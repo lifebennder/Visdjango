@@ -1,0 +1,70 @@
+{% extends 'vis/base.html' %}
+{% load staticfiles %}
+{% block title %}Economic Visualisation{% endblock %}
+{% block extrahead %}
+    <link href="{% static 'nvd3/nv.d3.css' %}" rel="stylesheet">
+    <script src="{% static 'd3/d3.min.js' %}"></script>
+    <script src="{% static 'nvd3/nv.d3.js' %}"></script>
+    <script src="{% static 'js/mainvis.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="page-header" style="  margin: 00px 0 10px;  padding-bottom: 0px;">
+        <h2 style="    margin-top: 0.00em;
+    margin-bottom: 0.0em;">Economic Visualisation</h2>
+    </div>
+
+    <div class="" style=" background-color: #31b0d5; height:92%; min-height: 500px; ">
+        <!--div class="" style="display: inline;   background-color: #008800;"-->
+        <div class="" style="float:left;  border-right: 5px solid #dddddd; float:left; height: 100%; width: 23%;
+        background-color: #ffffff; padding: 10px 10px 10px 10px;  margin: 0px 00px 20px 00px; ">
+            <!--div class="container-fluid" style=" height: 500px;  background-color: seashell;"></div-->
+            <h4 style="   text-align: center;">
+                Controls
+            </h4>
+            <div class="panel panel-default"  >
+                <div class="panel-heading">Main Graph</div>
+                <div class="panel-body">contetnt</div>
+            </div>
+        </div>
+        <!--The right side-->
+        <div class="" style=" float:left;  height: 100%; width: 77%; background-color: pink; ">
+            <!--The right side TOP-->
+            <div class="" style=" height: 20%; background-color: rgba(32, 255, 77, 0.82);">
+                <div style=" float:left; border-right: 5px solid #dddddd; height: 100%; width: 33.3%; background-color: #c9c9c0;">
+
+                </div>
+                <div style=" float:left;border-right: 5px solid #dddddd; height: 100%; width: 33.3%; background-color: #49f70b;">
+                </div>
+
+                <div id="chart"
+                     style=" float:left; height: 100%; width: 33.3%; background-color: #dd1f33 ;">
+                    <svg></svg>
+                </div>
+            </div>
+
+            <!--The right side BOTTOM-->
+            <div class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 80%; background-color: purple; ">
+
+                <div id="main"
+                     style="  height:100%; width: 100%; background-color: #ffff00; ">
+                    <svg></svg>
+                </div>
+            </div>
+
+
+        </div>
+        <!--/div-->
+    </div>
+
+    <div class="references top-border">
+        <h1>Credits and Further Reading</h1>
+        <ul>
+            <li>Source: <a
+                    href="http://nvd3.org/examples/discreteBar.html">http://nvd3.org/examples/discreteBar.html</a></li>
+            <li><a href="http://bl.ocks.org/mbostock/3887118">http://bl.ocks.org/mbostock/3887118</a></li>
+        </ul>
+    </div>
+
+{% endblock %}

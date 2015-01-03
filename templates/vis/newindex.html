@@ -1,0 +1,48 @@
+{% extends 'vis/base.html' %}
+{% load staticfiles %}
+{% block title %}Economic Visualisation{% endblock %}
+{% block extrahead %}
+  <link href="{% static 'nvd3/nv.d3.css' %}" rel="stylesheet">
+  <script src="{% static 'd3/d3.min.js' %}"></script>
+  <script src="{% static 'nvd3/nv.d3.js' %}"></script>
+  <script src="{% static 'js/mainvis.js' %}"></script>
+{% endblock %}
+
+{%  block content %}
+
+  <div class="page-header">
+    <h1>Economic Visualisation</h1>
+  </div>
+
+  <div class="container-fluid" style="
+    border-style: solid;
+    border-width: 2px;
+    width:800px;
+    height:500px;
+    align-content: center">
+  <div id="main"  style="float: right;
+    width:33%;
+    height:30%;
+    border-style: solid;
+    border-width:2px;">
+    <svg></svg>
+  </div>
+
+    <div id="chart" style="float: right;
+    width:33%;
+    height:50%;
+    border-style: solid;
+    border-width: 2px;">
+    <svg ></svg>
+  </div>
+  </div>
+
+  <div class="references">
+    <h1>Credits and Further Reading</h1>
+    <ul>
+      <li>Source: <a href="http://nvd3.org/examples/discreteBar.html">http://nvd3.org/examples/discreteBar.html</a></li>
+      <li><a href="http://bl.ocks.org/mbostock/3887118">http://bl.ocks.org/mbostock/3887118</a></li>
+    </ul>
+  </div>
+
+{% endblock %}

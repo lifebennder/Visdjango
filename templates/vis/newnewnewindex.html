@@ -1,0 +1,61 @@
+{% extends 'vis/base.html' %}
+{% load staticfiles %}
+{% block title %}Economic Visualisation{% endblock %}
+{% block extrahead %}
+    <link href="{% static 'nvd3/nv.d3.css' %}" rel="stylesheet">
+    <script src="{% static 'd3/d3.min.js' %}"></script>
+    <script src="{% static 'nvd3/nv.d3.js' %}"></script>
+    <script src="{% static 'js/mainvis.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="page-header" style="  margin: 00px 0 10px;  padding-bottom: 0px;">
+        <h1>Economic Visualisation</h1>
+    </div>
+
+    <div class="container-fluid" style=" background-color: #31b0d5; height:600px; ">
+        <!--div class="" style="display: inline;   background-color: #008800;"-->
+            <div class="" style="float:left; height: 100%; width: 25%; background-color: #101010;">
+                <!--div class="container-fluid" style=" height: 500px;  background-color: seashell;"></div-->asd
+            </div>
+            <!--The right side-->
+            <div class="" style="   display: table; height: 100%; width: 75%; background-color: pink; ">
+                <!--The right side TOP-->
+                <div class="" style="display:table-cell; height: 10%; background-color: rgba(32, 255, 77, 0.82);">
+                    <div style=" height: 100%; width: 30%; background-color: #c9c9c0;">
+
+                    </div>
+                    <div style=" height: 100%; width: 30%; background-color: #49f70b;">
+
+
+                    <div id="chart"
+                         style="  height: 100%; width: 30%; background-color: #dd1f33 ;">
+                        <svg></svg>
+
+                </div>
+
+                <!--The right side BOTTOM-->
+                <div class="" style=" width: 100%;  display:table-row; height: 90%;">
+
+                    <div  id="main"
+                         style="  width: 100%;  display:table-cell; background-color: #ffff00; ">
+                        <svg></svg>
+                    </div>
+                </div>
+
+
+            </div>
+        <!--/div-->
+    </div>
+
+    <div class="references">
+        <h1>Credits and Further Reading</h1>
+        <ul>
+            <li>Source: <a
+                    href="http://nvd3.org/examples/discreteBar.html">http://nvd3.org/examples/discreteBar.html</a></li>
+            <li><a href="http://bl.ocks.org/mbostock/3887118">http://bl.ocks.org/mbostock/3887118</a></li>
+        </ul>
+    </div>
+
+{% endblock %}
