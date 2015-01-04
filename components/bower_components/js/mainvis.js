@@ -1,40 +1,6 @@
 //$(function() {
 
-
-function exampleData() {
-    return [
-        {
-            key: "Cumulative Return",
-            values: [
-                {"label": "A Label", "value": -29.765957771107},
-                {"label": "B Label", "value": 500},
-                {"label": "C Label", "value": 32.807804682612},
-                {"label": "D Label", "value": 196.45946739256},
-                {"label": "E Label", "value": 0.19434030906893},
-                {"label": "F Label", "value": -98.079782601442},
-                {"label": "G Label", "value": -13.925743130903},
-                {"label": "H Label", "value": -5.1387322875705}
-            ]
-        }
-    ]
-}
-function testData() {
-    return [
-        {
-            key: "Cumulative Return",
-            values: [
-                {"x": 0.0, "y": -29.765957771107},
-                {"x": 1.0, "y": -29.765957771107},
-                {"x": 2.0, "y": 29.765957771107},
-                {"x": 3.0, "y": -29.765957771107},
-                {"x": 4.0, "y": -29.765957771107},
-                {"x": 5.0, "y": -29.765957771107},
-            ]
-        }
-    ]
-}
-
-nv.addGraph(function () {
+/*nv.addGraph(function () {
     var chart = nv.models.discreteBarChart()
             .x(function (d) {
                 return d.label
@@ -52,14 +18,29 @@ nv.addGraph(function () {
      .datum(exampleData())
      .call(chart);*/
 
-    nv.utils.windowResize(chart.update);
+    //nv.utils.windowResize(chart.update);
 
-    return chart;
+    //return chart;
 
-});
-d3.json("/vis/main_data/", function (error, data) {
+//});
+var mainchart;
+var maindata;
+var mainfocus = false;
+window.onload = function(e) {nv.log('loaded');drawmain(mainfocus,true,true);};
+
+function drawmain(focus,interactive,tooltips){
+    d3.json("/vis/main_data/", function (error, data) {
+    removeGraph('main');
     nv.addGraph(function () {
-        var chart = nv.models.lineChart().margin({left: 60}).interactive(true);
+        var chart;
+        if (focus){
+            chart = nv.models.lineWithFocusChart().margin({left: 60});
+            chart.y2Axis.tickFormat(d3.format('f'));
+            chart.useInteractiveGuideline(interactive);
+        } else {
+            chart = nv.models.lineChart().margin({left: 60});
+            chart.useInteractiveGuideline(interactive);
+        }
         chart.xAxis.axisLabel('Years');
         chart.xAxis
             .tickFormat(d3.format('f'));
@@ -71,9 +52,12 @@ d3.json("/vis/main_data/", function (error, data) {
         chart.forceY([0]);
         //chart.y2Axis.tickFormat(d3.format('f'));
         //chart.y2Axis.scale(chart.y);
-        chart.useInteractiveGuideline(true).tooltips(true);
+
+
+        chart.tooltips(tooltips);
+        //chart.interactive(false);
         //nv.log(chart.forceY()+' '+chart.y);
-        nv.log('hello');
+        nv.log('drawing main, interactive tooltip: '+interactive+' tooltip:'+tooltips);
         //chart.yAxis.scale().domain([0,500]);
         //chart.yDomain = [0,500];
         //chart.yDomain2 = 500;
@@ -82,11 +66,55 @@ d3.json("/vis/main_data/", function (error, data) {
 
         d3.select('#main svg')
             .datum(data)
-            .transition().duration(100)
+            .transition().duration(250)
             .call(chart);
 
         nv.utils.windowResize(chart.update);
-
+        mainchart = chart;
+        maindata = data;
         return chart;
     });
 });
+}
+function removeGraph(graph){
+    d3.selectAll("#"+graph+" svg > *").remove();
+    if(mainchart!=null)mainchart.tooltips(false);
+}
+function setInteractiveMode() {
+    nv.log("set interactive   ");
+    removeGraph('main');
+
+    if(mainchart.useInteractiveGuideline()==true){
+        nv.log('interactive in true:   '+mainchart.useInteractiveGuideline());
+        //mainchart.useInteractiveGuideline(false).tooltips(false);
+        //mainchart.useInteractiveGuideline(false).tooltips(false);
+        drawmain(mainfocus,false,true);
+    } else {
+        nv.log('interactive is false');
+        //mainchart.useInteractiveGuideline(false).tooltips(false);
+        drawmain(mainfocus,true,true);
+    }
+
+    //d3.select("#data").remove();
+    //d3.json("/vis/main_data/", function (error, data) {
+        //nv.log(error);
+
+    /*d3.selectAll('#main svg')
+         .datum(maindata)
+         .transition().duration(100)
+         .call(mainchart.tooltips(true));
+        //mainchart.useInteractiveGuideline(false).update;*/
+    //});
+
+}
+
+function setFocusMode() {
+    nv.log("setFocus Mode");
+    removeGraph('main');
+    mainfocus = !mainfocus;
+    drawmain(mainfocus,false,true);
+}
+
+function NormaliseMode() {
+
+}

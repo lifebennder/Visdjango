@@ -3222,7 +3222,11 @@ nv.models.cumulativeLineChart = function() {
       if (!line.values) {
          return line;
       }
-      var v = lines.y()(line.values[idx], idx);
+      var indexValue = line.values[idx];
+      if (indexValue == null) {
+        return line;
+      }
+      var v = lines.y()(indexValue, idx);
 
       //TODO: implement check below, and disable series if series loses 100% or more cause divide by 0 issue
       if (v < -.95 && !noErrorCheck) {
@@ -4646,8 +4650,7 @@ nv.models.indentedTree = function() {
 
             d3.select(this).select('span')
               .attr('class', d3.functor(column.classes) )
-              .text(function(d) { return column.format ? column.format(d) :
-                                        (d[column.key] || '-') });
+              .text(function(d) { return column.format ? (d[column.key] ? column.format(d[column.key]) : '-') :  (d[column.key] || '-'); });
           });
 
         if  (column.showCount) {
@@ -6321,7 +6324,7 @@ nv.models.lineWithFocusChart = function() {
     , tooltips = true
     , tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
-               '<p>' +  y + ' att ' + x + '</p>'
+               '<p>' +  y + ' at ' + x + '</p>'
       }
     , noData = "No Data Available."
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'brush')
@@ -6806,7 +6809,16 @@ nv.models.lineWithFocusChart = function() {
     showLegend = _;
     return chart;
   };
-
+    ///CHANGED
+  chart.useInteractiveGuideline = function(_) {
+    if(!arguments.length) return false;//useInteractiveGuideline;
+    /*useInteractiveGuideline = _;
+    if (_ === true) {
+       chart.interactive(false);
+       chart.useVoronoi(false);
+    }*/
+    return chart;
+  };
   chart.tooltips = function(_) {
     if (!arguments.length) return tooltips;
     tooltips = _;
