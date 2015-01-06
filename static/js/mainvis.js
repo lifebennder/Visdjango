@@ -47,9 +47,13 @@ function drawmain(focus,interactive,tooltips){
         chart.yAxis
             .tickFormat(d3.format('f'));
         chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(40);
+        chart.clipEdge(true);
         //chart.yAxis.scale(function(n){return o(n)});
         //chart.forceY([0,d3.max(data)]);
+        //chart.clipVoronoi(true);
+        //nv.log(chart.clipVoronoi(true));
         chart.forceY([0]);
+
         //chart.y2Axis.tickFormat(d3.format('f'));
         //chart.y2Axis.scale(chart.y);
 
@@ -63,12 +67,12 @@ function drawmain(focus,interactive,tooltips){
         //chart.yDomain2 = 500;
         //chart.title("Historic Data");
         //nv.log('hello'+chart.yDomain1+' '+chart.yDomain2+' '+chart.yDomain);
-
+        //chart.rescaleY=true;
         d3.select('#main svg')
             .datum(data)
             .transition().duration(250)
             .call(chart);
-
+        nv.log('y  '+ chart.y()+'    '+chart.yRange());
         nv.utils.windowResize(chart.update);
         mainchart = chart;
         maindata = data;
@@ -112,7 +116,7 @@ function setFocusMode() {
     nv.log("setFocus Mode");
     removeGraph('main');
     mainfocus = !mainfocus;
-    drawmain(true,false,true);
+    drawmain(mainfocus,false,true);
 }
 
 function NormaliseMode() {

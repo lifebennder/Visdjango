@@ -16,13 +16,12 @@
     </div>
 
     <div class="" style=" background-color: #31b0d5; height:92%; min-height: 500px; ">
-        <!--div class="" style="display: inline;   background-color: #008800;"-->
         <div class="" style="float:left;  border-right: 5px solid #dddddd; float:left; height: 100%; width: 23%;
         background-color: #ffffff; padding: 10px 10px 10px 10px;  margin: 0px 00px 20px 00px; ">
-            <!--div class="container-fluid" style=" height: 500px;  background-color: seashell;"></div-->
             <h4 style="   text-align: center;">
                 Controls
             </h4>
+            <!-- Main Graph Control Panel-->
             <div class="panel panel-info" >
                 <div class="panel-heading">Main Graph</div>
                 <div class="panel-body" style="text-align: center"><div>
@@ -30,6 +29,18 @@
                     <button type="checkbox" class="btn btn-info" aria-label="true" onclick="setInteractiveMode()">Interactive Mode</button>
                     <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()">Navigation Chart</button>
                     <button type="checkbox" class="btn btn-info" onclick="NormaliseMode()">Normalise</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Second Control Panel-->
+            <div class="panel panel-info" >
+                <div class="panel-heading">Data</div>
+                <div class="panel-body" style="text-align: center"><div>
+                    <div class="btn-group-vertical btn-group-lg" role="group">
+                    <button type="checkbox" class="btn btn-info" aria-label="true" onclick="setInteractiveMode()"></button>
+                    <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()"></button>
+                    <button type="checkbox" class="btn btn-info" onclick="NormaliseMode()"></button>
                     </div>
                     </div>
                 </div>
@@ -55,17 +66,17 @@
             <div class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 80%; background-color: purple; ">
 
                 <div id="main"
-                     style="  height:100%; width: 100%; background-color: #ffff00; ">
+                     style="  height:100%; width: 100%; background-color: rgb(255, 250, 0); ">
                     <svg></svg>
                 </div>
             </div>
 
 
         </div>
-        <!--/div-->
     </div>
 
     <div class="references top-border">
+        <h1>Interesting data combinations</h1>
         <h1>Credits and Further Reading</h1>
         <ul>
             <li>Source: <a

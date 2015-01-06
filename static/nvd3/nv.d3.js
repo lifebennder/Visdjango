@@ -1462,14 +1462,14 @@ nv.models.historicalBar = function() {
       //------------------------------------------------------------
       // Setup Scales
 
-      x   .domain(xDomain || d3.extent(data[0].values.map(getX).concat(forceX) ))
+      x.domain(xDomain || d3.extent(data[0].values.map(getX).concat(forceX) ))
 
       if (padData)
         x.range(xRange || [availableWidth * .5 / data[0].values.length, availableWidth * (data[0].values.length - .5)  / data[0].values.length ]);
       else
         x.range(xRange || [0, availableWidth]);
 
-      y   .domain(yDomain || d3.extent(data[0].values.map(getY).concat(forceY) ))
+        y.domain(yDomain || d3.extent(data[0].values.map(getY).concat(forceY) ))
           .range(yRange || [availableHeight, 0]);
 
       // If scale's domain don't have a range, slightly adjust to make one... so a chart can show a single data point
@@ -2637,7 +2637,7 @@ nv.models.cumulativeLineChart = function() {
 
       x = lines.xScale();
       y = lines.yScale();
-
+      nv.log('x: '+x+' y: '+y);
 
       if (!rescaleY) {
         var seriesDomains = data
@@ -6307,7 +6307,6 @@ nv.models.lineWithFocusChart = function() {
     , y2Axis = nv.models.axis()
     , legend = nv.models.legend()
     , brush = d3.svg.brush()
-    , interactiveLayer = nv.interactiveGuideline()
     ;
 
   var margin = {top: 30, right: 30, bottom: 30, left: 60}
@@ -6330,7 +6329,6 @@ nv.models.lineWithFocusChart = function() {
     , noData = "No Data Available."
     , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'brush')
     , transitionDuration = 250
-    , useInteractiveGuideline = false
     ;
 
   lines
@@ -6476,18 +6474,6 @@ nv.models.lineWithFocusChart = function() {
       //------------------------------------------------------------
       // Main Chart Component(s)
 
-      //------------------------------------------------------------
-      //Set up interactive layer
-      if (useInteractiveGuideline) {
-        interactiveLayer
-           .width(availableWidth)
-           .height(availableHeight1)
-           .margin({left:margin.left, top:margin.top})
-           .svgContainer(container)
-           .xScale(x);
-        wrap.select(".nv-interactive").call(interactiveLayer);
-      }
-
       lines
         .width(availableWidth)
         .height(availableHeight1)
@@ -6629,85 +6615,15 @@ nv.models.lineWithFocusChart = function() {
       //============================================================
       // Event Handling/Dispatching (in chart's scope)
       //------------------------------------------------------------
-            //CHANGEDDDD
-      legend.dispatch.on('stateChange', function(newState) {
-        //state = newState;
-        dispatch.stateChange(newState);
+
+      legend.dispatch.on('stateChange', function(newState) { 
         chart.update();
-      });
-
-      interactiveLayer.dispatch.on('elementMousemove', function(e) {
-          lines.clearHighlights();
-          var singlePoint, pointIndex, pointXLocation, allData = [];
-          data
-          .filter(function(series, i) {
-            series.seriesIndex = i;
-            return !series.disabled;
-          })
-          .forEach(function(series,i) {
-              pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-              lines.highlightPoint(i, pointIndex, true);
-              var point = series.values[pointIndex];
-              if (typeof point === 'undefined') return;
-              if (typeof singlePoint === 'undefined') singlePoint = point;
-              if (typeof pointXLocation === 'undefined') pointXLocation = chart.xScale()(chart.x()(point,pointIndex));
-              allData.push({
-                  key: series.key,
-                  value: chart.y()(point, pointIndex),
-                  color: color(series,series.seriesIndex)
-              });
-          });
-          //Highlight the tooltip entry based on which point the mouse is closest to.
-          if (allData.length > 2) {
-            var yValue = chart.yScale().invert(e.mouseY);
-            var domainExtent = Math.abs(chart.yScale().domain()[0] - chart.yScale().domain()[1]);
-            var threshold = 0.03 * domainExtent;
-            var indexToHighlight = nv.nearestValueIndex(allData.map(function(d){return d.value}),yValue,threshold);
-            if (indexToHighlight !== null)
-              allData[indexToHighlight].highlight = true;
-          }
-
-          var xValue = xAxis.tickFormat()(chart.x()(singlePoint,pointIndex));
-          interactiveLayer.tooltip
-                  .position({left: pointXLocation + margin.left, top: e.mouseY + margin.top})
-                  .chartContainer(that.parentNode)
-                  .enabled(tooltips)
-                  .valueFormatter(function(d,i) {
-                     return yAxis.tickFormat()(d);
-                  })
-                  .data(
-                      {
-                        value: xValue,
-                        series: allData
-                      }
-                  )();
-
-          interactiveLayer.renderGuideLine(pointXLocation);
-
-      });
-
-      interactiveLayer.dispatch.on("elementMouseout",function(e) {
-          dispatch.tooltipHide();
-          lines.clearHighlights();
       });
 
       dispatch.on('tooltipShow', function(e) {
         if (tooltips) showTooltip(e, that.parentNode);
       });
 
-
-      dispatch.on('changeState', function(e) {
-
-        if (typeof e.disabled !== 'undefined' && data.length === e.disabled.length) {
-          data.forEach(function(series,i) {
-            series.disabled = e.disabled[i];
-          });
-
-          state.disabled = e.disabled;
-        }
-
-        chart.update();
-      });
       //============================================================
 
 
@@ -6893,7 +6809,16 @@ nv.models.lineWithFocusChart = function() {
     showLegend = _;
     return chart;
   };
-
+    ///CHANGED
+  chart.useInteractiveGuideline = function(_) {
+    if(!arguments.length) return false;//useInteractiveGuideline;
+    /*useInteractiveGuideline = _;
+    if (_ === true) {
+       chart.interactive(false);
+       chart.useVoronoi(false);
+    }*/
+    return chart;
+  };
   chart.tooltips = function(_) {
     if (!arguments.length) return tooltips;
     tooltips = _;

@@ -1462,14 +1462,14 @@ nv.models.historicalBar = function() {
       //------------------------------------------------------------
       // Setup Scales
 
-      x   .domain(xDomain || d3.extent(data[0].values.map(getX).concat(forceX) ))
+      x.domain(xDomain || d3.extent(data[0].values.map(getX).concat(forceX) ))
 
       if (padData)
         x.range(xRange || [availableWidth * .5 / data[0].values.length, availableWidth * (data[0].values.length - .5)  / data[0].values.length ]);
       else
         x.range(xRange || [0, availableWidth]);
 
-      y   .domain(yDomain || d3.extent(data[0].values.map(getY).concat(forceY) ))
+        y.domain(yDomain || d3.extent(data[0].values.map(getY).concat(forceY) ))
           .range(yRange || [availableHeight, 0]);
 
       // If scale's domain don't have a range, slightly adjust to make one... so a chart can show a single data point
@@ -5516,7 +5516,6 @@ nv.models.lineChart = function() {
 
       x = lines.xScale();
       y = lines.yScale();
-
       //------------------------------------------------------------
 
 
