@@ -115,5 +115,6 @@ BOWER_INSTALLED_APPS = (
 'nvd3#1.1.15-beta',
 'bootstrap#3.3.1',
 'jquery#2.1.3',
-'google-code-prettify#1.0.3'
+'google-code-prettify#1.0.3',
+'nvd3-community#1.7.0',
 )

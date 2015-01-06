@@ -2637,7 +2637,7 @@ nv.models.cumulativeLineChart = function() {
 
       x = lines.xScale();
       y = lines.yScale();
-      nv.log('x: '+x+' y: '+y);
+
 
       if (!rescaleY) {
         var seriesDomains = data
@@ -5516,7 +5516,6 @@ nv.models.lineChart = function() {
 
       x = lines.xScale();
       y = lines.yScale();
-
       //------------------------------------------------------------
 
 

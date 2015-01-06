@@ -2,9 +2,9 @@
 {% load staticfiles %}
 {% block title %}Economic Visualisation{% endblock %}
 {% block extrahead %}
-    <link href="{% static 'nvd3/nv.d3.css' %}" rel="stylesheet">
+    <link href="{% static 'nvd3-community/build/nv.d3.css' %}" rel="stylesheet">
     <script src="{% static 'd3/d3.min.js' %}"></script>
-    <script src="{% static 'nvd3/nv.d3.js' %}"></script>
+    <script src="{% static 'nvd3-community/build/nv.d3.js' %}"></script>
     <script src="{% static 'js/mainvis.js' %}"></script>
 {% endblock %}
 
@@ -50,22 +50,25 @@
         <div class="" style=" float:left;  height: 100%; width: 77%; background-color: pink; ">
             <!--The right side TOP-->
             <div class="" style=" height: 20%; background-color: rgba(32, 255, 77, 0.82);">
-                <div style=" float:left; border-right: 5px solid #dddddd; height: 100%; width: 33.3%; background-color: #c9c9c0;">
-
+                <!--The right side TOP LEFT-->
+                <div id="leftvis" style=" float:left; border-right: 5px solid #dddddd; height: 100%; width: 33.3%; background-color: #c9c9c0;">
+                    <svg></svg>
                 </div>
-                <div style=" float:left;border-right: 5px solid #dddddd; height: 100%; width: 33.3%; background-color: #49f70b;">
+                <!--The right side TOP MIDDLE-->
+                <div id="middlevis" style=" float: left ; border-right: 5px solid #dddddd; height: 100%; width: 33.3%; background-color: #49f70b;">
+                    <svg></svg>
                 </div>
-
-                <div id="chart"
+                <!--The right side TOP RIGHT-->
+                <div id="rightvis"
                      style=" float:left; height: 100%; width: 33.3%; background-color: #dd1f33 ;">
                     <svg></svg>
                 </div>
             </div>
 
             <!--The right side BOTTOM-->
-            <div class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 80%; background-color: purple; ">
+            <div id="mainparent" class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 80%; background-color: purple; ">
 
-                <div id="main"
+                <div id="main" class="with-3d-shadow with-transitions"
                      style="  height:100%; width: 100%; background-color: rgb(255, 250, 0); ">
                     <svg></svg>
                 </div>
