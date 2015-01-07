@@ -96,12 +96,12 @@ function drawleftvis() {
 
 //Draw the top left visualisation
 function drawmiddlevis() {
-    //drawUpperVis('middlevis');
+    drawUpperVis('middlevis');
 }
 
 //Draw the top left visualisation
 function drawrightvis() {
-    //drawUpperVis('rightvis');
+    drawUpperVis('rightvis');
 }
 
 function drawUpperVis(visid,leftLabel,rightLabel) {
