@@ -39,6 +39,7 @@ function drawmain(focus, interactive, tooltips) {
             chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
             chart.y(function (d) {
+                if(d.y=="") return null;
                 return parseFloat(d.y)
             });
             chart.x(function (d) {
@@ -103,32 +104,32 @@ function drawrightvis() {
     drawUpperVis('rightvis');
 }
 
-function drawUpperVis(visid) {
+function drawUpperVis(visid,leftLabel,rightLabel) {
     nv.addGraph(function () {
         var chart = nv.models.lineChart();
         chart.xAxis.tickFormat(d3.format('f'));
         chart.yAxis.tickFormat(d3.format('f'));
-        chart.yAxis.showMaxMin(true).axisLabel('Left').axisLabelDistance(-30);
-        chart.xAxis.axisLabel('Bottom').axisLabelDistance(-10);
-        chart.xAxis.ticks(false);
+        chart.yAxis.tickValues([]).showMaxMin(true).axisLabel('Left').axisLabelDistance(-30);
+        chart.xAxis.tickValues([]).axisLabel('Bottom').axisLabelDistance(-10);
+        chart.xAxis.ticks(true);
 
-        chart.width(parseInt(d3.select('#leftvis').style('width')));
-        chart.height(parseInt(d3.select('#leftvis').style('height')));
+        chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
+        chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
         chart.tooltipContent(function (key, y, e, graph) {
             var content = '<h3 style="background-color: ';
             content += e.color + '">';
             content += '</h3><p>' + y + '</p>';
             return content;
         });
-        chart.margin({"left": 30, "right": 30, "top": 15, "bottom": 28});
+        chart.margin({"left": 35, "right": 30, "top": 10, "bottom": 30});
         chart.options({
             useInteractiveGuideLines: true
             , showLegend: false
-            , title: 'Phillips Curve'
             //,showYAxis : false
             //,showXAxis : false
         });
         d3.select('#' + visid + ' svg').datum(sinAndCos()).call(chart);
+        nv.utils.windowResize(chart.update);
     });
 }
 function sinAndCos() {

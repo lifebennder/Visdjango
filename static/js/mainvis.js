@@ -1,130 +1,87 @@
 //$(function() {
 
-/*nv.addGraph(function () {
-    var chart = nv.models.discreteBarChart()
-            .x(function (d) {
-                return d.label
-            })    //Specify the data accessors.
-            .y(function (d) {
-                return d.value
-            })
-            .staggerLabels(true)    //Too many bars and not enough room? Try staggering labels.
-            .tooltips(false)        //Don't show tooltips
-            .showValues(true)       //...instead, show the bar value right on top of each bar.
-            .transitionDuration(350)
-        ;
-
-    /*d3.select('#chart svg')
-     .datum(exampleData())
-     .call(chart);*/
-
-    //nv.utils.windowResize(chart.update);
-
-    //return chart;
-
-//});
-
-window.onload = function(e) {
-    nv.log('loaded');
-    drawmain(mainfocus,true,true);
-    drawtopleft();};
-
 //main visualisation global variables.
 var mainchart;
 var maindata;
 var mainfocus = false;
-function drawmain(focus,interactive,tooltips){
+window.onload = function (e) {
+    nv.log('loaded');
+    drawmain(mainfocus, true, true);
+    drawleftvis();
+    drawmiddlevis();
+    drawrightvis();
+};
+
+
+function drawmain(focus, interactive, tooltips) {
     d3.json("/vis/main_data/", function (error, data) {
-    removeGraph('main');
-    nv.addGraph(function () {
-        var chart;
-        if (focus){
-            chart = nv.models.lineWithFocusChart().margin({left: 60});
-            chart.y2Axis.tickFormat(d3.format('f'));
-            chart.useInteractiveGuideline(interactive);
-        } else {
-            chart = nv.models.lineChart().margin({left: 60});
-            chart.useInteractiveGuideline(interactive);
-        }
-        chart.xAxis.axisLabel('Years');
-        chart.xAxis
-            .tickFormat(d3.format('f'));
-        chart.yAxis
-            .tickFormat(d3.format('f'));
-        chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(40);
-        chart.clipEdge(true);
-        //chart.yAxis.scale(function(n){return o(n)});
-        //chart.forceY([0,d3.max(data)]);
-        //chart.clipVoronoi(true);
-        //nv.log(chart.clipVoronoi(true));
-        //chart.forceY([0]);
-
-        //chart.y2Axis.tickFormat(d3.format('f'));
-        //chart.y2Axis.scale(chart.y);
-        var i = 0;
-        chart.y(function(d) { if(i==5 || i== 6) {console.log(d.y);}i++; return parseFloat(d.y) });
-        chart.tooltips(tooltips);
-        //chart.interactive(false);
-        //nv.log(chart.forceY()+' '+chart.y);
-        nv.log('drawing main, interactive tooltip: '+interactive+' tooltip:'+tooltips);
-        //chart.yAxis.scale().domain([0,500]);
-        //chart.yDomain = [0,500];
-        //chart.yDomain2 = 500;
-        //chart.title("Historic Data");
-        //nv.log('hello'+chart.yDomain1+' '+chart.yDomain2+' '+chart.yDomain);
-        //chart.rescaleY=true;
-
-        console.log(JSON.stringify(data))
-
-        d3.select('#main svg')
-            .datum(data)
-            .transition().duration(300)
-            .call(chart);
-        //nv.log('y  '+ chart.y()+'    '+chart.yRange());
-        nv.utils.windowResize(chart.update);
-        mainchart = chart;
-        maindata = data;
-        return chart;
+        removeGraph('main');
+        nv.addGraph(function () {
+            var chart;
+            if (focus) {
+                chart = nv.models.lineWithFocusChart().margin({left: 60});
+                chart.y2Axis.tickFormat(d3.format('f'));
+                //chart.useInteractiveGuideline(interactive);
+            } else {
+                chart = nv.models.lineChart().margin({left: 60});
+                chart.useInteractiveGuideline(interactive);
+            }
+            //chart.interpolate("step");
+            //chart.title('Historic Data Visualisation').titleOffset(-10);
+            //console.log('Main width: '+parseInt(d3.select('#main').style('width'))+' height: '+parseInt(d3.select('#main').style('height')));
+            //chart.width(parseInt(d3.select('#main').style('width')));
+            //chart.height(parseInt(d3.select('#main').style('height')));
+            chart.xAxis.axisLabel('Years');
+            chart.xAxis
+                .tickFormat(d3.format('f'));
+            chart.yAxis
+                .tickFormat(d3.format('f'));
+            chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
+            chart.clipEdge(true);
+            chart.y(function (d) {
+                if(d.y=="") return null;
+                return parseFloat(d.y)
+            });
+            chart.x(function (d) {
+                return parseFloat(d.x)
+            });
+            chart.tooltips(tooltips);
+            console.log('drawing main, interactive tooltip: ' + interactive + ' tooltip:' + tooltips);
+            d3.select('#main svg')
+                .datum(data)
+                .transition()//.duration(300)
+                .call(chart);
+            nv.utils.windowResize(chart.update);
+            mainchart = chart;
+            maindata = data;
+            return chart;
+        });
     });
-});
 }
-function removeGraph(graph){
-    d3.selectAll("#"+graph+" svg > *").remove();
-    if(mainchart!=null)mainchart.tooltips(false);
+function removeGraph(graph) {
+    d3.selectAll("#" + graph + " svg > *").remove();
 }
 function setInteractiveMode() {
-    nv.log("set interactive   ");
+    console.log("setting interactive   ");
     removeGraph('main');
-
-    if(mainchart.useInteractiveGuideline()==true){
-        nv.log('interactive in true:   '+mainchart.useInteractiveGuideline());
-        //mainchart.useInteractiveGuideline(false).tooltips(false);
-        //mainchart.useInteractiveGuideline(false).tooltips(false);
-        drawmain(mainfocus,false,true);
-    } else {
-        nv.log('interactive is false');
-        //mainchart.useInteractiveGuideline(false).tooltips(false);
-        drawmain(mainfocus,true,true);
+    if (mainfocus) {
+        mainfocus = !mainfocus;
+        drawmain(mainfocus, true, true);
     }
-
-    //d3.select("#data").remove();
-    //d3.json("/vis/main_data/", function (error, data) {
-        //nv.log(error);
-
-    /*d3.selectAll('#main svg')
-         .datum(maindata)
-         .transition().duration(100)
-         .call(mainchart.tooltips(true));
-        //mainchart.useInteractiveGuideline(false).update;*/
-    //});
-
+    if (mainchart.useInteractiveGuideline() == true) {
+        console.log('interactive in true:   ' + mainchart.useInteractiveGuideline());
+        drawmain(mainfocus, false, true);
+    } else {
+        console.log('interactive is false');
+        drawmain(mainfocus, true, true);
+    }
 }
 
 function setFocusMode() {
-    nv.log("setFocus Mode");
+    console.log("setFocus Mode");
     removeGraph('main');
     mainfocus = !mainfocus;
-    drawmain(mainfocus,false,true);
+    drawmain(mainfocus, false, true);
 }
 
 function NormaliseMode() {
@@ -133,18 +90,85 @@ function NormaliseMode() {
 
 //TOP RIGHT CHART
 //Draw the top left visualisation
-function drawtopleft(){
+function drawleftvis() {
+    drawUpperVis('leftvis');
+}
+
+//Draw the top left visualisation
+function drawmiddlevis() {
+    //drawUpperVis('middlevis');
+}
+
+//Draw the top left visualisation
+function drawrightvis() {
+    //drawUpperVis('rightvis');
+}
+
+function drawUpperVis(visid,leftLabel,rightLabel) {
     nv.addGraph(function () {
-        //var chart = nv.models.
+        var chart = nv.models.lineChart();
+        chart.xAxis.tickFormat(d3.format('f'));
+        chart.yAxis.tickFormat(d3.format('f'));
+        chart.yAxis.tickValues([]).showMaxMin(true).axisLabel('Left').axisLabelDistance(-30);
+        chart.xAxis.tickValues([]).axisLabel('Bottom').axisLabelDistance(-10);
+        chart.xAxis.ticks(true);
+
+        chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
+        chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
+        chart.tooltipContent(function (key, y, e, graph) {
+            var content = '<h3 style="background-color: ';
+            content += e.color + '">';
+            content += '</h3><p>' + y + '</p>';
+            return content;
+        });
+        chart.margin({"left": 35, "right": 30, "top": 10, "bottom": 30});
+        chart.options({
+            useInteractiveGuideLines: true
+            , showLegend: false
+            //,showYAxis : false
+            //,showXAxis : false
+        });
+        d3.select('#' + visid + ' svg').datum(sinAndCos()).call(chart);
+        nv.utils.windowResize(chart.update);
     });
 }
+function sinAndCos() {
+    var sin = [],
+        phillips = [],
+        rand = [],
+        rand2 = []
+        ;
 
-//Draw the top left visualisation
-function drawtopmiddle(){
+    for (var i = 0; i < 50; i++) {
+        //sin.push({x: i, y: i % 10 == 5 ? null : Math.sin(i / 10)}); //the nulls are to show how defined works
+        phillips.push({x: i, y: (1 / i) > 100 ? null : (1 / i)});
+        //rand.push({x: i, y: Math.random() / 10});
+//rand2.push({x: i, y: Math.cos(i/10) + Math.random() / 10 })
+    }
+    return [
 
-}
+//area: true,
+        {
+            values: phillips,
+            key: "Cosine Wave",
+            color: "#2ca02c"
+        },
+        /*{
+         values: sin,
+         key: "Sine Wave",
+         color: "#ff7f0e"
+         },
 
-//Draw the top left visualisation
-function drawtopright(){
-
+         {
+         values: rand,
+         key: "Random Points",
+         color: "#2222ff"
+         }
+         ,
+         {
+         values: rand2,
+         key: "Random Cosine",
+         color: "#667711"
+         }*/
+    ];
 }

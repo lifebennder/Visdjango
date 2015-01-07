@@ -24,6 +24,7 @@ def isnumeric(v):
             if v == '' or v == ' ': continue
             float(v) or int(v)
             break"""
+        if v=='null' or v==None or v=='' : return True
         float(v) or int(v)
     except ValueError:
         return False

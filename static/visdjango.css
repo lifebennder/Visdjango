@@ -41,3 +41,22 @@ h3 {
     padding-bottom: 5px;
 
 }
+
+svg {
+     height: 100%;
+     width: 100%;
+}
+.topvis {
+    float:left;
+    border-right: 5px solid #dddddd;
+    height: 100%;
+    width: 33.3%;
+    background-color: #c9c9c0;
+}
+.toptitle {
+    text-align: center;
+    margin: 5px 0 0px 0;
+}
+.nomargin {
+    margin: 0px 0 0px 0;
+}
