@@ -112,7 +112,7 @@ BOWER_PATH = 'bower.cmd'
 
 BOWER_INSTALLED_APPS = (
 'd3#3.3.13',
-'nvd3#1.1.15-beta',
+#'nvd3#1.1.15-beta',
 'bootstrap#3.3.1',
 'jquery#2.1.3',
 'google-code-prettify#1.0.3',
