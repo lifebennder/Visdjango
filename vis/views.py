@@ -24,7 +24,7 @@ def isnumeric(v):
             if v == '' or v == ' ': continue
             float(v) or int(v)
             break"""
-        if v=='null' or v==None or v=='' : return True
+        if v=='null' or v==None or v==''or v==' ' : return True
         float(v) or int(v)
     except ValueError:
         return False
@@ -51,9 +51,12 @@ def readcsv(path):
                     chartdata.append({'key': cell, 'values': []})
                 else:
 
-                    if colnum == 0 or not isnumeric(cell):
-                        if not isnumeric(cell): adjcolnum += 1
+                    if colnum == 0 or not isnumeric(reader[1][colnum]):
+                        if not isnumeric(reader[1][colnum]): adjcolnum += 1
                         continue
+                    collnum = colnum
+                    adj = adjcolnum
+                    index = colnum-adjcolnum
                     keyval = chartdata[colnum-adjcolnum]
                     keyval['values'].append({'x':row[0],'y':cell})
     """   transposed = zip(*reader)
