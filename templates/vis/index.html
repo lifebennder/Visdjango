@@ -3,7 +3,7 @@
 {% block title %}Economic Visualisation{% endblock %}
 {% block extrahead %}
     <link href="{% static 'nvd3-community/build/nv.d3.css' %}" rel="stylesheet">
-    <script src="{% static 'd3/d3.min.js' %}"></script>
+    <script src="{% static 'd3/d3.js' %}"></script>
     <script src="{% static 'nvd3-community/build/nv.d3.js' %}"></script>
     <script src="{% static 'js/mainvis.js' %}"></script>
 {% endblock %}
@@ -15,7 +15,7 @@
     margin-bottom: 0.0em;">Economic Visualisation</h2>
     </div>
 
-    <div class="" style=" background-color: #31b0d5; height:92%; min-height: 500px; ">
+    <div class="" style="height:92%; min-height: 500px; ">
         <div class="" style="float:left;  border-right: 5px solid #dddddd; float:left; height: 100%; width: 23%;
         background-color: #ffffff; padding: 10px 10px 10px 10px;  margin: 0px 00px 20px 00px; ">
             <h4 style="   text-align: center;">
@@ -47,9 +47,9 @@
             </div>
         </div>
         <!--The right side-->
-        <div class="" style=" float:left;  height: 100%; width: 77%; background-color: pink; ">
+        <div class="" style=" float:left;  height: 100%; width: 77%;">
             <!--The right side TOP-->
-            <div class="" style=" height: 25%; background-color: rgba(32, 255, 77, 0.82);">
+            <div class="" style=" height: 25%;">
                 <!--The right side TOP LEFT-->
                 <div class="topvis">
                     <h5 class="toptitle" >Phillips Curve</h5>
@@ -59,14 +59,14 @@
                 </div>
                 <!--The right side TOP MIDDLE-->
                 <div class="topvis">
-                    <h5 class="toptitle" >Title</h5>
+                    <h5 class="toptitle" >Yield Curve</h5>
                     <div id="middlevis" style="height: 90%; width:100%">
                          <svg></svg>
                     </div>
                 </div>
                 <!--The right side TOP RIGHT-->
                 <div class="topvis" style="float: right;">
-                    <h5 class="toptitle" >Title</h5>
+                    <h5 class="toptitle" >IS-LM Model</h5>
                     <div id="rightvis" style="height: 90%; width:100%">
                          <svg></svg>
                     </div>
@@ -88,11 +88,16 @@
 
     <div class="references top-border">
         <h1>Interesting data combinations</h1>
-        <h1>Credits and Further Reading</h1>
         <ul>
-            <li>Source: <a
-                    href="http://nvd3.org/examples/discreteBar.html">http://nvd3.org/examples/discreteBar.html</a></li>
-            <li><a href="http://bl.ocks.org/mbostock/3887118">http://bl.ocks.org/mbostock/3887118</a></li>
+            <li>Spending Vs. Public Debt</li>
+            <li>Real GDP (per Capita) Vs. GDP (per Capita)</li>
+            <li>Spending Vs. Public Debt</li>
+        </ul>
+        <h1>Further Reading</h1>
+        <ul>
+            <li><a href="http://en.wikipedia.org/wiki/Phillips_curve">Phillips Curve</a></li>
+            <li><a href="http://en.wikipedia.org/wiki/IS%E2%80%93LM_model">IS-LM Model</a></li>
+            <li><a href="http://en.wikipedia.org/wiki/Yield_curve">Yield Curve</a></li>
         </ul>
     </div>
 

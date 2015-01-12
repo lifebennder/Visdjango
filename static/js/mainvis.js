@@ -1,12 +1,13 @@
 //$(function() {
 
 //main visualisation global variables.
-var mainchart;
+var mainchart = null;
 var maindata;
 var mainfocus = false;
 window.onload = function (e) {
+    //removeGraph('main',mainchart);
     nv.log('loaded');
-    drawmain(mainfocus, true, true);
+    drawmain(mainfocus, false, true);
     drawleftvis();
     drawmiddlevis();
     drawrightvis();
@@ -15,7 +16,7 @@ window.onload = function (e) {
 
 function drawmain(focus, interactive, tooltips) {
     d3.json("/vis/main_data/", function (error, data) {
-        removeGraph('main');
+        removeGraph('main',mainchart);
         nv.addGraph(function () {
             var chart;
             if (focus) {
@@ -54,23 +55,53 @@ function drawmain(focus, interactive, tooltips) {
             nv.utils.windowResize(chart.update);
             mainchart = chart;
             maindata = data;
+            /*chart.dispatch.on('elementMousemove', function(e){
+                console.log('element: ');
+                //console.dir(e.point);
+            });*/
+            chart.interactiveLayer.dispatch.on('elementMousemove.maininflation', function(e) {
+                //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
+                var inflationSeries;
+                data.forEach(function(series, i){
+                    if(series.key.contains('Inflation')) inflationSeries=series.values;
+                });
+                //console.log('infla  '+inflationSeries[e.pointXValue]);
+                //console.log('x  '+ chart.lines);
+                //var x = chart.xAxis.tickFormat()(chart.lines.x()(e.point, e.pointIndex)),
+                //y = chart.yAxis.tickFormat()(chart.lines.y()(e.point, e.pointIndex));
+                //console.log(x+'  '+y);
+                 /*data
+                    .filter(function(series, i) {
+                        series.seriesIndex = i
+                         var pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                         //('Inflation (CPI) %')
+                         console.log('series: '+ pointIndex+' '+i);
+                        return !series.disabled;
+                    });*/
+                //                        lines.highlightPoint(i, pointIndex, true);
+                //if (tooltips) showTooltip(e, that.parentNode);
+                //console.log('clicked: '+ e.pointXValue+'  y:'+ e.mouseY+':'+e.mouseX);
+            });
             return chart;
         });
     });
 }
-function removeGraph(graph) {
+function removeGraph(graph, chartobject) {
+    if( chartobject != null) chartobject.tooltips(false);//chartobject.useInteractiveGuideLines(false);
     d3.selectAll("#" + graph + " svg > *").remove();
 }
 function setInteractiveMode() {
     console.log("setting interactive   ");
-    removeGraph('main');
+    //removeGraph('main');
+    mainchart.tooltips(false);
     if (mainfocus) {
         mainfocus = !mainfocus;
         drawmain(mainfocus, true, true);
     }
-    if (mainchart.useInteractiveGuideline() == true) {
-        console.log('interactive in true:   ' + mainchart.useInteractiveGuideline());
-        drawmain(mainfocus, false, true);
+    else if (mainchart.useInteractiveGuideline() == true) {
+        console.log('interactive is true:   ' + mainchart.useInteractiveGuideline());
+        drawmain(mainfocus, false, false);
     } else {
         console.log('interactive is false');
         drawmain(mainfocus, true, true);
@@ -79,8 +110,9 @@ function setInteractiveMode() {
 
 function setFocusMode() {
     console.log("setFocus Mode");
-    removeGraph('main');
+    //removeGraph('main');
     mainfocus = !mainfocus;
+
     drawmain(mainfocus, false, true);
 }
 
@@ -91,30 +123,31 @@ function NormaliseMode() {
 //TOP RIGHT CHART
 //Draw the top left visualisation
 function drawleftvis() {
-    drawUpperVis('leftvis');
+    drawUpperVis('leftvis','Inflation', 'Unemployment');
 }
 
 //Draw the top left visualisation
 function drawmiddlevis() {
-    drawUpperVis('middlevis');
+    drawUpperVis('middlevis','Inflation', 'Unemployment');
 }
 
 //Draw the top left visualisation
 function drawrightvis() {
-    drawUpperVis('rightvis');
+    drawUpperVis('rightvis','Inflation', 'Unemployment');
 }
 
-function drawUpperVis(visid,leftLabel,rightLabel) {
+function drawUpperVis(visid,leftLabel,bottomLabel) {
     nv.addGraph(function () {
         var chart = nv.models.lineChart();
-        chart.xAxis.tickFormat(d3.format('f'));
-        chart.yAxis.tickFormat(d3.format('f'));
-        chart.yAxis.tickValues([]).showMaxMin(true).axisLabel('Left').axisLabelDistance(-30);
-        chart.xAxis.tickValues([]).axisLabel('Bottom').axisLabelDistance(-10);
+        chart.xAxis.tickFormat(d3.format('f')).tickValues([]);
+        chart.yAxis.tickFormat(d3.format('f')).tickValues([]);
+        chart.yAxis.tickValues([]).showMaxMin(true);
+        if(leftLabel!=null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
+        if(bottomLabel!=null)chart.xAxis.axisLabel(bottomLabel).axisLabelDistance(-17);
         chart.xAxis.ticks(true);
 
-        chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
-        chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
+        //chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
+        //chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
         chart.tooltipContent(function (key, y, e, graph) {
             var content = '<h3 style="background-color: ';
             content += e.color + '">';
@@ -153,22 +186,5 @@ function sinAndCos() {
             key: "Cosine Wave",
             color: "#2ca02c"
         },
-        /*{
-         values: sin,
-         key: "Sine Wave",
-         color: "#ff7f0e"
-         },
-
-         {
-         values: rand,
-         key: "Random Points",
-         color: "#2222ff"
-         }
-         ,
-         {
-         values: rand2,
-         key: "Random Cosine",
-         color: "#667711"
-         }*/
     ];
 }

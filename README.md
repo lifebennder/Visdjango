@@ -1,10 +1,10 @@
 Visdjango
 =========
-Built by Luka Prelic
-An economic visualisation and teaching Web Application that illustrates the historic changes of UK's economic status.
+<h3>Built by Luka Prelic</h3>
+<p>An economic visualisation and teaching Web Application that illustrates the historic changes of UK's economic status.
 The Historic data is tied to abstract economic theory. This allows for economic students to make a clear picture between
-economic theory and real life application of that theory. A perspective that is frequently missing from economic teachings.
+economic theory and real life application of that theory. A perspective that is frequently missing from economic teachings.</p>
 
-Built using Pycharm IDE.
-This is a economic visualisation project with visualisations made using NVD3 Javascript library. NVD3 is built using D3.
-The web server is implemented using Django CMS.
+<h3>Built using Pycharm IDE.</h3>
+<p>This is a economic visualisation project with visualisations made using NVD3 Javascript library. NVD3 is built using D3.
+The web server is implemented using Django CMS.</p>
