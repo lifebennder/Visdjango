@@ -7,7 +7,7 @@ var mainfocus = false;
 window.onload = function (e) {
     //removeGraph('main',mainchart);
     nv.log('loaded');
-    drawmain(mainfocus, false, true);
+    drawmain(mainfocus, true, true);
     drawleftvis();
     drawmiddlevis();
     drawrightvis();
@@ -59,7 +59,7 @@ function drawmain(focus, interactive, tooltips) {
                 console.log('element: ');
                 //console.dir(e.point);
             });*/
-            chart.interactiveLayer.dispatch.on('elementMousemove.maininflation', function(e) {
+            if(chart.interactiveLayer != null)chart.interactiveLayer.dispatch.on('elementMousemove.maininflation', function(e) {
                 //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
                 //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
                 var inflationSeries;
@@ -101,7 +101,7 @@ function setInteractiveMode() {
     }
     else if (mainchart.useInteractiveGuideline() == true) {
         console.log('interactive is true:   ' + mainchart.useInteractiveGuideline());
-        drawmain(mainfocus, false, false);
+        drawmain(mainfocus, false, true);
     } else {
         console.log('interactive is false');
         drawmain(mainfocus, true, true);
