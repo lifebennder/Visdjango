@@ -2,15 +2,18 @@
 
 //main visualisation global variables.
 var mainchart = null;
-var maindata;
+var maindata = null;
 var mainfocus = false;
+
+var leftVis = null;
+var middleVis = null;
+var rightVis = null;
 window.onload = function (e) {
     //removeGraph('main',mainchart);
     nv.log('loaded');
     drawmain(mainfocus, true, true);
-    drawleftvis();
-    drawmiddlevis();
-    drawrightvis();
+    //jsonWait();
+
 };
 
 
@@ -19,9 +22,10 @@ function drawmain(focus, interactive, tooltips) {
         removeGraph('main',mainchart);
         nv.addGraph(function () {
             var chart;
+            var tickformat = '.2f';
             if (focus) {
                 chart = nv.models.lineWithFocusChart().margin({left: 60});
-                chart.y2Axis.tickFormat(d3.format('f'));
+                chart.y2Axis.tickFormat(d3.format(tickformat));
                 //chart.useInteractiveGuideline(interactive);
             } else {
                 chart = nv.models.lineChart().margin({left: 60});
@@ -36,7 +40,7 @@ function drawmain(focus, interactive, tooltips) {
             chart.xAxis
                 .tickFormat(d3.format('f'));
             chart.yAxis
-                .tickFormat(d3.format('f'));
+                .tickFormat(d3.format(tickformat));
             chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
             chart.y(function (d) {
@@ -47,6 +51,10 @@ function drawmain(focus, interactive, tooltips) {
                 return parseFloat(d.x)
             });
             chart.tooltips(tooltips);
+            chart.tooltipContent(function(key, x, y, e, graph) {
+            return '<h3>' + key + '</h3>' +
+                '<p>' +  y + ' in ' + x + '</p>'
+        });
             console.log('drawing main, interactive tooltip: ' + interactive + ' tooltip:' + tooltips);
             d3.select('#main svg')
                 .datum(data)
@@ -59,30 +67,30 @@ function drawmain(focus, interactive, tooltips) {
                 console.log('element: ');
                 //console.dir(e.point);
             });*/
-            if(chart.interactiveLayer != null)chart.interactiveLayer.dispatch.on('elementMousemove.maininflation', function(e) {
-                //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-                //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
-                var inflationSeries;
-                data.forEach(function(series, i){
-                    if(series.key.contains('Inflation')) inflationSeries=series.values;
+
+            /*Events Handlers*/
+            if(chart.interactiveLayer != null){
+                chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function(e) {
+                    if(leftVis!=null)leftVis.lines.clearHighlights();
+                    //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                    //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
+                    var inflationSeries;
+                    var unemploymentSeries;
+                    data.forEach(function(series, i){
+                        if(!series.key.indexOf('Inflation'))inflationSeries=series.values;
+                        if(!series.key.indexOf('Unemployment'))unemploymentSeries=series.values;
+                    });
+                    //console.log(Math.round(e.pointXValue)+'    |'+inflationSeries[100].y+'|');
+                    var inflation = inflationSeries[Math.round(e.pointXValue)-inflationSeries[0].x].y;
+                    var unemployment = unemploymentSeries[Math.round(e.pointXValue)-unemploymentSeries[0].x].y;
+                    //console.log('inflation: '+inflation+ ' unemployment: '+unemployment);
+                    if(leftVis!=null)leftVis.lines.highlightPoint(0,parseInt(unemployment),true);
                 });
-                //console.log('infla  '+inflationSeries[e.pointXValue]);
-                //console.log('x  '+ chart.lines);
-                //var x = chart.xAxis.tickFormat()(chart.lines.x()(e.point, e.pointIndex)),
-                //y = chart.yAxis.tickFormat()(chart.lines.y()(e.point, e.pointIndex));
-                //console.log(x+'  '+y);
-                 /*data
-                    .filter(function(series, i) {
-                        series.seriesIndex = i
-                         var pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-                         //('Inflation (CPI) %')
-                         console.log('series: '+ pointIndex+' '+i);
-                        return !series.disabled;
-                    });*/
-                //                        lines.highlightPoint(i, pointIndex, true);
-                //if (tooltips) showTooltip(e, that.parentNode);
-                //console.log('clicked: '+ e.pointXValue+'  y:'+ e.mouseY+':'+e.mouseX);
-            });
+                chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function(e) {
+                if(leftVis!=null)leftVis.lines.clearHighlights();
+                });
+            }
+            jsonWait();
             return chart;
         });
     });
@@ -123,29 +131,47 @@ function NormaliseMode() {
 //TOP RIGHT CHART
 //Draw the top left visualisation
 function drawleftvis() {
-    drawUpperVis('leftvis','Inflation', 'Unemployment');
+    //console.log(phillipsData());
+    drawUpperVis('leftvis','Inflation', 'Unemployment',phillipsData());
 }
 
 //Draw the top left visualisation
 function drawmiddlevis() {
-    drawUpperVis('middlevis','Inflation', 'Unemployment');
+    drawUpperVis('middlevis','Inflation', 'Unemployment',phillipsData());
 }
 
 //Draw the top left visualisation
 function drawrightvis() {
-    drawUpperVis('rightvis','Inflation', 'Unemployment');
+    drawUpperVis('rightvis','Inflation', 'Unemployment',phillipsData());
 }
 
-function drawUpperVis(visid,leftLabel,bottomLabel) {
+/*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
+function jsonWait(){
+    drawleftvis();
+    drawmiddlevis();
+    drawrightvis();
+}
+function drawUpperVis(visid,leftLabel,bottomLabel,data) {
     nv.addGraph(function () {
+        console.log('drawing '+visid);
         var chart = nv.models.lineChart();
         chart.xAxis.tickFormat(d3.format('f')).tickValues([]);
         chart.yAxis.tickFormat(d3.format('f')).tickValues([]);
         chart.yAxis.tickValues([]).showMaxMin(true);
+        chart.showLegend(false);
+        chart.y(function (d) {
+            if (d.y == "") return null;
+            return parseFloat(d.y)
+        });
+        chart.x(function (d) {
+            return parseFloat(d.x)
+        });
+        //chart.interpolate('linear-closed');
+        chart.pointShape('cross');
         if(leftLabel!=null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
         if(bottomLabel!=null)chart.xAxis.axisLabel(bottomLabel).axisLabelDistance(-17);
-        chart.xAxis.ticks(true);
-
+        //chart.xAxis.ticks(true);
+        chart.pointActive(function (d) {  return d.notActive;});
         //chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
         //chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
         chart.tooltipContent(function (key, y, e, graph) {
@@ -155,36 +181,55 @@ function drawUpperVis(visid,leftLabel,bottomLabel) {
             return content;
         });
         chart.margin({"left": 35, "right": 30, "top": 10, "bottom": 30});
-        chart.options({
+        /*chart.options({
             useInteractiveGuideLines: true
             , showLegend: false
             //,showYAxis : false
             //,showXAxis : false
-        });
-        d3.select('#' + visid + ' svg').datum(sinAndCos()).call(chart);
+        });*/
+        d3.select('#' + visid + ' svg').datum(data).call(chart);
         nv.utils.windowResize(chart.update);
+
+        if(visid=='leftvis')leftVis = chart;
+        else if (visid=='middlevis')middleVis = chart;
+        else if (visid=='rightvis')rightVis = chart;
     });
 }
-function sinAndCos() {
-    var sin = [],
+function phillipsData() {
+    var historicPhillipsCurve = [],
         phillips = [],
-        rand = [],
-        rand2 = []
-        ;
+        inflationSeries,
+        unemploymentSeries;
 
-    for (var i = 0; i < 50; i++) {
-        //sin.push({x: i, y: i % 10 == 5 ? null : Math.sin(i / 10)}); //the nulls are to show how defined works
+    //console.log(maindata);
+    if(maindata ==null) return;
+    console.log('drawing scatter phillips');
+    maindata.forEach(function (series, i) {
+
+        if (!series.key.indexOf('Inflation'))inflationSeries = series.values;
+        if (!series.key.indexOf('Unemployment'))unemploymentSeries = series.values;
+    });
+    for(var i = 0;i<unemploymentSeries.length; i++){
+        var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
+        //console.log({x:unemploymentVal, y:inflationVal});
+       if(unemploymentVal!= '' && inflationVal!='') historicPhillipsCurve.push({x:unemploymentVal, y:inflationVal});
+    }
+
+    for (var i = 1; i < 20; i++) {
+        //scatter.push({x: i, y: i % 10 == 5 ? null : Math.sin(i / 10)}); //the nulls are to show how defined works
         phillips.push({x: i, y: (1 / i) > 100 ? null : (1 / i)});
-        //rand.push({x: i, y: Math.random() / 10});
-//rand2.push({x: i, y: Math.cos(i/10) + Math.random() / 10 })
     }
     return [
-
 //area: true,
         {
             values: phillips,
-            key: "Cosine Wave",
-            color: "#2ca02c"
+            key: "Theoretical Curve"
+
+        },
+        {
+            values: historicPhillipsCurve,
+            key: "Historic Values",
+            color: "#2ca02c", shape: 'circle'
         },
     ];
 }
