@@ -4,6 +4,9 @@
 var mainchart = null;
 var maindata;
 var mainfocus = false;
+var leftVis = null;
+var middleVis = null;
+var rightVis = null;
 window.onload = function (e) {
     //removeGraph('main',mainchart);
     nv.log('loaded');
@@ -19,9 +22,10 @@ function drawmain(focus, interactive, tooltips) {
         removeGraph('main',mainchart);
         nv.addGraph(function () {
             var chart;
+            var tickformat = '.2f';
             if (focus) {
                 chart = nv.models.lineWithFocusChart().margin({left: 60});
-                chart.y2Axis.tickFormat(d3.format('f'));
+                chart.y2Axis.tickFormat(d3.format(tickformat));
                 //chart.useInteractiveGuideline(interactive);
             } else {
                 chart = nv.models.lineChart().margin({left: 60});
@@ -36,7 +40,7 @@ function drawmain(focus, interactive, tooltips) {
             chart.xAxis
                 .tickFormat(d3.format('f'));
             chart.yAxis
-                .tickFormat(d3.format('f'));
+                .tickFormat(d3.format(tickformat));
             chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
             chart.y(function (d) {
@@ -47,6 +51,10 @@ function drawmain(focus, interactive, tooltips) {
                 return parseFloat(d.x)
             });
             chart.tooltips(tooltips);
+            chart.tooltipContent(function(key, x, y, e, graph) {
+            return '<h3>' + key + '</h3>' +
+                '<p>' +  y + ' in ' + x + '</p>'
+        });
             console.log('drawing main, interactive tooltip: ' + interactive + ' tooltip:' + tooltips);
             d3.select('#main svg')
                 .datum(data)
@@ -59,30 +67,29 @@ function drawmain(focus, interactive, tooltips) {
                 console.log('element: ');
                 //console.dir(e.point);
             });*/
-            if(chart.interactiveLayer != null)chart.interactiveLayer.dispatch.on('elementMousemove.maininflation', function(e) {
-                //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-                //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
-                var inflationSeries;
-                data.forEach(function(series, i){
-                    if(series.key.contains('Inflation')) inflationSeries=series.values;
+
+            /*Events Handlers*/
+            if(chart.interactiveLayer != null){
+                chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function(e) {
+                    leftVis.lines.clearHighlights();
+                    //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                    //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
+                    var inflationSeries;
+                    var unemploymentSeries;
+                    data.forEach(function(series, i){
+                        if(!series.key.indexOf('Inflation'))inflationSeries=series.values;
+                        if(!series.key.indexOf('Unemployment'))unemploymentSeries=series.values;
+                    });
+                    //console.log(Math.round(e.pointXValue)+'    |'+inflationSeries[100].y+'|');
+                    var inflation = inflationSeries[Math.round(e.pointXValue)-inflationSeries[0].x].y;
+                    var unemployment = unemploymentSeries[Math.round(e.pointXValue)-unemploymentSeries[0].x].y;
+                    //console.log('inflation: '+inflation+ ' unemployment: '+unemployment);
+                    leftVis.lines.highlightPoint(0,parseInt(unemployment),true);
                 });
-                //console.log('infla  '+inflationSeries[e.pointXValue]);
-                //console.log('x  '+ chart.lines);
-                //var x = chart.xAxis.tickFormat()(chart.lines.x()(e.point, e.pointIndex)),
-                //y = chart.yAxis.tickFormat()(chart.lines.y()(e.point, e.pointIndex));
-                //console.log(x+'  '+y);
-                 /*data
-                    .filter(function(series, i) {
-                        series.seriesIndex = i
-                         var pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-                         //('Inflation (CPI) %')
-                         console.log('series: '+ pointIndex+' '+i);
-                        return !series.disabled;
-                    });*/
-                //                        lines.highlightPoint(i, pointIndex, true);
-                //if (tooltips) showTooltip(e, that.parentNode);
-                //console.log('clicked: '+ e.pointXValue+'  y:'+ e.mouseY+':'+e.mouseX);
-            });
+                chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function(e) {
+                leftVis.lines.clearHighlights();
+                });
+            }
             return chart;
         });
     });
@@ -154,6 +161,7 @@ function drawUpperVis(visid,leftLabel,bottomLabel) {
             content += '</h3><p>' + y + '</p>';
             return content;
         });
+        chart.lines.highlightPoint(10,false);
         chart.margin({"left": 35, "right": 30, "top": 10, "bottom": 30});
         chart.options({
             useInteractiveGuideLines: true
@@ -163,6 +171,9 @@ function drawUpperVis(visid,leftLabel,bottomLabel) {
         });
         d3.select('#' + visid + ' svg').datum(sinAndCos()).call(chart);
         nv.utils.windowResize(chart.update);
+        if(visid=='leftvis')leftVis = chart;
+        else if (visid=='middlevis')middleVis = chart;
+        else if (visid=='rightvis')rightVis = chart;
     });
 }
 function sinAndCos() {
