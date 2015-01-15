@@ -9,7 +9,7 @@ var leftVis = null;
 var middleVis = null;
 var rightVis = null;
 window.onload = function (e) {
-    //removeGraph('main',mainchart);
+    //removeGraph('main',mainVis);
     nv.log('loaded');
     drawmain(mainfocus, true, true);
     //jsonWait();

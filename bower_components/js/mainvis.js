@@ -98,12 +98,12 @@ function setInteractiveMode() {
 
     if(mainchart.useInteractiveGuideline()==true){
         nv.log('interactive in true:   '+mainchart.useInteractiveGuideline());
-        //mainchart.useInteractiveGuideline(false).tooltips(false);
-        //mainchart.useInteractiveGuideline(false).tooltips(false);
+        //mainVis.useInteractiveGuideline(false).tooltips(false);
+        //mainVis.useInteractiveGuideline(false).tooltips(false);
         drawmain(mainfocus,false,true);
     } else {
         nv.log('interactive is false');
-        //mainchart.useInteractiveGuideline(false).tooltips(false);
+        //mainVis.useInteractiveGuideline(false).tooltips(false);
         drawmain(mainfocus,true,true);
     }
 
@@ -114,8 +114,8 @@ function setInteractiveMode() {
     /*d3.selectAll('#main svg')
          .datum(maindata)
          .transition().duration(100)
-         .call(mainchart.tooltips(true));
-        //mainchart.useInteractiveGuideline(false).update;*/
+         .call(mainVis.tooltips(true));
+        //mainVis.useInteractiveGuideline(false).update;*/
     //});
 
 }

@@ -1,25 +1,29 @@
-//$(function() {
-
 //main visualisation global variables.
-var mainchart = null;
+var mainVis = null;
 var maindata = null;
 var mainfocus = false;
+
+//data indexes to speedup data retrieval. Otherwise its too laggy
+var inflationIndex;
+var unemploymentIndex;
+var inflationValIndex;
+var unemploymentValIndex;
 
 var leftVis = null;
 var middleVis = null;
 var rightVis = null;
+
 window.onload = function (e) {
-    //removeGraph('main',mainchart);
+    //removeGraph('main',mainVis);
     nv.log('loaded');
     drawmain(mainfocus, true, true);
     //jsonWait();
 
 };
 
-
 function drawmain(focus, interactive, tooltips) {
     d3.json("/vis/main_data/", function (error, data) {
-        removeGraph('main',mainchart);
+        removeGraph('main',mainVis);
         nv.addGraph(function () {
             var chart;
             var tickformat = '.2f';
@@ -61,7 +65,7 @@ function drawmain(focus, interactive, tooltips) {
                 .transition()//.duration(300)
                 .call(chart);
             nv.utils.windowResize(chart.update);
-            mainchart = chart;
+            mainVis = chart;
             maindata = data;
             /*chart.dispatch.on('elementMousemove', function(e){
                 console.log('element: ');
@@ -85,6 +89,7 @@ function drawmain(focus, interactive, tooltips) {
                     var unemployment = unemploymentSeries[Math.round(e.pointXValue)-unemploymentSeries[0].x].y;
                     //console.log('inflation: '+inflation+ ' unemployment: '+unemployment);
                     if(leftVis!=null)leftVis.lines.highlightPoint(0,parseInt(unemployment),true);
+                    if(leftVis!=null)leftVis.lines.highlightPoint(1,parseInt(unemployment),true);
                 });
                 chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function(e) {
                 if(leftVis!=null)leftVis.lines.clearHighlights();
@@ -102,13 +107,13 @@ function removeGraph(graph, chartobject) {
 function setInteractiveMode() {
     console.log("setting interactive   ");
     //removeGraph('main');
-    mainchart.tooltips(false);
+    mainVis.tooltips(false);
     if (mainfocus) {
         mainfocus = !mainfocus;
         drawmain(mainfocus, true, true);
     }
-    else if (mainchart.useInteractiveGuideline() == true) {
-        console.log('interactive is true:   ' + mainchart.useInteractiveGuideline());
+    else if (mainVis.useInteractiveGuideline() == true) {
+        console.log('interactive is true:   ' + mainVis.useInteractiveGuideline());
         drawmain(mainfocus, false, true);
     } else {
         console.log('interactive is false');
@@ -167,32 +172,46 @@ function drawUpperVis(visid,leftLabel,bottomLabel,data) {
             return parseFloat(d.x)
         });
         //chart.interpolate('linear-closed');
-        chart.pointShape('cross');
+        //chart.pointShape('cross');
         if(leftLabel!=null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
         if(bottomLabel!=null)chart.xAxis.axisLabel(bottomLabel).axisLabelDistance(-17);
+
         //chart.xAxis.ticks(true);
-        chart.pointActive(function (d) {  return d.notActive;});
+        //chart.pointActive(function (d) {  return d.notActive;});
         //chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
         //chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
-        chart.tooltipContent(function (key, y, e, graph) {
-            var content = '<h3 style="background-color: ';
-            content += e.color + '">';
-            content += '</h3><p>' + y + '</p>';
+        chart.tooltipContent(function (key, x,y, e, graph) {
+            var RGB = e.series.color;
+            var alpha='0.35';
+            var backgroundcolor = 'rgba('+parseInt(RGB.substring(1,3),16)+','+
+                parseInt(RGB.substring(3,5),16)+','+
+                parseInt(RGB.substring(5,7),16)+','+alpha+')';
+            var content = '<div class="toptooltiptitle" style="background-color: ';
+            content += backgroundcolor + '">';
+            content += key+'</div><p>'+leftLabel+': ' + y+' '+bottomLabel+': '+ x + '</p>';
             return content;
         });
         chart.margin({"left": 35, "right": 30, "top": 10, "bottom": 30});
-        /*chart.options({
-            useInteractiveGuideLines: true
-            , showLegend: false
-            //,showYAxis : false
-            //,showXAxis : false
-        });*/
         d3.select('#' + visid + ' svg').datum(data).call(chart);
         nv.utils.windowResize(chart.update);
 
         if(visid=='leftvis')leftVis = chart;
         else if (visid=='middlevis')middleVis = chart;
         else if (visid=='rightvis')rightVis = chart;
+
+        /*Event Handlers*/
+        chart.dispatch.on('tooltipShow.upper', function (e) {
+            console.log(e);
+            var inflationIndex;
+            var unemploymentIndex;
+            maindata.forEach(function (series, i) {
+                if (!series.key.indexOf(leftLabel))inflationIndex = i;
+                if (!series.key.indexOf(bottomLabel))unemploymentIndex = i;
+            });
+            console.log(inflationIndex+'  '+unemploymentIndex+'  '+ e.point.x+'  '+ e.point.y);
+            //if(mainVis!=null)mainVis.lines.highlightPoint(inflationIndex, e.point.y,true);
+            //if(mainVis!=null)mainVis.lines.highlightPoint(unemploymentIndex, e.point.x,true);
+        });
     });
 }
 function phillipsData() {
@@ -200,36 +219,32 @@ function phillipsData() {
         phillips = [],
         inflationSeries,
         unemploymentSeries;
-
-    //console.log(maindata);
     if(maindata ==null) return;
     console.log('drawing scatter phillips');
     maindata.forEach(function (series, i) {
-
         if (!series.key.indexOf('Inflation'))inflationSeries = series.values;
         if (!series.key.indexOf('Unemployment'))unemploymentSeries = series.values;
     });
     for(var i = 0;i<unemploymentSeries.length; i++){
         var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
         //console.log({x:unemploymentVal, y:inflationVal});
-       if(unemploymentVal!= '' && inflationVal!='') historicPhillipsCurve.push({x:unemploymentVal, y:inflationVal});
+       if(unemploymentVal!= '' && inflationVal!='') historicPhillipsCurve.push({x:unemploymentVal, y:inflationVal, shape: 'circle'});
     }
 
     for (var i = 1; i < 20; i++) {
-        //scatter.push({x: i, y: i % 10 == 5 ? null : Math.sin(i / 10)}); //the nulls are to show how defined works
         phillips.push({x: i, y: (1 / i) > 100 ? null : (1 / i)});
     }
     return [
 //area: true,
         {
             values: phillips,
-            key: "Theoretical Curve"
-
+            key: "Theoretical Curve",
+            color: "#0000CD"
         },
         {
             values: historicPhillipsCurve,
             key: "Historic Values",
-            color: "#2ca02c", shape: 'circle'
+            color: "#2ca02c"
         },
     ];
 }
