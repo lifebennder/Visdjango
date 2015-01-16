@@ -2,12 +2,13 @@
 var mainVis = null;
 var maindata = null;
 var mainfocus = false;
+var tickformat = '.2f';
 
 //data indexes to speedup data retrieval. Otherwise its too laggy
 var inflationIndex;
 var unemploymentIndex;
-var inflationValIndex;
-var unemploymentValIndex;
+var inflationValIndex={};
+var unemploymentValIndex={};
 
 var leftVis = null;
 var middleVis = null;
@@ -26,7 +27,6 @@ function drawmain(focus, interactive, tooltips) {
         removeGraph('main',mainVis);
         nv.addGraph(function () {
             var chart;
-            var tickformat = '.2f';
             if (focus) {
                 chart = nv.models.lineWithFocusChart().margin({left: 60});
                 chart.y2Axis.tickFormat(d3.format(tickformat));
@@ -41,14 +41,16 @@ function drawmain(focus, interactive, tooltips) {
             //chart.width(parseInt(d3.select('#main').style('width')));
             //chart.height(parseInt(d3.select('#main').style('height')));
             chart.xAxis.axisLabel('Years');
-            chart.xAxis
-                .tickFormat(d3.format('f'));
-            chart.yAxis
-                .tickFormat(d3.format(tickformat));
+            chart.xAxis.tickFormat(d3.format('f'));
+            chart.yAxis.tickFormat(d3.format(tickformat));
             chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
+
+            getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
             chart.y(function (d) {
                 if(d.y=="") return null;
+                if(d.series = inflationIndex) inflationValIndex[d3.format(tickformat)(d.y)] = d.x;
+                if(d.series = unemploymentIndex) unemploymentValIndex[d3.format(tickformat)(d.y)] = d.x;
                 return parseFloat(d.y)
             });
             chart.x(function (d) {
@@ -71,7 +73,7 @@ function drawmain(focus, interactive, tooltips) {
                 console.log('element: ');
                 //console.dir(e.point);
             });*/
-
+            console.log(inflationValIndex);
             /*Events Handlers*/
             if(chart.interactiveLayer != null){
                 chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function(e) {
@@ -80,10 +82,12 @@ function drawmain(focus, interactive, tooltips) {
                     //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
                     var inflationSeries;
                     var unemploymentSeries;
-                    data.forEach(function(series, i){
+                    /*data.forEach(function(series, i){
                         if(!series.key.indexOf('Inflation'))inflationSeries=series.values;
                         if(!series.key.indexOf('Unemployment'))unemploymentSeries=series.values;
-                    });
+                    });*/
+                    inflationSeries=data[inflationIndex].values;
+                    unemploymentSeries=data[unemploymentIndex].values;
                     //console.log(Math.round(e.pointXValue)+'    |'+inflationSeries[100].y+'|');
                     var inflation = inflationSeries[Math.round(e.pointXValue)-inflationSeries[0].x].y;
                     var unemployment = unemploymentSeries[Math.round(e.pointXValue)-unemploymentSeries[0].x].y;
@@ -99,6 +103,12 @@ function drawmain(focus, interactive, tooltips) {
             return chart;
         });
     });
+}
+function getindexes(data){
+                data.forEach(function (series, i) {
+                if (!series.key.indexOf('Inflation'))inflationIndex = i;
+                if (!series.key.indexOf('Unemployment'))unemploymentIndex = i;
+            });
 }
 function removeGraph(graph, chartobject) {
     if( chartobject != null) chartobject.tooltips(false);//chartobject.useInteractiveGuideLines(false);
@@ -137,7 +147,7 @@ function NormaliseMode() {
 //Draw the top left visualisation
 function drawleftvis() {
     //console.log(phillipsData());
-    drawUpperVis('leftvis','Inflation', 'Unemployment',phillipsData());
+    drawUpperVis('leftvis','Inflation %', 'Unemployment %',phillipsData());
 }
 
 //Draw the top left visualisation
@@ -160,8 +170,8 @@ function drawUpperVis(visid,leftLabel,bottomLabel,data) {
     nv.addGraph(function () {
         console.log('drawing '+visid);
         var chart = nv.models.lineChart();
-        chart.xAxis.tickFormat(d3.format('f')).tickValues([]);
-        chart.yAxis.tickFormat(d3.format('f')).tickValues([]);
+        chart.xAxis.tickFormat(d3.format(tickformat)).tickValues([]);
+        chart.yAxis.tickFormat(d3.format(tickformat)).tickValues([]);
         chart.yAxis.tickValues([]).showMaxMin(true);
         chart.showLegend(false);
         chart.y(function (d) {
@@ -188,7 +198,7 @@ function drawUpperVis(visid,leftLabel,bottomLabel,data) {
                 parseInt(RGB.substring(5,7),16)+','+alpha+')';
             var content = '<div class="toptooltiptitle" style="background-color: ';
             content += backgroundcolor + '">';
-            content += key+'</div><p>'+leftLabel+': ' + y+' '+bottomLabel+': '+ x + '</p>';
+            content += key+'</div><p>'+leftLabel+': ' + y+',<br> '+bottomLabel+': '+ x + '</p>';
             return content;
         });
         chart.margin({"left": 35, "right": 30, "top": 10, "bottom": 30});
@@ -201,19 +211,29 @@ function drawUpperVis(visid,leftLabel,bottomLabel,data) {
 
         /*Event Handlers*/
         chart.dispatch.on('tooltipShow.upper', function (e) {
-            console.log(e);
+            var x = (d3.format(tickformat)(e.point.x)), y = (d3.format(tickformat)(e.point.y)),
+                mainMinVal = maindata[0].values[0].x;
             var inflationIndex;
             var unemploymentIndex;
-            maindata.forEach(function (series, i) {
-                if (!series.key.indexOf(leftLabel))inflationIndex = i;
-                if (!series.key.indexOf(bottomLabel))unemploymentIndex = i;
+            maindata.filter(function(series, i) {
+                        series.seriesIndex = i;
+                        return !series.disabled;
+                    }).forEach(function (series, i) {
+                if (!series.key.indexOf(leftLabel.split(" ")[0]))inflationIndex = i;
+                if (!series.key.indexOf(bottomLabel.split(" ")[0]))unemploymentIndex = i;
             });
-            console.log(inflationIndex+'  '+unemploymentIndex+'  '+ e.point.x+'  '+ e.point.y);
-            //if(mainVis!=null)mainVis.lines.highlightPoint(inflationIndex, e.point.y,true);
-            //if(mainVis!=null)mainVis.lines.highlightPoint(unemploymentIndex, e.point.x,true);
+            //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+inflationValIndex[y]+' xindex: '+ getXIndex(inflationValIndex[y],maindata[0].values));
+            if(mainVis!=null)mainVis.lines.highlightPoint(inflationIndex, inflationValIndex[y]-mainMinVal,true);
+            if(mainVis!=null)mainVis.lines.highlightPoint(unemploymentIndex, unemploymentValIndex[x]-mainMinVal,true);
+        });
+        chart.dispatch.on('tooltipHide.upper', function (e) {
+            mainVis.clearHighlights();
         });
     });
 }
+/*function getXIndex(Xvalue,series){
+    return Xvalue - series[0].x;
+}*/
 function phillipsData() {
     var historicPhillipsCurve = [],
         phillips = [],

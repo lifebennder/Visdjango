@@ -57,6 +57,21 @@ svg {
     text-align: center;
     margin: 5px 0 0px 0;
 }
+.toptooltiptitle {
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    font-size: 1.17em;
+}
 .nomargin {
     margin: 0px 0 0px 0;
+}
+#leftvis g.nv-series-1 path.nv-line
+{
+    stroke-opacity: 0;
+}
+#leftvis g.nv-scatter g.nv-series-1 path.nv-point
+{
+    fill-opacity: 0.4;
+    stroke-opacity: 0;
 }
