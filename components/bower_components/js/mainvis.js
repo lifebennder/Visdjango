@@ -145,26 +145,26 @@ function NormaliseMode() {
 
 //TOP RIGHT CHART
 //Draw the top left visualisation
-function drawleftvis() {
+function drawleftvis(leftAxis, bottomAxis) {
     //console.log(phillipsData());
-    drawUpperVis('leftvis','Inflation %', 'Unemployment %',phillipsData());
+    drawUpperVis('leftvis',leftAxis, bottomAxis, phillipsData(leftAxis, bottomAxis));
 }
 
 //Draw the top left visualisation
-function drawmiddlevis() {
-    drawUpperVis('middlevis','Inflation', 'Unemployment',phillipsData());
+function drawmiddlevis(leftAxis, bottomAxis) {
+    drawUpperVis('middlevis',leftAxis, bottomAxis, phillipsData(leftAxis, bottomAxis));
 }
 
 //Draw the top left visualisation
-function drawrightvis() {
-    drawUpperVis('rightvis','Inflation', 'Unemployment',phillipsData());
+function drawrightvis(leftAxis, bottomAxis) {
+    drawUpperVis('rightvis',leftAxis, bottomAxis, phillipsData(leftAxis,bottomAxis));
 }
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
 function jsonWait(){
-    drawleftvis();
-    drawmiddlevis();
-    drawrightvis();
+    drawleftvis('Inflation %','Unemployment %');
+    //drawmiddlevis('Government Revenue','Tax Rate %');
+    drawrightvis('Inflation %','Unemployment %');
 }
 function drawUpperVis(visid,leftLabel,bottomLabel,data) {
     nv.addGraph(function () {
@@ -231,19 +231,17 @@ function drawUpperVis(visid,leftLabel,bottomLabel,data) {
         });
     });
 }
-/*function getXIndex(Xvalue,series){
-    return Xvalue - series[0].x;
-}*/
-function phillipsData() {
+
+function phillipsData(leftAxis, bottomAxis) {
     var historicPhillipsCurve = [],
         phillips = [],
         inflationSeries,
         unemploymentSeries;
     if(maindata ==null) return;
-    console.log('drawing scatter phillips');
+    //console.log('drawing scatter phillips');
     maindata.forEach(function (series, i) {
-        if (!series.key.indexOf('Inflation'))inflationSeries = series.values;
-        if (!series.key.indexOf('Unemployment'))unemploymentSeries = series.values;
+        if (!series.key.indexOf(leftAxis.split(" ")[0]))inflationSeries = series.values;
+        if (!series.key.indexOf(bottomAxis.split(" ")[0]))unemploymentSeries = series.values;
     });
     for(var i = 0;i<unemploymentSeries.length; i++){
         var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
