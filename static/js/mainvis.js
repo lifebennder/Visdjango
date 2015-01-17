@@ -165,13 +165,13 @@ function drawleftvis(leftAxis, bottomAxis) {
 //Draw the top left visualisation
 function drawmiddlevis(leftAxis, bottomAxis) {
     middleVisData = phillipsData(leftAxis, bottomAxis);
-    drawUpperVis('middlevis', leftAxis, bottomAxis, phillipsData(leftAxis, bottomAxis));
+    drawUpperVis('middlevis', leftAxis, bottomAxis, middleVisData);
 }
 
 //Draw the top left visualisation
 function drawrightvis(leftAxis, bottomAxis) {
     rightVisData = phillipsData(leftAxis, bottomAxis);
-    drawUpperVis('rightvis', leftAxis, bottomAxis, phillipsData(leftAxis, bottomAxis));
+    drawUpperVis('rightvis', leftAxis, bottomAxis, rightVisData);
 }
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
@@ -273,7 +273,7 @@ function phillipsData(leftAxis, bottomAxis) {
 
     for (var i = 1; i < 25; i++) {
         var y = Math.round(100* ((1 / (i))*30-5) )/100;
-        console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
         phillips.push({x: i, y: y == 0 ? 0.01 : y});
     }
     return [
