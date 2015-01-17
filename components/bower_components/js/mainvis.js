@@ -158,26 +158,26 @@ function NormaliseMode() {
 //TOP RIGHT CHART
 //Draw the top left visualisation
 function drawleftvis(leftAxis, bottomAxis) {
-    leftVisData = upperVisData(leftAxis, bottomAxis);
+    leftVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve());
     drawUpperVis('leftvis', leftAxis, bottomAxis, leftVisData);
 }
 
 //Draw the top left visualisation
 function drawmiddlevis(leftAxis, bottomAxis) {
-    middleVisData = upperVisData(leftAxis, bottomAxis);
+    middleVisData = upperVisData(leftAxis, bottomAxis, lafferCurve());
     drawUpperVis('middlevis', leftAxis, bottomAxis, middleVisData);
 }
 
 //Draw the top left visualisation
 function drawrightvis(leftAxis, bottomAxis) {
-    rightVisData = upperVisData(leftAxis, bottomAxis);
+    rightVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve());
     drawUpperVis('rightvis', leftAxis, bottomAxis, rightVisData);
 }
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
 function jsonWait() {
     drawleftvis('Inflation %', 'Unemployment %');
-    drawmiddlevis('Tax Revenue','Income Tax Rate %');
+    drawmiddlevis('Tax Revenue %', 'Income Tax Rate %');
     drawrightvis('Inflation %', 'Unemployment %');
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
@@ -246,9 +246,8 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     });
 }
 
-function upperVisData(leftAxis, bottomAxis) {
-    var historicPhillipsCurve = [], unemploymentStartIndex,
-        phillips = [],
+function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
+    var historicPhillipsCurve = [],// unemploymentStartIndex,
         inflationSeries,
         unemploymentSeries;
     if (maindata == null) return;
@@ -270,16 +269,10 @@ function upperVisData(leftAxis, bottomAxis) {
             historicPhillipsCurve.push({x: unemploymentVal, y: inflationVal, shape: 'circle'});
         }
     }
-
-    for (var i = 1; i < 25; i++) {
-        var y = Math.round(100* ((1 / (i))*30-5) )/100;
-        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
-        phillips.push({x: i, y: y == 0 ? 0.01 : y});
-    }
     return [
 //area: true,
         {
-            values: phillips,
+            values: theoreticalCurve,
             key: "Theoretical Curve",
             color: "#0000CD"
         },
@@ -290,4 +283,27 @@ function upperVisData(leftAxis, bottomAxis) {
             startXIndex: unemploymentStartIndex
         },
     ];
+}
+
+function phillipsCurve() {
+    var curve = [];
+    for (var i = 1; i < 25; i++) {
+        var y = Math.round(100 * ((1 / (i)) * 30 - 5)) / 100;
+        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+        curve.push({x: i, y: y == 0 ? 0.01 : y});
+
+    }
+    return curve;
+}
+
+function lafferCurve() {
+    var curve = [];
+    for (var i = 0; i <101; i++) {
+        var iShift = i-50;
+        var y = (-Math.pow((iShift)/10,2)+40);
+        y = Math.round(100 * y) / 100; //round the value
+        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+        curve.push({x: i, y: y< 0 ? 0 : y});
+    }
+    return curve;
 }
