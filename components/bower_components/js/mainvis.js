@@ -257,7 +257,6 @@ function phillipsData(leftAxis, bottomAxis) {
         if (!series.key.indexOf(leftAxis.split(" ")[0]))inflationSeries = series.values;
         if (!series.key.indexOf(bottomAxis.split(" ")[0]))unemploymentSeries = series.values;
     });
-    console.log(unemploymentSeries);
     var first = false;
     for (var i = 0; i < unemploymentSeries.length; i++) {
 
@@ -272,8 +271,10 @@ function phillipsData(leftAxis, bottomAxis) {
         }
     }
 
-    for (var i = 1; i < 20; i++) {
-        phillips.push({x: i, y: (1 / i) > 100 ? null : (1 / i)});
+    for (var i = 1; i < 25; i++) {
+        var y = Math.round(100* ((1 / (i))*30-5) )/100;
+        console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+        phillips.push({x: i, y: y == 0 ? 0.01 : y});
     }
     return [
 //area: true,
