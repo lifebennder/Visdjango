@@ -46,7 +46,7 @@ function drawmain(focus, interactive, tooltips) {
             chart.xAxis.axisLabel('Years');
             chart.xAxis.tickFormat(d3.format('f'));
             chart.yAxis.tickFormat(d3.format(tickformat));
-            chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
+            //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
 
             getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
@@ -82,6 +82,8 @@ function drawmain(focus, interactive, tooltips) {
                 chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function (e) {
                     if (leftVis != null) {
                         leftVis.lines.clearHighlights();
+                        middleVis.lines.clearHighlights();
+                        rightVis.lines.clearHighlights();
                         //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
                         //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
                         //var lastXVal = parseInt(data[0].values[data[0].values.length - 1].x);
@@ -178,7 +180,7 @@ function drawmiddlevis(leftAxis, bottomAxis) {
 
 //Draw the top left visualisation
 function drawrightvis(leftAxis, bottomAxis) {
-    rightVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve());
+    rightVisData = upperVisData(leftAxis, bottomAxis, ISLMCurve());
     drawUpperVis('rightvis', leftAxis, bottomAxis, rightVisData);
 }
 
@@ -305,6 +307,18 @@ function phillipsCurve() {
 }
 
 function lafferCurve() {
+    var curve = [];
+    for (var i = 0; i <101; i++) {
+        var iShift = i-50;
+        var y = (-Math.pow((iShift)/10,2)+40);
+        y = Math.round(100 * y) / 100; //round the value
+        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+        curve.push({x: i, y: y< 0 ? 0 : y});
+    }
+    return curve;
+}
+
+function ISLMCurve() {
     var curve = [];
     for (var i = 0; i <101; i++) {
         var iShift = i-50;
