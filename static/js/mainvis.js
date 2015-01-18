@@ -80,7 +80,7 @@ function drawmain(focus, interactive, tooltips) {
             /*Events Handlers*/
             if (chart.interactiveLayer != null) {
                 chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function (e) {
-                    if (leftVis != null) {
+                    if (leftVis != null && middleVis != null && rightVis != null) {
                         leftVis.lines.clearHighlights();
                         middleVis.lines.clearHighlights();
                         rightVis.lines.clearHighlights();
@@ -101,9 +101,9 @@ function drawmain(focus, interactive, tooltips) {
                         //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
                         //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
                         //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
-                        var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[1].startXIndex);
-                        var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[1].startXIndex);
-                        var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[1].startXIndex);
+                        var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[0].startXIndex);
+                        var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[0].startXIndex);
+                        var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[0].startXIndex);
                         //console.log(e.pointXValue+' '+ (unemploymentSeries[0].x+leftVisData[1].values.length));
                         //console.log(' pointIndex: '+pointIndex);
                         leftVis.lines.highlightPoint(0, leftPointIndex, true);
@@ -188,7 +188,7 @@ function drawrightvis(leftAxis, bottomAxis) {
 function drawUpperVisualisations() {
     drawleftvis('Inflation (CPI) %', 'Unemployment %');
     drawmiddlevis('Tax Revenue, GDP %', 'Income Tax Rate, avg %');
-    drawrightvis('Interest Rate %', 'Real GDP, billions 2008 £');
+    drawrightvis('Interest Rate %', 'Real GDP, billions £');
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
@@ -245,8 +245,8 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             }).forEach(function (series, i) {
                 //if (!series.key.indexOf(leftLabel.split(" ")[0]))inflationIndex = i;
                 //if (!series.key.indexOf(bottomLabel.split(" ")[0]))unemploymentIndex = i;
-                if (series.key== leftLabel)inflationIndex = i;
-                if (series.key== bottomLabel)unemploymentIndex = i;
+                if (series.key == leftLabel)inflationIndex = i;
+                if (series.key == bottomLabel)unemploymentIndex = i;
             });
             //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+inflationValIndex[y]+' xindex: '+ getXIndex(inflationValIndex[y],maindata[0].values));
             if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, inflationValIndex[y] - mainMinVal, true);
@@ -265,8 +265,8 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     if (maindata == null) return;
     //console.log('drawing scatter phillips');
     maindata.forEach(function (series, i) {
-        if (series.key== leftAxis)inflationSeries = series.values;
-        if (series.key== bottomAxis)unemploymentSeries = series.values;
+        if (series.key == leftAxis)inflationSeries = series.values;
+        if (series.key == bottomAxis)unemploymentSeries = series.values;
     });
     var first = false;
     for (var i = 0; i < unemploymentSeries.length; i++) {
@@ -281,20 +281,20 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
             historicPhillipsCurve.push({x: unemploymentVal, y: inflationVal, shape: 'circle'});
         }
     }
-    return [
+    var data = [
 //area: true,
-        {
-            values: theoreticalCurve,
-            key: "Theoretical Curve",
-            color: "#0000CD"
-        },
         {
             values: historicPhillipsCurve,
             key: "Historic Values",
             color: "#2ca02c",
             startXIndex: unemploymentStartIndex
-        },
+        }
     ];
+    console.log(theoreticalCurve);
+    theoreticalCurve.forEach(function (curve) {
+        data.push(curve);
+    });
+    return data;
 }
 
 function phillipsCurve() {
@@ -303,31 +303,47 @@ function phillipsCurve() {
         var y = Math.round(100 * ((1 / (i)) * 30 - 5)) / 100;
         //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
         curve.push({x: i, y: y == 0 ? 0.01 : y});
-
     }
-    return curve;
+    return [{
+        values: curve,
+        key: "Phillips Curve",
+        color: "#0000CD"
+    }];
 }
 
 function lafferCurve() {
     var curve = [];
-    for (var i = 0; i <101; i++) {
-        var iShift = i-50;
-        var y = (-Math.pow((iShift)/10,2)+40);
+    for (var i = 0; i < 101; i++) {
+        var iShift = i - 50;
+        var y = (-Math.pow((iShift) / 10, 2) + 40);
         y = Math.round(100 * y) / 100; //round the value
         //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
-        curve.push({x: i, y: y< 0 ? 0 : y});
+        curve.push({x: i, y: y < 0 ? 0 : y});
     }
-    return curve;
+    return [{
+        values: curve,
+        key: "Laffer Curve",
+        color: "#0000CD"
+    }];
 }
 
 function ISLMCurve() {
-    var curve = [];
-    for (var i = 0; i <101; i++) {
-        var iShift = i-50;
-        var y = (-Math.pow((iShift)/10,2)+40);
-        y = Math.round(100 * y) / 100; //round the value
+    var IScurve = [], LMcurve = [];
+    for (var i = 0; i < 1445; i=i + 20) {
+        var iShift = i;
+        var ISy = Math.round(100 *(-0.008*i+11))/ 100;
+         var LMy =  Math.round(100 *(0.008*i))/ 100;
         //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
-        curve.push({x: i, y: y< 0 ? 0 : y});
+        IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
+        LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
     }
-    return curve;
+    return [{
+        values: IScurve,
+        key: "IS Curve",
+        color: "#0000CD"
+    }, {
+        values: LMcurve,
+        key: "LM Curve",
+        color: "#0000CD"
+    }];
 }
