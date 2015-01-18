@@ -21,7 +21,7 @@ window.onload = function (e) {
     //removeGraph('main',mainVis);
     nv.log('loaded');
     drawmain(mainfocus, true, true);
-    //jsonWait();
+    //drawUpperVisualisations();
 
 };
 
@@ -99,19 +99,27 @@ function drawmain(focus, interactive, tooltips) {
                         //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
                         //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
                         //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
-                        var pointIndex = Math.round(e.pointXValue) - (leftVisData[1].startXIndex);
+                        var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[1].startXIndex);
+                        var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[1].startXIndex);
+                        var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[1].startXIndex);
                         //console.log(e.pointXValue+' '+ (unemploymentSeries[0].x+leftVisData[1].values.length));
                         //console.log(' pointIndex: '+pointIndex);
-                        leftVis.lines.highlightPoint(0, pointIndex, true);
-                        leftVis.lines.highlightPoint(1, pointIndex, true);
+                        leftVis.lines.highlightPoint(0, leftPointIndex, true);
+                        leftVis.lines.highlightPoint(1, leftPointIndex, true);
+                        middleVis.lines.highlightPoint(0, middlePointIndex, true);
+                        middleVis.lines.highlightPoint(1, middlePointIndex, true);
+                        rightVis.lines.highlightPoint(0, rightPointIndex, true);
+                        rightVis.lines.highlightPoint(1, rightPointIndex, true);
                     }
 
                 });
                 chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
                     if (leftVis != null)leftVis.lines.clearHighlights();
+                    if (middleVis != null)middleVis.lines.clearHighlights();
+                    if (rightVis != null)rightVis.lines.clearHighlights();
                 });
             }
-            jsonWait();
+            drawUpperVisualisations();
             return chart;
         });
     });
@@ -175,10 +183,10 @@ function drawrightvis(leftAxis, bottomAxis) {
 }
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
-function jsonWait() {
+function drawUpperVisualisations() {
     drawleftvis('Inflation %', 'Unemployment %');
     drawmiddlevis('Tax Revenue %', 'Income Tax Rate %');
-    drawrightvis('Inflation %', 'Unemployment %');
+    drawrightvis('Interest Rate %', 'Real GDP %');
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
@@ -247,7 +255,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
 }
 
 function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
-    var historicPhillipsCurve = [],// unemploymentStartIndex,
+    var historicPhillipsCurve = [], unemploymentStartIndex,
         inflationSeries,
         unemploymentSeries;
     if (maindata == null) return;

@@ -21,7 +21,7 @@ window.onload = function (e) {
     //removeGraph('main',mainVis);
     nv.log('loaded');
     drawmain(mainfocus, true, true);
-    //jsonWait();
+    //drawUpperVisualisations();
 
 };
 
@@ -46,7 +46,7 @@ function drawmain(focus, interactive, tooltips) {
             chart.xAxis.axisLabel('Years');
             chart.xAxis.tickFormat(d3.format('f'));
             chart.yAxis.tickFormat(d3.format(tickformat));
-            chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
+            //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
 
             getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
@@ -82,6 +82,8 @@ function drawmain(focus, interactive, tooltips) {
                 chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function (e) {
                     if (leftVis != null) {
                         leftVis.lines.clearHighlights();
+                        middleVis.lines.clearHighlights();
+                        rightVis.lines.clearHighlights();
                         //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
                         //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
                         //var lastXVal = parseInt(data[0].values[data[0].values.length - 1].x);
@@ -99,19 +101,27 @@ function drawmain(focus, interactive, tooltips) {
                         //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
                         //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
                         //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
-                        var pointIndex = Math.round(e.pointXValue) - (leftVisData[1].startXIndex);
+                        var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[1].startXIndex);
+                        var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[1].startXIndex);
+                        var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[1].startXIndex);
                         //console.log(e.pointXValue+' '+ (unemploymentSeries[0].x+leftVisData[1].values.length));
                         //console.log(' pointIndex: '+pointIndex);
-                        leftVis.lines.highlightPoint(0, pointIndex, true);
-                        leftVis.lines.highlightPoint(1, pointIndex, true);
+                        leftVis.lines.highlightPoint(0, leftPointIndex, true);
+                        leftVis.lines.highlightPoint(1, leftPointIndex, true);
+                        middleVis.lines.highlightPoint(0, middlePointIndex, true);
+                        middleVis.lines.highlightPoint(1, middlePointIndex, true);
+                        rightVis.lines.highlightPoint(0, rightPointIndex, true);
+                        rightVis.lines.highlightPoint(1, rightPointIndex, true);
                     }
 
                 });
                 chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
                     if (leftVis != null)leftVis.lines.clearHighlights();
+                    if (middleVis != null)middleVis.lines.clearHighlights();
+                    if (rightVis != null)rightVis.lines.clearHighlights();
                 });
             }
-            jsonWait();
+            drawUpperVisualisations();
             return chart;
         });
     });
@@ -170,15 +180,15 @@ function drawmiddlevis(leftAxis, bottomAxis) {
 
 //Draw the top left visualisation
 function drawrightvis(leftAxis, bottomAxis) {
-    rightVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve());
+    rightVisData = upperVisData(leftAxis, bottomAxis, ISLMCurve());
     drawUpperVis('rightvis', leftAxis, bottomAxis, rightVisData);
 }
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
-function jsonWait() {
+function drawUpperVisualisations() {
     drawleftvis('Inflation %', 'Unemployment %');
     drawmiddlevis('Tax Revenue %', 'Income Tax Rate %');
-    drawrightvis('Inflation %', 'Unemployment %');
+    drawrightvis('Interest Rate %', 'Real GDP %');
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
@@ -247,7 +257,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
 }
 
 function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
-    var historicPhillipsCurve = [],// unemploymentStartIndex,
+    var historicPhillipsCurve = [], unemploymentStartIndex,
         inflationSeries,
         unemploymentSeries;
     if (maindata == null) return;
@@ -297,6 +307,18 @@ function phillipsCurve() {
 }
 
 function lafferCurve() {
+    var curve = [];
+    for (var i = 0; i <101; i++) {
+        var iShift = i-50;
+        var y = (-Math.pow((iShift)/10,2)+40);
+        y = Math.round(100 * y) / 100; //round the value
+        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+        curve.push({x: i, y: y< 0 ? 0 : y});
+    }
+    return curve;
+}
+
+function ISLMCurve() {
     var curve = [];
     for (var i = 0; i <101; i++) {
         var iShift = i-50;
