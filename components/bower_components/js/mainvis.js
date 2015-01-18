@@ -186,9 +186,9 @@ function drawrightvis(leftAxis, bottomAxis) {
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
 function drawUpperVisualisations() {
-    drawleftvis('Inflation %', 'Unemployment %');
-    drawmiddlevis('Tax Revenue %', 'Income Tax Rate %');
-    drawrightvis('Interest Rate %', 'Real GDP %');
+    drawleftvis('Inflation (CPI) %', 'Unemployment %');
+    drawmiddlevis('Tax Revenue, GDP %', 'Income Tax Rate, avg %');
+    drawrightvis('Interest Rate %', 'Real GDP, billions £');
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
@@ -243,8 +243,10 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
                 series.seriesIndex = i;
                 return !series.disabled;
             }).forEach(function (series, i) {
-                if (!series.key.indexOf(leftLabel.split(" ")[0]))inflationIndex = i;
-                if (!series.key.indexOf(bottomLabel.split(" ")[0]))unemploymentIndex = i;
+                //if (!series.key.indexOf(leftLabel.split(" ")[0]))inflationIndex = i;
+                //if (!series.key.indexOf(bottomLabel.split(" ")[0]))unemploymentIndex = i;
+                if (series.key== leftLabel)inflationIndex = i;
+                if (series.key== bottomLabel)unemploymentIndex = i;
             });
             //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+inflationValIndex[y]+' xindex: '+ getXIndex(inflationValIndex[y],maindata[0].values));
             if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, inflationValIndex[y] - mainMinVal, true);
@@ -263,8 +265,8 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     if (maindata == null) return;
     //console.log('drawing scatter phillips');
     maindata.forEach(function (series, i) {
-        if (!series.key.indexOf(leftAxis.split(" ")[0]))inflationSeries = series.values;
-        if (!series.key.indexOf(bottomAxis.split(" ")[0]))unemploymentSeries = series.values;
+        if (series.key== leftAxis)inflationSeries = series.values;
+        if (series.key== bottomAxis)unemploymentSeries = series.values;
     });
     var first = false;
     for (var i = 0; i < unemploymentSeries.length; i++) {
