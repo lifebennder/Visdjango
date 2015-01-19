@@ -10,7 +10,7 @@ var tickformat = '.2f';
 var ValueIndexList = {}; // Data indexes for all the series. accessed using labels
 //var inflationValIndex = {};
 //var unemploymentValIndex = {};
-var duplicate = 0;
+//var duplicate = 0;
 //upper visulisations
 var leftVis = null;
 var middleVis = null;

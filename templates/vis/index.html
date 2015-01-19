@@ -25,22 +25,31 @@
             <div class="panel panel-info" >
                 <div class="panel-heading">Main Graph</div>
                 <div class="panel-body" style="text-align: center"><div>
-                    <div class="btn-group-vertical btn-group-lg" role="group">
-                    <button type="button" class="btn btn-info" aria-label="true" onclick="setInteractiveMode()">Interactive Mode</button>
-                    <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()">Navigation Chart</button>
-                    <button type="checkbox" class="btn btn-info" onclick="NormaliseMode()">Normalise</button>
+                    <div class="btn-group-vertical btn-group-md" role="group">
+                    <button type="button" class="btn btn-info " aria-label="true" onclick="setInteractiveMode()"><div class="txt-responsive">Interactive Mode</div></button>
+                    <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()"><div class="txt-responsive">Navigation Chart</div></button>
+                    <button type="checkbox" class="btn btn-info " onclick="NormaliseMode()"><div class="txt-responsive">Normalise</div></button>
                     </div>
                     </div>
                 </div>
             </div>
             <!-- Second Control Panel-->
             <div class="panel panel-info" >
-                <div class="panel-heading">Data</div>
+                <div class="panel-heading ">Data</div>
                 <div class="panel-body" style="text-align: center"><div>
-                    <div class="btn-group-vertical btn-group-lg" role="group">
+                    <div class="btn-group-vertical btn-group-lg " role="group">
                     <button type="checkbox" class="btn btn-info" aria-label="true" onclick="setInteractiveMode()"></button>
                     <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()"></button>
                     <button type="checkbox" class="btn btn-info" onclick="NormaliseMode()"></button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-info" >
+                <div class="panel-heading">Style</div>
+                <div class="panel-body " style="text-align: center"><div>
+                    <div class="btn-group-vertical btn-group-md" role="group">
+                    <button type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()"><div class="txt-responsive">Background Colour</div></button>
                     </div>
                     </div>
                 </div>
@@ -74,10 +83,10 @@
             </div>
 
             <!--The right side BOTTOM-->
-            <div id="mainparent" class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 75%; background-color: purple; ">
+            <div id="mainparent" class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
 
                 <div id="main" class="with-3d-shadow with-transitions"
-                     style="  height:100%; width: 100%; background-color: rgb(255, 250, 0); ">
+                     style="  height:100%; width: 100%;/* background-color: rgb(255, 250, 0);*/ ">
                     <svg></svg>
                 </div>
             </div>

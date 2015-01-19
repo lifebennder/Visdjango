@@ -51,7 +51,7 @@ svg {
     border-right: 5px solid #dddddd;
     height: 100%;
     width: 33.3%;
-    background-color: #c9c9c0;
+   /* background-color: #c9c9c0;*/
 }
 .toptitle {
     text-align: center;
@@ -75,3 +75,14 @@ svg {
     fill-opacity: 0.4;
     stroke-opacity: 0;
 }
+
+.txt-responsive {
+    font-size: 10px;
+    /*font-size: 1.3vmin;*/
+      /*font-size: 80%;*/
+      font-size:calc(50% + 0.8vw);
+    /*padding:0% 0% 0% 0%;
+      margin:0% 0% 0% 0%;*/
+    /*line-height: 100%;*/
+    /*border-radius:1px;*/
+  }
