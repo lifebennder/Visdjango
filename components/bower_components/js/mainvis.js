@@ -5,11 +5,12 @@ var mainfocus = false;
 var tickformat = '.2f';
 
 //data indexes to speedup data retrieval. Otherwise its too laggy
-var inflationIndex;
-var unemploymentIndex;
-var inflationValIndex = {};
-var unemploymentValIndex = {};
-
+//var inflationIndex;
+//var unemploymentIndex;
+var ValueIndexList = {}; // Data indexes for all the series. accessed using labels
+//var inflationValIndex = {};
+//var unemploymentValIndex = {};
+//var duplicate = 0;
 //upper visulisations
 var leftVis = null;
 var middleVis = null;
@@ -49,13 +50,39 @@ function drawmain(focus, interactive, tooltips) {
             //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
             chart.clipEdge(true);
 
-            getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
+            //getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
+
+            data.forEach(function (series, i) {
+                ValueIndexList[series.key] = {};
+                series.values.forEach(function (values, i){
+                    if (values.y == "") return;
+                    var yy = d3.format(tickformat)(values.y);
+                    //console.log(value);
+                    ValueIndexList[series.key][yy] = values.x;
+                });
+            });
+
             chart.y(function (d) {
                 if (d.y == "") return null;
-                if (d.series = inflationIndex) inflationValIndex[d3.format(tickformat)(d.y)] = d.x;
-                if (d.series = unemploymentIndex) unemploymentValIndex[d3.format(tickformat)(d.y)] = d.x;
+                //var yy = d3.format(tickformat)(d.y);
+
+                //if (d.series = inflationIndex)
+                //console.log(inflationValIndex[yy] );
+                //TODO GIVE THEM ALL THEIR EACH INDEX, GOOD CODING PRACTICE. AVOID DUPLICATES NO MATTER IF TER ARE
+                //TODO DONT DO THIS HERE AS IT IS PERFORMED EVERY TIME ANYTHING HAPPENS.
+              // if(inflationValIndex[yy] === d.x && duplicate<100){ duplicate++; console.log(duplicate+'  '+inflationValIndex[yy]+'  infl '+ d.x+' '+ d.y);}
+
+                /*ValueIndexList[data[d.series].key][yy] = d.x;
+                if(duplicate>38000) console.log(d.series + ' '+ d.y+' x: '+ d.x);
+                if(duplicate%1000 ==0) console.log(duplicate);
+                duplicate++;*/
+                //inflationValIndex[yy] = d.x;
+                //if (d.series = unemploymentIndex)
+               //if( unemploymentValIndex[yy] === d.x && duplicate<100){ duplicate++; console.log(duplicate+'  unem '+ d.x+' '+ d.y);}
+                  //  unemploymentValIndex[yy] = d.x;
                 return parseFloat(d.y)
             });
+
             chart.x(function (d) {
                 return parseFloat(d.x)
             });
@@ -187,7 +214,7 @@ function drawrightvis(leftAxis, bottomAxis) {
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
 function drawUpperVisualisations() {
     drawleftvis('Inflation (CPI) %', 'Unemployment %');
-    drawmiddlevis('Tax Revenue, GDP %', 'Income Tax Rate, avg %');
+    drawmiddlevis('Tax Rev, GDP %', 'Income Tax Rate, avg %');
     drawrightvis('Interest Rate %', 'Real GDP, billions £');
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
@@ -241,6 +268,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             var unemploymentIndex;
             maindata.filter(function (series, i) {
                 series.seriesIndex = i;
+
                 return !series.disabled;
             }).forEach(function (series, i) {
                 //if (!series.key.indexOf(leftLabel.split(" ")[0]))inflationIndex = i;
@@ -249,8 +277,8 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
                 if (series.key == bottomLabel)unemploymentIndex = i;
             });
             //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+inflationValIndex[y]+' xindex: '+ getXIndex(inflationValIndex[y],maindata[0].values));
-            if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, inflationValIndex[y] - mainMinVal, true);
-            if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, unemploymentValIndex[x] - mainMinVal, true);
+            if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, ValueIndexList[leftLabel][y] - mainMinVal, true);
+            if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, ValueIndexList[bottomLabel][x] - mainMinVal, true);
         });
         chart.dispatch.on('tooltipHide.upper', function (e) {
             mainVis.clearHighlights();
