@@ -3,7 +3,7 @@ var mainVis = null;
 var maindata = null;
 var mainfocus = false;
 var tickformat = '.2f';
-
+var backgroundcolour = true;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -191,7 +191,20 @@ function setFocusMode() {
 function NormaliseMode() {
 
 }
+function BackgroundColour() {
+    var topcolour = d3.rgb("#c9c9c0");
+    var maincolour = d3.rgb(255, 250, 0);
+    if(backgroundcolour){
+        topcolour = d3.rgb(255,255,255);
+        maincolour = d3.rgb(255,255,255);
+    }
+    //console.log(d3.select('#main').style('background-color'));
+    //console.log(maincolour+ '   '+backgroundcolour);
+    d3.select('#main').style('background-color',maincolour);
+    d3.selectAll('.topvis').style('background-color',topcolour);
+    backgroundcolour = !backgroundcolour;
 
+}
 //TOP RIGHT CHART
 //Draw the top left visualisation
 function drawleftvis(leftAxis, bottomAxis) {
