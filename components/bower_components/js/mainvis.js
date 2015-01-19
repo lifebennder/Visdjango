@@ -48,7 +48,7 @@ function drawmain(focus, interactive, tooltips) {
             chart.xAxis.tickFormat(d3.format('f'));
             chart.yAxis.tickFormat(d3.format(tickformat));
             //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
-            chart.clipEdge(true);
+            //chart.clipEdge(true);
 
             //getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
 
@@ -208,18 +208,21 @@ function BackgroundColour() {
 //TOP RIGHT CHART
 //Draw the top left visualisation
 function drawleftvis(leftAxis, bottomAxis) {
+    removeGraph('leftvis', leftVis);
     leftVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve());
     drawUpperVis('leftvis', leftAxis, bottomAxis, leftVisData);
 }
 
 //Draw the top left visualisation
 function drawmiddlevis(leftAxis, bottomAxis) {
+    removeGraph('middlevis', middleVis);
     middleVisData = upperVisData(leftAxis, bottomAxis, lafferCurve());
     drawUpperVis('middlevis', leftAxis, bottomAxis, middleVisData);
 }
 
 //Draw the top left visualisation
 function drawrightvis(leftAxis, bottomAxis) {
+    removeGraph('rightvis', rightVis);
     rightVisData = upperVisData(leftAxis, bottomAxis, ISLMCurve());
     drawUpperVis('rightvis', leftAxis, bottomAxis, rightVisData);
 }
@@ -234,6 +237,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
         console.log('drawing ' + visid);
         var chart = nv.models.lineChart();
+        chart.tooltips(true);
         chart.xAxis.tickFormat(d3.format(tickformat)).tickValues([]);
         chart.yAxis.tickFormat(d3.format(tickformat)).tickValues([]);
         chart.yAxis.tickValues([]).showMaxMin(true);
