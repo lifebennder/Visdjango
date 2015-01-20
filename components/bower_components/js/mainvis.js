@@ -1,9 +1,14 @@
 //main visualisation global variables.
 var mainVis = null;
 var maindata = null;
+var unNormalisedmaindata = null;
+var Normalisedmaindata = null;
 var mainfocus = false;
+var maininteractive = true;
+var maintooltips = true;
 var tickformat = '.2f';
 var backgroundcolour = true;
+var mainNormalised = false;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -20,24 +25,29 @@ var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
     //removeGraph('main',mainVis);
+    d3.json("/vis/main_data/", function (error, data) {
+        unNormalisedmaindata = data;
+        maindata = unNormalisedmaindata;
+        drawmain(maindata);
+    });
     nv.log('loaded');
-    drawmain(mainfocus, true, true);
+    //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
 
 };
 
-function drawmain(focus, interactive, tooltips) {
-    d3.json("/vis/main_data/", function (error, data) {
+function drawmain(data) {
+    //d3.json("/vis/main_data/", function (error, data) {
         removeGraph('main', mainVis);
         nv.addGraph(function () {
             var chart;
-            if (focus) {
+            if (mainfocus) {
                 chart = nv.models.lineWithFocusChart().margin({left: 60});
                 chart.y2Axis.tickFormat(d3.format(tickformat));
-                //chart.useInteractiveGuideline(interactive);
+                //chart.useInteractiveGuideline(maininteractive);
             } else {
                 chart = nv.models.lineChart().margin({left: 60});
-                chart.useInteractiveGuideline(interactive);
+                chart.useInteractiveGuideline(maininteractive);
             }
             //chart.interpolate("step");
             //chart.title('Historic Data Visualisation').titleOffset(-10);
@@ -86,12 +96,12 @@ function drawmain(focus, interactive, tooltips) {
             chart.x(function (d) {
                 return parseFloat(d.x)
             });
-            chart.tooltips(tooltips);
+            chart.tooltips(maintooltips);
             chart.tooltipContent(function (key, x, y, e, graph) {
                 return '<h3>' + key + '</h3>' +
                     '<p>' + y + ' in ' + x + '</p>'
             });
-            console.log('drawing main, interactive tooltip: ' + interactive + ' tooltip:' + tooltips);
+            console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
             d3.select('#main svg')
                 .datum(data)
                 .transition()//.duration(300)
@@ -151,14 +161,14 @@ function drawmain(focus, interactive, tooltips) {
             drawUpperVisualisations();
             return chart;
         });
-    });
+    //});
 }
-function getindexes(data) {
+/*function getindexes(data) {
     data.forEach(function (series, i) {
         if (!series.key.indexOf('Inflation'))inflationIndex = i;
         if (!series.key.indexOf('Unemployment'))unemploymentIndex = i;
     });
-}
+}*/
 function removeGraph(graph, chartobject) {
     if (chartobject != null) chartobject.tooltips(false);//chartobject.useInteractiveGuideLines(false);
     d3.selectAll("#" + graph + " svg > *").remove();
@@ -166,17 +176,19 @@ function removeGraph(graph, chartobject) {
 function setInteractiveMode() {
     console.log("setting interactive   ");
     //removeGraph('main');
-    mainVis.tooltips(false);
+    mainVis.tooltips(false); //TODO MAYBE REMOVE THIS
     if (mainfocus) {
         mainfocus = !mainfocus;
-        drawmain(mainfocus, true, true);
+        drawmain(maindata);
     }
     else if (mainVis.useInteractiveGuideline() == true) {
         console.log('interactive is true:   ' + mainVis.useInteractiveGuideline());
-        drawmain(mainfocus, false, true);
+        maininteractive = false;
+        drawmain(maindata);
     } else {
         console.log('interactive is false');
-        drawmain(mainfocus, true, true);
+        maininteractive = true; maintooltips = true;
+        drawmain(maindata);
     }
 }
 
@@ -185,10 +197,34 @@ function setFocusMode() {
     //removeGraph('main');
     mainfocus = !mainfocus;
 
-    drawmain(mainfocus, false, true);
+    drawmain(maindata);
 }
 
 function NormaliseMode() {
+    //TODO change teh maindata loading so that it loads the data seperatly from the drawing and then just pass in
+    //TODO the actual data variable. This allows for normalisation to work and not need to get data every time.
+    if(!mainNormalised &&Normalisedmaindata === null){
+     Normalisedmaindata = [];
+     unNormalisedmaindata.forEach(function (series, seriesi) {
+                Normalisedmaindata.push({'key': series.key, 'values': []});
+                var max = d3.format(tickformat)(d3.max(series.values, function(d){return d.y}));
+                var min = d3.format(tickformat)(d3.min(series.values, function(d){return d.y}));
+                series.values.forEach(function (s, i){
+                    if (s.y == "") return;
+                    var x =s.x;
+                    var y = d3.format(tickformat)(s.y);
+                    y = d3.format(tickformat)((y - min)/(max-min));
+                   // console.log(x+'  '+y+  ' min: '+min+'   '+max);
+                    //console.log(Normalisedmaindata[i]);
+                    Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
+                });
+            });
+    }
+    console.log(Normalisedmaindata);
+    if(mainNormalised)maindata = unNormalisedmaindata;
+    else maindata = Normalisedmaindata;
+    drawmain(maindata);
+    mainNormalised = !mainNormalised;
 
 }
 function BackgroundColour() {
@@ -307,9 +343,9 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     var historicPhillipsCurve = [], unemploymentStartIndex,
         inflationSeries,
         unemploymentSeries;
-    if (maindata == null) return;
+    if (unNormalisedmaindata == null) return;
     //console.log('drawing scatter phillips');
-    maindata.forEach(function (series, i) {
+    unNormalisedmaindata.forEach(function (series, i) {
         if (series.key == leftAxis)inflationSeries = series.values;
         if (series.key == bottomAxis)unemploymentSeries = series.values;
     });
