@@ -24,7 +24,10 @@ var leftVisData = null;
 var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
-    //removeGraph('main',mainVis);
+    removeGraph('main',mainVis);
+    removeGraph('leftvis',leftVis);
+    removeGraph('middlevis',middleVis);
+    removeGraph('rightvis',rightVis);
     d3.json("/vis/main_data/", function (error, data) {
         unNormalisedmaindata = data;
         maindata = unNormalisedmaindata;
@@ -207,13 +210,24 @@ function NormaliseMode() {
      Normalisedmaindata = [];
      unNormalisedmaindata.forEach(function (series, seriesi) {
                 Normalisedmaindata.push({'key': series.key, 'values': []});
-                var max = d3.format(tickformat)(d3.max(series.values, function(d){return d.y}));
-                var min = d3.format(tickformat)(d3.min(series.values, function(d){return d.y}));
+                var max = //d3.format(tickformat)(
+                    d3.max(series.values, function(d){return parseFloat(d.y)})
+                   // )
+                    ;
+                var min = //d3.format(tickformat)(
+                    d3.min(series.values, function(d){return parseFloat(d.y)})
+                    //)
+                    ;
+                console.log('k: '+series.key+' min: '+min+' max: '+max);
                 series.values.forEach(function (s, i){
                     if (s.y == "") return;
                     var x =s.x;
-                    var y = d3.format(tickformat)(s.y);
-                    y = d3.format(tickformat)((y - min)/(max-min));
+                    var y = //d3.format(tickformat)(
+                        s.y//)
+                        ;
+                    y = d3.format(tickformat)(
+                        (y - min)/(max-min))
+                    ;
                    // console.log(x+'  '+y+  ' min: '+min+'   '+max);
                     //console.log(Normalisedmaindata[i]);
                     Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
