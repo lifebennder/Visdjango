@@ -8,7 +8,7 @@ var maininteractive = true;
 var maintooltips = true;
 var tickformat = '.2f';
 var backgroundcolour = true;
-var mainNormalised = false;
+var isMainNormalised = false;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -113,7 +113,7 @@ function drawmain(data) {
             nv.utils.windowResize(chart.update);
             mainVis = chart;
             maindata = data;
-            mainNormalised = maindata;
+            normalised = maindata;
             //chart.dispatch.stateChange(chart.defaultState());
             /*chart.dispatch.on('elementMousemove', function(e){
              console.log('element: ');
@@ -156,7 +156,6 @@ function drawmain(data) {
                         rightVis.lines.highlightPoint(0, rightPointIndex, true);
                         rightVis.lines.highlightPoint(1, rightPointIndex, true);
                     }
-
                 });
                 chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
                     if (leftVis != null)leftVis.lines.clearHighlights();
@@ -166,10 +165,10 @@ function drawmain(data) {
                 chart.dispatch.on('stateChange', function (newState) {
 
                     newState.disabled.forEach(function(disabled,i){
-                        mainNormalised[i].disabled = disabled;
+                        Normalisedmaindata[i].disabled = disabled;
                         if(unNormalisedmaindata!=null)unNormalisedmaindata[i].disabled = disabled;
                     });
-                   //console.log(newState.disabled);
+                   console.log('state change ');
                 });
             }
             drawUpperVisualisations();
@@ -216,7 +215,8 @@ function setFocusMode() {
 function NormaliseMode() {
     //TODO change teh maindata loading so that it loads the data seperatly from the drawing and then just pass in
     //TODO the actual data variable. This allows for normalisation to work and not need to get data every time.
-    if(!mainNormalised &&Normalisedmaindata === null){
+    if(!isMainNormalised &&Normalisedmaindata == null){
+        console.log('normalising');
      Normalisedmaindata = [];
      unNormalisedmaindata.forEach(function (series, seriesi) {
                 Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
@@ -243,10 +243,10 @@ function NormaliseMode() {
             });
     }
     //console.log(Normalisedmaindata);
-    if(mainNormalised)maindata = unNormalisedmaindata;
+    if(isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
     drawmain(maindata);
-    mainNormalised = !mainNormalised;
+    isMainNormalised = !isMainNormalised;
 
 }
 function BackgroundColour() {
