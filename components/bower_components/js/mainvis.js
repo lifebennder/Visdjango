@@ -243,15 +243,25 @@ function spendingVsDebt() {
     var keywords = ['Debt','Spending'];
     setSeries(keywords);
 }
-
+function search(){
+    var text = document.getElementById('searchbox').value.split(', ');
+    console.log('searching for: '+ text+'|');
+    if(text!='')setSeries(text);
+}
+/*Set the series that will be displayed. input is a list of keywords*/
 function setSeries(keywords) {
+    if(keywords==undefined||keywords[0]=='') return;
+    console.log(keywords);
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
         state.disabled.push(function(kws){
             //var match = false;
-            for(var keyword in kws){
-                //console.log(keyword+'  '+kws);
-            if (series.key.indexOf(kws[keyword]) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
+            if(kws[0].toString().toLowerCase()=='all')return false;
+            for(var index in kws){
+                var key = series.key.toLowerCase();
+                var keyword = kws[index].toString();
+                console.log(key+'   '+keyword+' '+index+' '+keyword.toLowerCase());
+            if (key.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
                 return false;
             }
             };

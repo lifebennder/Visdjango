@@ -21,6 +21,13 @@
             <h4 style="   text-align: center;">
                 Controls
             </h4>
+            <!-- Axis Search Box-->
+            <div class="input-group">
+                <input id="searchbox" type="text" class="form-control" placeholder="Select Series: &quot;Tax, GDP&quot;">
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" type="button" onclick="search()">Go!</button>
+                    </span>
+            </div><br>
             <!-- Main Graph Control Panel-->
             <div class="panel panel-info" >
                 <div class="panel-heading">Main Graph</div>
@@ -33,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Second Control Panel-->
+            <!-- Second, Upper Visualisation Control Panel-->
             {% comment %}<div class="panel panel-info" >
                 <div class="panel-heading ">Data</div>
                 <div class="panel-body" style="text-align: center"><div>
@@ -46,6 +53,18 @@
                 </div>
             </div>{% endcomment %}
             <div class="panel panel-info" >
+                <div class="panel-heading">Upper Visualisations Series</div>
+                <div class="panel-body " style="text-align: center"><div>
+                    <div class="btn-group-vertical btn-group-md" role="group">
+                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Inflation', 'Unemployment'])"><div class="txt-responsive">Phillips Curve</div></button>
+                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'])"><div class="txt-responsive">Laffer Curve</div></button>
+                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Interest', 'Real GDP, billions'])"><div class="txt-responsive">IS-LM Model</div></button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Third, Style Control Panel-->
+            <div class="panel panel-info" >
                 <div class="panel-heading">Style</div>
                 <div class="panel-body " style="text-align: center"><div>
                     <div class="btn-group-vertical btn-group-md" role="group">
@@ -54,6 +73,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
         <!--The right side-->
         <div class="" style=" float:left;  height: 100%; width: 77%;">
@@ -106,11 +126,13 @@
         <ul class="twocolumns">
             <li><a onclick="setSeries(['Spending', 'Debt'])">Spending Vs. Public Debt</a></li>
             <li><a onclick="setSeries(['per capita'])">Real GDP (per Capita) Vs. GDP (per Capita)</a></li>
-            <li><a onclick="setSeries(['per capita'])">Spending Vs. Public Debt</a></li>
-            <li><a onclick="setSeries(['GDP, billions','Real GDP billions'])">Real GDP Vs. GDP</a></li>
+            <li><a onclick="setSeries(['GDP %'])">GDP %</a></li>
+            <li><a onclick="setSeries(['GDP, billions','Real GDP, billions'])">Real GDP Vs. GDP</a></li>
+            <li><a onclick="setSeries(['GDP, billions','per capita','Population'])">Population Vs. GDP</a></li>
+            <li><a onclick="setSeries(['unemployment','Tax Rev, GDP %'])">Unemployment Vs. Tax Revenue, GDP %</a></li>
         </ul>
         <h1>Further Reading</h1>
-        <ul>
+        <ul class="twocolumns">
             <li><a href="http://en.wikipedia.org/wiki/Phillips_curve">Phillips Curve</a></li>
             <li><a href="http://en.wikipedia.org/wiki/IS%E2%80%93LM_model">IS-LM Model</a>:
                 <a href="https://www.youtube.com/watch?v=Q3hoC8lDCBo">Video Explanation</a></li>
