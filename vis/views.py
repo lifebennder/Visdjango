@@ -48,7 +48,7 @@ def readcsv(path):
             for colnum, cell in enumerate(row):
                 if rownum == 0:
                     if not isnumeric(reader[1][colnum]) or colnum==0: continue
-                    chartdata.append({'key': cell, 'values': []})
+                    chartdata.append({'key': cell, 'values': [], 'disabled': False})
                 else:
 
                     if colnum == 0 or not isnumeric(reader[1][colnum]):

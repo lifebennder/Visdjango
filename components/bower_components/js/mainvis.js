@@ -97,6 +97,7 @@ function drawmain(data) {
             });
 
             chart.x(function (d) {
+                if (d.x == null) return null;
                 return parseFloat(d.x)
             });
             chart.tooltips(maintooltips);
@@ -112,6 +113,8 @@ function drawmain(data) {
             nv.utils.windowResize(chart.update);
             mainVis = chart;
             maindata = data;
+            mainNormalised = maindata;
+            //chart.dispatch.stateChange(chart.defaultState());
             /*chart.dispatch.on('elementMousemove', function(e){
              console.log('element: ');
              //console.dir(e.point);
@@ -160,6 +163,14 @@ function drawmain(data) {
                     if (middleVis != null)middleVis.lines.clearHighlights();
                     if (rightVis != null)rightVis.lines.clearHighlights();
                 });
+                chart.dispatch.on('stateChange', function (newState) {
+
+                    newState.disabled.forEach(function(disabled,i){
+                        mainNormalised[i].disabled = disabled;
+                        if(unNormalisedmaindata!=null)unNormalisedmaindata[i].disabled = disabled;
+                    });
+                   //console.log(newState.disabled);
+                });
             }
             drawUpperVisualisations();
             return chart;
@@ -199,7 +210,6 @@ function setFocusMode() {
     console.log("setFocus Mode");
     //removeGraph('main');
     mainfocus = !mainfocus;
-
     drawmain(maindata);
 }
 
@@ -209,7 +219,7 @@ function NormaliseMode() {
     if(!mainNormalised &&Normalisedmaindata === null){
      Normalisedmaindata = [];
      unNormalisedmaindata.forEach(function (series, seriesi) {
-                Normalisedmaindata.push({'key': series.key, 'values': []});
+                Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
                 var max = //d3.format(tickformat)(
                     d3.max(series.values, function(d){return parseFloat(d.y)})
                    // )
@@ -228,13 +238,11 @@ function NormaliseMode() {
                     y = d3.format(tickformat)(
                         (y - min)/(max-min))
                     ;
-                   // console.log(x+'  '+y+  ' min: '+min+'   '+max);
-                    //console.log(Normalisedmaindata[i]);
                     Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
                 });
             });
     }
-    console.log(Normalisedmaindata);
+    //console.log(Normalisedmaindata);
     if(mainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
     drawmain(maindata);
@@ -255,6 +263,26 @@ function BackgroundColour() {
     backgroundcolour = !backgroundcolour;
 
 }
+
+function spendingVsDebt(){
+    console.log("spending");
+    var state = {disabled:[]};
+    maindata.forEach(function(series,i){
+        console.log(series.key.indexOf('Debt') + '   '+series.key.indexOf('Spending'));
+        if(series.key.indexOf('Debt')>=0||series.key.indexOf('Spending')>=0){
+            state.disabled.push(false);
+            //setdisabled(false,i);
+        }
+        else state.disabled.push(true);
+        //setdisabled(true,i);
+    });
+    mainVis.dispatch.changeState(state);
+}
+/*function setdisabled(disabled, i){
+    maindata[i].disabled = disabled;
+    if(unNormalisedmaindata!=null || unNormalisedmaindata!=undefined)unNormalisedmaindata[i].disabled = disabled;
+}*/
+
 //TOP RIGHT CHART
 //Draw the top left visualisation
 function drawleftvis(leftAxis, bottomAxis) {
