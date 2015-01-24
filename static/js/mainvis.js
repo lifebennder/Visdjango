@@ -24,10 +24,10 @@ var leftVisData = null;
 var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
-    removeGraph('main',mainVis);
-    removeGraph('leftvis',leftVis);
-    removeGraph('middlevis',middleVis);
-    removeGraph('rightvis',rightVis);
+    removeGraph('main', mainVis);
+    removeGraph('leftvis', leftVis);
+    removeGraph('middlevis', middleVis);
+    removeGraph('rightvis', rightVis);
     d3.json("/vis/main_data/", function (error, data) {
         unNormalisedmaindata = data;
         maindata = unNormalisedmaindata;
@@ -41,147 +41,114 @@ window.onload = function (e) {
 
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
-        removeGraph('main', mainVis);
-        nv.addGraph(function () {
-            var chart;
-            if (mainfocus) {
-                chart = nv.models.lineWithFocusChart().margin({left: 60});
-                chart.y2Axis.tickFormat(d3.format(tickformat));
-                //chart.useInteractiveGuideline(maininteractive);
-            } else {
-                chart = nv.models.lineChart().margin({left: 60});
-                chart.useInteractiveGuideline(maininteractive);
-            }
-            //chart.interpolate("step");
-            //chart.title('Historic Data Visualisation').titleOffset(-10);
-            //console.log('Main width: '+parseInt(d3.select('#main').style('width'))+' height: '+parseInt(d3.select('#main').style('height')));
-            //chart.width(parseInt(d3.select('#main').style('width')));
-            //chart.height(parseInt(d3.select('#main').style('height')));
-            chart.xAxis.axisLabel('Years');
-            chart.xAxis.tickFormat(d3.format('f'));
-            chart.yAxis.tickFormat(d3.format(tickformat));
-            //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
-            //chart.clipEdge(true);
+    removeGraph('main', mainVis);
+    nv.addGraph(function () {
+        var chart;
+        if (mainfocus) {
+            chart = nv.models.lineWithFocusChart().margin({left: 60});
+            chart.y2Axis.tickFormat(d3.format(tickformat));
+            //chart.useInteractiveGuideline(maininteractive);
+        } else {
+            chart = nv.models.lineChart().margin({left: 60});
+            chart.useInteractiveGuideline(maininteractive);
+        }
+        //chart.interpolate("step");
+        //chart.title('Historic Data Visualisation').titleOffset(-10);
+        //console.log('Main width: '+parseInt(d3.select('#main').style('width'))+' height: '+parseInt(d3.select('#main').style('height')));
+        //chart.width(parseInt(d3.select('#main').style('width')));
+        //chart.height(parseInt(d3.select('#main').style('height')));
+        chart.xAxis.axisLabel('Years');
+        chart.xAxis.tickFormat(d3.format('f'));
+        chart.yAxis.tickFormat(d3.format(tickformat));
+        //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
+        //chart.clipEdge(true);
 
-            //getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
+        //getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
 
-            data.forEach(function (series, i) {
-                ValueIndexList[series.key] = {};
-                series.values.forEach(function (values, i){
-                    if (values.y == "") return;
-                    var yy = d3.format(tickformat)(values.y);
-                    //console.log(value);
-                    ValueIndexList[series.key][yy] = values.x;
-                });
+        data.forEach(function (series, i) {
+            ValueIndexList[series.key] = {};
+            series.values.forEach(function (values, i) {
+                if (values.y == "") return;
+                var yy = d3.format(tickformat)(values.y);
+                //console.log(value);
+                ValueIndexList[series.key][yy] = values.x;
             });
-
-            chart.y(function (d) {
-                if (d.y == "") return null;
-                //var yy = d3.format(tickformat)(d.y);
-
-                //if (d.series = inflationIndex)
-                //console.log(inflationValIndex[yy] );
-                //TODO GIVE THEM ALL THEIR EACH INDEX, GOOD CODING PRACTICE. AVOID DUPLICATES NO MATTER IF TER ARE
-                //TODO DONT DO THIS HERE AS IT IS PERFORMED EVERY TIME ANYTHING HAPPENS.
-              // if(inflationValIndex[yy] === d.x && duplicate<100){ duplicate++; console.log(duplicate+'  '+inflationValIndex[yy]+'  infl '+ d.x+' '+ d.y);}
-
-                /*ValueIndexList[data[d.series].key][yy] = d.x;
-                if(duplicate>38000) console.log(d.series + ' '+ d.y+' x: '+ d.x);
-                if(duplicate%1000 ==0) console.log(duplicate);
-                duplicate++;*/
-                //inflationValIndex[yy] = d.x;
-                //if (d.series = unemploymentIndex)
-               //if( unemploymentValIndex[yy] === d.x && duplicate<100){ duplicate++; console.log(duplicate+'  unem '+ d.x+' '+ d.y);}
-                  //  unemploymentValIndex[yy] = d.x;
-                return parseFloat(d.y)
-            });
-
-            chart.x(function (d) {
-                if (d.x == null) return null;
-                return parseFloat(d.x)
-            });
-            chart.tooltips(maintooltips);
-            chart.tooltipContent(function (key, x, y, e, graph) {
-                return '<h3>' + key + '</h3>' +
-                    '<p>' + y + ' in ' + x + '</p>'
-            });
-            console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
-            d3.select('#main svg')
-                .datum(data)
-                .transition()//.duration(300)
-                .call(chart);
-            nv.utils.windowResize(chart.update);
-            mainVis = chart;
-            maindata = data;
-            normalised = maindata;
-            //chart.dispatch.stateChange(chart.defaultState());
-            /*chart.dispatch.on('elementMousemove', function(e){
-             console.log('element: ');
-             //console.dir(e.point);
-             });*/
-            //console.log(inflationValIndex);
-            /*Events Handlers*/
-            if (chart.interactiveLayer != null) {
-                chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function (e) {
-                    if (leftVis != null && middleVis != null && rightVis != null) {
-                        leftVis.lines.clearHighlights();
-                        middleVis.lines.clearHighlights();
-                        rightVis.lines.clearHighlights();
-                        //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
-                        //console.log(e.point+'  '+'   '+ e.pointXValue+'   '+ e.target);
-                        //var lastXVal = parseInt(data[0].values[data[0].values.length - 1].x);
-                        //var startingXVal = parseInt(data[0].values[0].x);
-                        //var inflationSeries;
-                        //var unemploymentSeries;
-                        /*data.forEach(function(series, i){
-                         if(!series.key.indexOf('Inflation'))inflationSeries=series.values;
-                         if(!series.key.indexOf('Unemployment'))unemploymentSeries=series.values;
-                         });*/
-                        //inflationSeries = data[inflationIndex].values;
-                        //unemploymentSeries = data[unemploymentIndex].values;
-                        //console.log(leftVisData[1]);
-                        //var inflation = inflationSeries[Math.round(e.pointXValue) - inflationSeries[0].x].y;
-                        //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
-                        //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
-                        //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
-                        var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[0].startXIndex);
-                        var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[0].startXIndex);
-                        var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[0].startXIndex);
-                        //console.log(e.pointXValue+' '+ (unemploymentSeries[0].x+leftVisData[1].values.length));
-                        //console.log(' pointIndex: '+pointIndex);
-                        leftVis.lines.highlightPoint(0, leftPointIndex, true);
-                        leftVis.lines.highlightPoint(1, leftPointIndex, true);
-                        middleVis.lines.highlightPoint(0, middlePointIndex, true);
-                        middleVis.lines.highlightPoint(1, middlePointIndex, true);
-                        rightVis.lines.highlightPoint(0, rightPointIndex, true);
-                        rightVis.lines.highlightPoint(1, rightPointIndex, true);
-                    }
-                });
-                chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
-                    if (leftVis != null)leftVis.lines.clearHighlights();
-                    if (middleVis != null)middleVis.lines.clearHighlights();
-                    if (rightVis != null)rightVis.lines.clearHighlights();
-                });
-                chart.dispatch.on('stateChange', function (newState) {
-
-                    newState.disabled.forEach(function(disabled,i){
-                        Normalisedmaindata[i].disabled = disabled;
-                        if(unNormalisedmaindata!=null)unNormalisedmaindata[i].disabled = disabled;
-                    });
-                   console.log('state change ');
-                });
-            }
-            drawUpperVisualisations();
-            return chart;
         });
+
+        chart.y(function (d) {
+            if (d.y == "") return null;
+            //var yy = d3.format(tickformat)(d.y);
+            return parseFloat(d.y)
+        });
+
+        chart.x(function (d) {
+            if (d.x == null) return null;
+            return parseFloat(d.x)
+        });
+        chart.tooltips(maintooltips);
+        chart.tooltipContent(function (key, x, y, e, graph) {
+            return '<h3>' + key + '</h3>' +
+                '<p>' + y + ' in ' + x + '</p>'
+        });
+        console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
+        d3.select('#main svg')
+            .datum(data)
+            .transition()//.duration(300)
+            .call(chart);
+        nv.utils.windowResize(chart.update);
+        mainVis = chart;
+        maindata = data;
+        //Normalisedmaindata = maindata;
+
+        /*Events Handlers*/
+        if (chart.interactiveLayer != null) {
+            chart.interactiveLayer.dispatch.on('elementMousemove.mainphillips', function (e) {
+                if (leftVis != null && middleVis != null && rightVis != null) {
+                    leftVis.lines.clearHighlights();
+                    middleVis.lines.clearHighlights();
+                    rightVis.lines.clearHighlights();
+                    //var inflation = inflationSeries[Math.round(e.pointXValue) - inflationSeries[0].x].y;
+                    //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
+                    //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
+                    //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
+                    var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[0].startXIndex);
+                    var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[0].startXIndex);
+                    var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[0].startXIndex);
+                    //console.log(e.pointXValue+' '+ (unemploymentSeries[0].x+leftVisData[1].values.length));
+                    //console.log(' pointIndex: '+pointIndex);
+                    leftVis.lines.highlightPoint(0, leftPointIndex, true);
+                    leftVis.lines.highlightPoint(1, leftPointIndex, true);
+                    middleVis.lines.highlightPoint(0, middlePointIndex, true);
+                    middleVis.lines.highlightPoint(1, middlePointIndex, true);
+                    rightVis.lines.highlightPoint(0, rightPointIndex, true);
+                    rightVis.lines.highlightPoint(1, rightPointIndex, true);
+                }
+            });
+            chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
+                if (leftVis != null)leftVis.lines.clearHighlights();
+                if (middleVis != null)middleVis.lines.clearHighlights();
+                if (rightVis != null)rightVis.lines.clearHighlights();
+            });
+            chart.dispatch.on('stateChange', function (newState) {
+
+                newState.disabled.forEach(function (disabled, i) {
+                    Normalisedmaindata[i].disabled = disabled;
+                    if (unNormalisedmaindata != null)unNormalisedmaindata[i].disabled = disabled;
+                });
+                console.log('state change ');
+            });
+        }
+        drawUpperVisualisations();
+        return chart;
+    });
     //});
 }
 /*function getindexes(data) {
-    data.forEach(function (series, i) {
-        if (!series.key.indexOf('Inflation'))inflationIndex = i;
-        if (!series.key.indexOf('Unemployment'))unemploymentIndex = i;
-    });
-}*/
+ data.forEach(function (series, i) {
+ if (!series.key.indexOf('Inflation'))inflationIndex = i;
+ if (!series.key.indexOf('Unemployment'))unemploymentIndex = i;
+ });
+ }*/
 function removeGraph(graph, chartobject) {
     if (chartobject != null) chartobject.tooltips(false);//chartobject.useInteractiveGuideLines(false);
     d3.selectAll("#" + graph + " svg > *").remove();
@@ -200,7 +167,8 @@ function setInteractiveMode() {
         drawmain(maindata);
     } else {
         console.log('interactive is false');
-        maininteractive = true; maintooltips = true;
+        maininteractive = true;
+        maintooltips = true;
         drawmain(maindata);
     }
 }
@@ -215,35 +183,39 @@ function setFocusMode() {
 function NormaliseMode() {
     //TODO change teh maindata loading so that it loads the data seperatly from the drawing and then just pass in
     //TODO the actual data variable. This allows for normalisation to work and not need to get data every time.
-    if(!isMainNormalised &&Normalisedmaindata == null){
+    if (!isMainNormalised && Normalisedmaindata == null) {
         console.log('normalising');
-     Normalisedmaindata = [];
-     unNormalisedmaindata.forEach(function (series, seriesi) {
-                Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
-                var max = //d3.format(tickformat)(
-                    d3.max(series.values, function(d){return parseFloat(d.y)})
-                   // )
-                    ;
-                var min = //d3.format(tickformat)(
-                    d3.min(series.values, function(d){return parseFloat(d.y)})
-                    //)
-                    ;
-                console.log('k: '+series.key+' min: '+min+' max: '+max);
-                series.values.forEach(function (s, i){
-                    if (s.y == "") return;
-                    var x =s.x;
-                    var y = //d3.format(tickformat)(
+        Normalisedmaindata = [];
+        unNormalisedmaindata.forEach(function (series, seriesi) {
+            Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
+            var max = //d3.format(tickformat)(
+                    d3.max(series.values, function (d) {
+                        return parseFloat(d.y)
+                    })
+            // )
+                ;
+            var min = //d3.format(tickformat)(
+                    d3.min(series.values, function (d) {
+                        return parseFloat(d.y)
+                    })
+            //)
+                ;
+            console.log('k: ' + series.key + ' min: ' + min + ' max: ' + max);
+            series.values.forEach(function (s, i) {
+                if (s.y == "") return;
+                var x = s.x;
+                var y = //d3.format(tickformat)(
                         s.y//)
-                        ;
-                    y = d3.format(tickformat)(
-                        (y - min)/(max-min))
                     ;
-                    Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
-                });
+                y = d3.format(tickformat)(
+                    (y - min) / (max - min))
+                ;
+                Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
             });
+        });
     }
-    //console.log(Normalisedmaindata);
-    if(isMainNormalised)maindata = unNormalisedmaindata;
+    console.log(isMainNormalised);
+    if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
     drawmain(maindata);
     isMainNormalised = !isMainNormalised;
@@ -252,36 +224,37 @@ function NormaliseMode() {
 function BackgroundColour() {
     var topcolour = d3.rgb("#c9c9c0");
     var maincolour = d3.rgb(255, 250, 0);
-    if(backgroundcolour){
-        topcolour = d3.rgb(255,255,255);
-        maincolour = d3.rgb(255,255,255);
+    if (backgroundcolour) {
+        topcolour = d3.rgb(255, 255, 255);
+        maincolour = d3.rgb(255, 255, 255);
     }
-    //console.log(d3.select('#main').style('background-color'));
-    //console.log(maincolour+ '   '+backgroundcolour);
-    d3.select('#main').style('background-color',maincolour);
-    d3.selectAll('.topvis').style('background-color',topcolour);
+    d3.select('#main').style('background-color', maincolour);
+    d3.selectAll('.topvis').style('background-color', topcolour);
     backgroundcolour = !backgroundcolour;
-
 }
 
-function spendingVsDebt(){
-    console.log("spending");
-    var state = {disabled:[]};
-    maindata.forEach(function(series,i){
-        console.log(series.key.indexOf('Debt') + '   '+series.key.indexOf('Spending'));
-        if(series.key.indexOf('Debt')>=0||series.key.indexOf('Spending')>=0){
-            state.disabled.push(false);
-            //setdisabled(false,i);
-        }
-        else state.disabled.push(true);
-        //setdisabled(true,i);
+function spendingVsDebt() {
+    var keywords = ['Debt','Spending'];
+    setSeries(keywords);
+}
+
+function setSeries(keywords) {
+    var state = {disabled: []};
+    maindata.forEach(function (series, i) {
+        state.disabled.push(function(kws){
+            //var match = false;
+            for(var keyword in kws){
+                console.log(keyword+'  '+kws);
+            if (series.key.indexOf(kws[keyword]) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
+                return false;
+            }
+            };
+            return true;
+        }(keywords));
     });
+    //console.log(state.disabled);
     mainVis.dispatch.changeState(state);
 }
-/*function setdisabled(disabled, i){
-    maindata[i].disabled = disabled;
-    if(unNormalisedmaindata!=null || unNormalisedmaindata!=undefined)unNormalisedmaindata[i].disabled = disabled;
-}*/
 
 //TOP RIGHT CHART
 //Draw the top left visualisation
@@ -331,11 +304,6 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         //chart.pointShape('cross');
         if (leftLabel != null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
         if (bottomLabel != null)chart.xAxis.axisLabel(bottomLabel).axisLabelDistance(-17);
-
-        //chart.xAxis.ticks(true);
-        //chart.pointActive(function (d) {  return d.notActive;});
-        //chart.width(parseInt(d3.select('#' + visid + ' svg').style('width')));
-        //chart.height(parseInt(d3.select('#' + visid + ' svg').style('height')));
         chart.tooltipContent(function (key, x, y, e, graph) {
             var RGB = e.series.color;
             var alpha = '0.35';
@@ -451,10 +419,10 @@ function lafferCurve() {
 
 function ISLMCurve() {
     var IScurve = [], LMcurve = [];
-    for (var i = 0; i < 1445; i=i + 20) {
+    for (var i = 0; i < 1445; i = i + 20) {
         var iShift = i;
-        var ISy = Math.round(100 *(-0.008*i+11))/ 100;
-         var LMy =  Math.round(100 *(0.008*i))/ 100;
+        var ISy = Math.round(100 * (-0.008 * i + 11)) / 100;
+        var LMy = Math.round(100 * (0.008 * i)) / 100;
         //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
         IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
         LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});

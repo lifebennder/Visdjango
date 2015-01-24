@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    <div class="page-header" style="  margin: 00px 0 10px;  padding-bottom: 0px;">
+    <div class="page-header" style="  margin-top: 0px; margin-bottom:10px;  padding-bottom: 0px;">
         <h2 style="    margin-top: 0.00em;
     margin-bottom: 0.0em;">Economic Visualisation</h2>
     </div>
@@ -103,10 +103,11 @@
             <li>Inflation - The inflation relates the the Consumer Price Index, therefore consumer goods inflation</li>
         </ul>
         <h1>Interesting data combinations</h1>
-        <ul>
-            <li id="spendingvsdebt" onclick="spendingVsDebt()"><a>Spending Vs. Public Debt)</a></li>
-            <li onclick="realGDPVsGDP()"><a>Real GDP (per Capita) Vs. GDP (per Capita)</a></li>
-            <li onclick="spendingVsDebt()"><a>Spending Vs. Public Debt</a></li>
+        <ul class="twocolumns">
+            <li><a onclick="setSeries(['Spending', 'Debt'])">Spending Vs. Public Debt</a></li>
+            <li><a onclick="setSeries(['per capita'])">Real GDP (per Capita) Vs. GDP (per Capita)</a></li>
+            <li><a onclick="setSeries(['per capita'])">Spending Vs. Public Debt</a></li>
+            <li><a onclick="setSeries(['GDP, billions','Real GDP billions'])">Real GDP Vs. GDP</a></li>
         </ul>
         <h1>Further Reading</h1>
         <ul>

@@ -9,8 +9,8 @@ body {
 }
 
 .home-container {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 
@@ -50,7 +50,7 @@ svg {
     float:left;
     border-right: 5px solid #dddddd;
     height: 100%;
-    width: 33.3%;
+    width: 33.333%;
     background-color: #c9c9c0;
 }
 .toptitle {
@@ -86,3 +86,9 @@ svg {
     /*line-height: 100%;*/
     /*border-radius:1px;*/
   }
+
+.twocolumns {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}
