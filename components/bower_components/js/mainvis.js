@@ -128,20 +128,26 @@ function drawmain(data) {
                 if (leftVis != null)leftVis.lines.clearHighlights();
                 if (middleVis != null)middleVis.lines.clearHighlights();
                 if (rightVis != null)rightVis.lines.clearHighlights();
-            });
-            chart.dispatch.on('stateChange', function (newState) {
-
-                newState.disabled.forEach(function (disabled, i) {
-                    Normalisedmaindata[i].disabled = disabled;
-                    if (unNormalisedmaindata != null)unNormalisedmaindata[i].disabled = disabled;
-                });
+            });}
+            chart.dispatch.on('stateChange.main', function (newState) {
+                updateData(newState);
                 console.log('state change ');
             });
-        }
+            chart.dispatch.on('changeState.main', function (newState) {
+                updateData(newState);
+                console.log('change state');
+            });
+
         drawUpperVisualisations();
         return chart;
     });
     //});
+}
+function updateData(newState){
+                    newState.disabled.forEach(function (disabled, i) {
+                    if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
+                    unNormalisedmaindata[i].disabled = disabled;
+                });
 }
 /*function getindexes(data) {
  data.forEach(function (series, i) {
@@ -184,7 +190,7 @@ function NormaliseMode() {
     //TODO change teh maindata loading so that it loads the data seperatly from the drawing and then just pass in
     //TODO the actual data variable. This allows for normalisation to work and not need to get data every time.
     if (!isMainNormalised && Normalisedmaindata == null) {
-        console.log('normalising');
+        console.log('calculating normalisation values');
         Normalisedmaindata = [];
         unNormalisedmaindata.forEach(function (series, seriesi) {
             Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
@@ -200,7 +206,7 @@ function NormaliseMode() {
                     })
             //)
                 ;
-            console.log('k: ' + series.key + ' min: ' + min + ' max: ' + max);
+            //console.log('k: ' + series.key + ' min: ' + min + ' max: ' + max);
             series.values.forEach(function (s, i) {
                 if (s.y == "") return;
                 var x = s.x;
@@ -214,7 +220,7 @@ function NormaliseMode() {
             });
         });
     }
-    console.log(isMainNormalised);
+    console.log('Normalised: '+isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
     drawmain(maindata);
@@ -244,7 +250,7 @@ function setSeries(keywords) {
         state.disabled.push(function(kws){
             //var match = false;
             for(var keyword in kws){
-                console.log(keyword+'  '+kws);
+                //console.log(keyword+'  '+kws);
             if (series.key.indexOf(kws[keyword]) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
                 return false;
             }
@@ -252,7 +258,7 @@ function setSeries(keywords) {
             return true;
         }(keywords));
     });
-    //console.log(state.disabled);
+    //console.log(state);
     mainVis.dispatch.changeState(state);
 }
 

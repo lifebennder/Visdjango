@@ -6005,7 +6005,7 @@ nv.models.lineWithFocusChart = function() {
             if (brushExtent) brush.extent(brushExtent);
 
             var brushBG = g.select('.nv-brushBackground').selectAll('g')
-                .data([brushExtent || brush.extent()])
+                .data([brushExtent || brush.extent()]);
 
             var brushBGenter = brushBG.enter()
                 .append('g');
