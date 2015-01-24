@@ -42,6 +42,22 @@
             <li><b>&quot;Normalise&quot;</b> - This Normalises the data. This means that all the data curves will be
             the same height. All data will be between 0 and 1.</li>
         </ol>
+        <br>
+        <h4>Main Visualisation Legend</h4>
+        <img class="image" src="{% static 'images/legend.jpg' %}"><br>
+        This panel is above the main visualisations and displayes all the series information: The Series name and The Series Colour.
+        If the circle to the left of each series is full then that means the series is being displayed, Otherwise, the circle
+        is hollow. This means that the series is disabled and not displayed.<br>
+        The legend is also a control tool. It can enable or disable series. There are two actions that can be performed:
+        <ul>
+            <li><b>Single Click</b> - This toggles the series that is being clicked. This means it enables the series if
+            disabled, or disables the series if enabled.</li>
+            <li><b>Double Click</b> - This disables all other series, or displays all series. If many series are enables and
+            a double click is performed, that series is shown only, all others are disabled. If only that one is enabled,
+            the double click will enable all series.</li>
+        </ul>
+
+
         <br><br>
 
         <h3>Extending</h3>
