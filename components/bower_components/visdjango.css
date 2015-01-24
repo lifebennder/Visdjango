@@ -92,3 +92,16 @@ svg {
   -webkit-columns: 2;
   -moz-columns: 2;
 }
+
+.image {
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-botton: 100px;
+    border: solid;
+    border-width: 1px;
+    border-color: #bdbdbd;
+
+}

@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <div class="page-header" >
+    <div class="page-header">
         <h2>Manual And Other Help</h2>
     </div>
 
@@ -13,14 +13,46 @@
 
         <h3>How to use the Application</h3>
         The application is meant to display economic data about the United Kingdom.
-
+        <h4>Series Selectior</h4>
+        <img class="image" src="{% static 'images/controls.jpg' %}"><br>
+        This allows for a textual selection of the series that you want to be displayed. The keyword wanted should be
+        typed in,
+        for example <code>&quot;Tax&quot;</code>. Once, you typed in the keywords, you click <code>
+        &quot;Go!&quot;</code>. This will stelected the
+        desired series as specificed in the search box.<br><br>
+        Many keywords can be entered just add <code>&quot;, &quot;</code> between each of them and all the series with
+        any of those
+        keywords will be displayed. For example: <code>&quot;%, GDP, Tax, Population&quot;</code>. All can be selected
+        using <code>&quot;All&quot;</code>
         <br><br>
+        <h4>Data Combinations</h4>
+        <img class="image" src="{% static 'images/data combinations.jpg' %}"><br>
+        This panel, below the visualisations shows a list of interesting data and series combinations. For example,
+        <code>&quot;Spending Vs. Public Debt&quot;</code> shows the Government spending and Public Debt series. This shows
+        the corolation between the two and economic conclusions can be made from them.
+        <br><br>
+        <h4>Main Visualisation Controls</h4>
+        <img class="image" src="{% static 'images/maingraphcontrol.jpg' %}"><br>
+        This panel controls the Main visualisation properties. There are 3 properties that can be changes:
+        <ol>
+            <li><b>&quot;Interactive Mode&quot;</b> - This toggles if the tooltip style. Either its tooltip displaying 1 point, or
+            the tooltip shows all series in that perticular year.</li>
+            <li><b>&quot;Navigation Chart&quot;</b> - This toggles the Navigation chart that allows for the x axis to be
+            shortened or extended.</li>
+            <li><b>&quot;Normalise&quot;</b> - This Normalises the data. This means that all the data curves will be
+            the same height. All data will be between 0 and 1.</li>
+        </ol>
+        <br><br>
+
         <h3>Extending</h3>
         <h4>Inputting your own data</h4>
-        The data for the graph is taken from a csv file that is located with the server. Therefore the data can be changed by changing the
-        csv file itself. This can be easily dont by opening it in excell or the like. The data us read and given to the graph using JSON.
-        The JSON data can be seen by accessing <a href="{% url 'vis.views.main_data' %}">Main Graph Data</a>. The CSV can be accessed using
-        <a href="{% static 'debtdata.csv' %}">CSV Link</a>
+        The data for the graph is taken from a csv file that is located with the server. Therefore the data can be
+        changed by changing the
+        csv file itself. This can be easily dont by opening it in excell or the like. The data us read and given to the
+        graph using JSON.
+        The JSON data can be seen by accessing <a href="{% url 'vis.views.main_data' %}">Main Graph Data</a>. The CSV
+        can be accessed using
+        <a href="{% static 'debtdata.csv' %}">CSV Link</a>.
     </div>
 
 {% endblock %}

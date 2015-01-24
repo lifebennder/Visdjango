@@ -104,7 +104,7 @@ def index(request):
     #return render_to_response('nvd3/barchart_2.html')
 
 
-def helpp(request):
+def help(request):
     return render_to_response('vis/help.html')
 
 
