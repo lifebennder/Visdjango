@@ -54,6 +54,7 @@ svg {
     background-color: #c9c9c0;
 }
 .toptitle {
+    font-weight: bold;
     text-align: center;
     margin: 5px 0 0px 0;
 }

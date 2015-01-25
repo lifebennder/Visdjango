@@ -10,16 +10,42 @@
     </div>
 
     <div class="" style="  min-height: 400px; ">
-
+        <h3>Upper Visualisations</h3>
+        <h4>Phillips Curve</h4>
+        <img class="image" src="{% static 'images/phillips.jpg' %}"><br>
+        <b>Axis: Y: Inflation %,</b> The Consumer Price Index (inflation).<b> X: Unemployment % of Population</b><br>
+        This displays the Phillips Curve in blue along with the historic data of the Phillips curve in green.
+        The visualisation clearly displays that the theoretic assumption of the Phillips curve is true.
+        The blue curve shows the theoretical curvature and values of the Phillips curve.
+        The green points show the points that the curve took in practice. This means with the specific inflation % and unemployment rates.
+        The highlighted points show the points that is selected/focused in the main visualisation.
+        <h4>Laffer Curve</h4>
+        <img class="image" src="{% static 'images/laffer.jpg' %}"><br>
+        <b>Axis: Y: Tax Revenue as % of GDP, X: Income Tax Rate %</b><br>
+        This displays the Laffer Curve in blue along with the historic data of the Laffer curve in green.
+        The actual tax rates were never too high or too low therefore, it is difficult to say if the Laffer curve is true
+        in practice.
+        The blue curve shows the theoretical curvature and values of the Laffer curve.
+        The green points show the points that the curve took in practice. This means with the specific inflation % and unemployment rates.
+        The highlighted points show the points that is selected/focused in the main visualisation.
+        <h4>IS-LM Model</h4>
+        <img class="image" src="{% static 'images/is-lm.jpg' %}"><br>
+        <b>Axis: Y: Central Bank Interest Rate %, X: Real GDP in billions</b><br>
+        This displays the IS-LM Model Curve in blue along with the historic data of the IS-LM Model Curve in green.
+        As can be seen the historic data follow the IS curve (downwards sloping), however not so much for the LM curve(upwards sloping)
+        The blue curve shows the theoretical curvature and values of the IS-LM Model Curve.
+        The green points show the points that the curve took in practice. This means with the specific inflation % and unemployment rates.
+        The highlighted points show the points that is selected/focused in the main visualisation.
+        <br><br>
         <h3>How to use the Application</h3>
         The application is meant to display economic data about the United Kingdom.
-        <h4>Series Selectior</h4>
+        <h4>Series Selection</h4>
         <img class="image" src="{% static 'images/controls.jpg' %}"><br>
         This allows for a textual selection of the series that you want to be displayed. The keyword wanted should be
         typed in,
         for example <code>&quot;Tax&quot;</code>. Once, you typed in the keywords, you click <code>
-        &quot;Go!&quot;</code>. This will stelected the
-        desired series as specificed in the search box.<br><br>
+        &quot;Go!&quot;</code>. This will selected the
+        desired series as specified in the search box.<br><br>
         Many keywords can be entered just add <code>&quot;, &quot;</code> between each of them and all the series with
         any of those
         keywords will be displayed. For example: <code>&quot;%, GDP, Tax, Population&quot;</code>. All can be selected
@@ -29,14 +55,14 @@
         <img class="image" src="{% static 'images/data combinations.jpg' %}"><br>
         This panel, below the visualisations shows a list of interesting data and series combinations. For example,
         <code>&quot;Spending Vs. Public Debt&quot;</code> shows the Government spending and Public Debt series. This shows
-        the corolation between the two and economic conclusions can be made from them.
+        the correlation between the two and economic conclusions can be made from them.
         <br><br>
         <h4>Main Visualisation Controls</h4>
         <img class="image" src="{% static 'images/maingraphcontrol.jpg' %}"><br>
         This panel controls the Main visualisation properties. There are 3 properties that can be changes:
         <ol>
             <li><b>&quot;Interactive Mode&quot;</b> - This toggles if the tooltip style. Either its tooltip displaying 1 point, or
-            the tooltip shows all series in that perticular year.</li>
+            the tooltip shows all series in that particular year.</li>
             <li><b>&quot;Navigation Chart&quot;</b> - This toggles the Navigation chart that allows for the x axis to be
             shortened or extended.</li>
             <li><b>&quot;Normalise&quot;</b> - This Normalises the data. This means that all the data curves will be
@@ -64,7 +90,7 @@
         <h4>Inputting your own data</h4>
         The data for the graph is taken from a csv file that is located with the server. Therefore the data can be
         changed by changing the
-        csv file itself. This can be easily dont by opening it in excell or the like. The data us read and given to the
+        csv file itself. This can be easily don't by opening it in excell or the like. The data us read and given to the
         graph using JSON.
         The JSON data can be seen by accessing <a href="{% url 'vis.views.main_data' %}">Main Graph Data</a>. The CSV
         can be accessed using

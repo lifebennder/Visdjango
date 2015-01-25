@@ -56,7 +56,7 @@
                 <div class="panel-heading">Upper Visualisations Series</div>
                 <div class="panel-body " style="text-align: center"><div>
                     <div class="btn-group-vertical btn-group-md" role="group">
-                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Inflation', 'Unemployment'])"><div class="txt-responsive">Phillips Curve</div></button>
+                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Inflation', 'Unemployment'])"><div class="txt-responsive" >Phillips Curve</div></button>
                     <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'])"><div class="txt-responsive">Laffer Curve</div></button>
                     <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Interest', 'Real GDP, billions'])"><div class="txt-responsive">IS-LM Model</div></button>
                     </div>
@@ -81,21 +81,21 @@
             <div class="" style=" height: 25%;">
                 <!--The right side TOP LEFT-->
                 <div class="topvis">
-                    <h5 class="toptitle" >Phillips Curve</h5>
+                    <h5 class="toptitle" ><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Phillips Curve</a></h5>
                     <div id="leftvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                          <svg></svg>
                     </div>
                 </div>
                 <!--The right side TOP MIDDLE-->
                 <div class="topvis">
-                    <h5 class="toptitle" >Laffer Curve</h5>
+                    <h5 class="toptitle" ><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Laffer Curve</a></h5>
                     <div id="middlevis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                          <svg></svg>
                     </div>
                 </div>
                 <!--The right side TOP RIGHT-->
                 <div class="topvis" style="float: right;">
-                    <h5 class="toptitle" >IS-LM Model</h5>
+                    <h5 class="toptitle" ><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">IS-LM Model</a></h5>
                     <div id="rightvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                          <svg></svg>
                     </div>
