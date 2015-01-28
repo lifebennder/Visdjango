@@ -1,4 +1,4 @@
-//main visualisation global variables.
+    //main visualisation global variables.
 var mainVis = null;
 var maindata = null;
 var unNormalisedmaindata = null;
@@ -323,12 +323,15 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.tooltipContent(function (key, x, y, e, graph) {
             var RGB = e.series.color;
             var alpha = '0.35';
+            var year = ValueIndexList[leftLabel][y];
+            if(year == undefined) year = ValueIndexList[bottomLabel][x];
             var backgroundcolor = 'rgba(' + parseInt(RGB.substring(1, 3), 16) + ',' +
                 parseInt(RGB.substring(3, 5), 16) + ',' +
                 parseInt(RGB.substring(5, 7), 16) + ',' + alpha + ')';
             var content = '<div class="toptooltiptitle" style="background-color: ';
             content += backgroundcolor + '">';
-            content += key + '</div><p>' + leftLabel + ': ' + y + ',<br> ' + bottomLabel + ': ' + x + '</p>';
+            content += key + '</div><p>' + leftLabel + ': ' + y + ',<br> ' + bottomLabel + ': ' + x;
+            content += '<br> Year: '+ValueIndexList[leftLabel][y]+'</p>';
             return content;
         });
         chart.margin({"left": 40, "right": 30, "top": 10, "bottom": 30});
