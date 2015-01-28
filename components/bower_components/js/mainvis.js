@@ -280,14 +280,14 @@ function drawleftvis(leftAxis, bottomAxis) {
     drawUpperVis('leftvis', leftAxis, bottomAxis, leftVisData);
 }
 
-//Draw the top left visualisation
+//Draw the top middle visualisation
 function drawmiddlevis(leftAxis, bottomAxis) {
     removeGraph('middlevis', middleVis);
     middleVisData = upperVisData(leftAxis, bottomAxis, lafferCurve());
     drawUpperVis('middlevis', leftAxis, bottomAxis, middleVisData);
 }
 
-//Draw the top left visualisation
+//Draw the top right visualisation
 function drawrightvis(leftAxis, bottomAxis) {
     removeGraph('rightvis', rightVis);
     rightVisData = upperVisData(leftAxis, bottomAxis, ISLMCurve());
@@ -358,7 +358,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
                 if (series.key == leftLabel)inflationIndex = i;
                 if (series.key == bottomLabel)unemploymentIndex = i;
             });
-            //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+inflationValIndex[y]+' xindex: '+ getXIndex(inflationValIndex[y],maindata[0].values));
+            console.log('  x:'+ x+' '+' y:'+ y+' vind:'+ValueIndexList[leftLabel][y]+' xindex: '+ ValueIndexList[bottomLabel][x]);
             if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, ValueIndexList[leftLabel][y] - mainMinVal, true);
             if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, ValueIndexList[bottomLabel][x] - mainMinVal, true);
         });

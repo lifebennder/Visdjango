@@ -22,7 +22,7 @@
             <h4 style="   text-align: center;">
                 Series Search
             </h4>
-            <!-- Axis Search Box-->
+            <!-- Series Search Box-->
             <div class="input-group">
                 <input id="searchbox" type="text" class="form-control"
                        placeholder="Select Series: &quot;Tax, GDP&quot;">
@@ -107,7 +107,6 @@
                 <div class="topvis">
                     <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Phillips
                         Curve</a></h5>
-
                     <div id="leftvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                         <svg></svg>
                     </div>
@@ -116,7 +115,6 @@
                 <div class="topvis">
                     <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Laffer
                         Curve</a></h5>
-
                     <div id="middlevis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                         <svg></svg>
                     </div>
@@ -125,7 +123,6 @@
                 <div class="topvis" style="float: right; border-right: 0px;">
                     <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">IS-LM
                         Model</a></h5>
-
                     <div id="rightvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                         <svg></svg>
                     </div>
@@ -144,9 +141,9 @@
 
         </div>
 
-        <!--The Left Control Panel, Data Combinations-->
+        <!--The Right Control Panel, Data Combinations-->
         <div style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
-        background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
+        background-color: #ffffff; padding: 0px 00px 10px 10px;  margin: 0px 00px 20px 00px;">
             <h4 style="   text-align: center;">
                 Data Combinations
             </h4>
@@ -156,14 +153,28 @@
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
                             <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setInteractiveMode()">
-                                <div class="txt-responsive">Interactive Mode</div>
+                                    onclick="setSeries(['Spending', 'Debt'])">
+                                <div class="txt-responsive">Spending Vs.<br> Public Debt</div>
                             </button>
-                            <button type="checkbox" class="btn btn-info" onclick="setFocusMode()">
-                                <div class="txt-responsive">Navigation Chart</div>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['per capita'])">
+                                <div class="txt-responsive">Real GDP (per Capita) <br>Vs. GDP (per Capita)</div>
                             </button>
-                            <button type="checkbox" class="btn btn-info " onclick="NormaliseMode()">
-                                <div class="txt-responsive">Normalise</div>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['GDP %'])">
+                                <div class="txt-responsive">GDP %</div>
+                            </button>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['GDP, billions','Real GDP, billions'])">
+                                <div class="txt-responsive">Real GDP Vs. GDP</div>
+                            </button>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['GDP, billions','per capita','Population'])">
+                                <div class="txt-responsive">Population Vs. GDP</div>
+                            </button>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['unemployment','Tax Rev, GDP %'])">
+                                <div class="txt-responsive">Unemployment Vs. <br>Tax Revenue, GDP %</div>
                             </button>
                         </div>
                     </div>
@@ -172,30 +183,23 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
     <div class="references top-border">
         <h1>Data Attributes</h1>
-
-        <p>Data Source: The data is a compile data table comes from many sources. Most of the data comes from the ONS
-            (Office for National Statistics).
-            However, any data provided that is not available from the ONS was taken from these Sources:</p>
+        <h4>Series Details</h4>
         <ul>
-
             <li>Real GDP - The inflation adjustment is set to reference 2008</li>
             <li>Tax Revenue- This includes all taxable income</li>
             <li>Inflation - The inflation relates the the Consumer Price Index, therefore consumer goods inflation</li>
-        </ul>
-        <h1>Interesting data combinations</h1>
+        </ul><br>
+        <h4>Data Sources</h4>
+        <p> The data is a compile data table comes from many sources. Most of the data comes from the ONS
+            (Office for National Statistics).
+            However, any data provided that is not available from the ONS was taken from these Sources:<br>
+            Tax Rates: <a href="http://www.ifs.org.uk/">Institute For Fiscal Studies</a><br>
+            Pre-1900s Data: <a href="www.ukpublicspending.co.uk">Uk Public Spending</a><br>
+            GDP 1840-2014: <a href="http://measuringworth.com/">Measuring Growth</a></p>
+
+        <!--h1>Interesting data combinations</h1>
         <ul class="twocolumns">
             <li><a onclick="setSeries(['Spending', 'Debt'])">Spending Vs. Public Debt</a></li>
             <li><a onclick="setSeries(['per capita'])">Real GDP (per Capita) Vs. GDP (per Capita)</a></li>
@@ -203,7 +207,7 @@
             <li><a onclick="setSeries(['GDP, billions','Real GDP, billions'])">Real GDP Vs. GDP</a></li>
             <li><a onclick="setSeries(['GDP, billions','per capita','Population'])">Population Vs. GDP</a></li>
             <li><a onclick="setSeries(['unemployment','Tax Rev, GDP %'])">Unemployment Vs. Tax Revenue, GDP %</a></li>
-        </ul>
+        </ul-->
         <h1>Further Reading</h1>
         <ul class="twocolumns">
             <li><a href="http://en.wikipedia.org/wiki/Phillips_curve">Phillips Curve</a>:
