@@ -15,28 +15,39 @@
     margin-bottom: 0.0em;">Economic Visualisation</h2>
     </div>
 
+    <!-- The Application-->
     <div style="height:92%; min-height: 500px; ">
-        <div style="float:left;  border-right: 5px solid #dddddd; float:left; height: 100%; width: 23%;
+        <div style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
         background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
             <h4 style="   text-align: center;">
                 Series Search
             </h4>
             <!-- Axis Search Box-->
             <div class="input-group">
-                <input id="searchbox" type="text" class="form-control" placeholder="Select Series: &quot;Tax, GDP&quot;">
+                <input id="searchbox" type="text" class="form-control"
+                       placeholder="Select Series: &quot;Tax, GDP&quot;">
                     <span class="input-group-btn">
                         <button class="btn btn-info" type="button" onclick="search()">Go!</button>
                     </span>
-            </div><br>
+            </div>
+            <br>
             <!-- Main Visualisation Control Panel-->
-            <div class="panel panel-info" >
+            <div class="panel panel-info">
                 <div class="panel-heading">Main Visualisation</div>
-                <div class="panel-body" style="text-align: center"><div>
-                    <div class="btn-group-vertical btn-group-md" role="group">
-                    <button type="button" class="btn btn-info " aria-label="true" onclick="setInteractiveMode()"><div class="txt-responsive">Interactive Mode</div></button>
-                    <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()"><div class="txt-responsive">Navigation Chart</div></button>
-                    <button type="checkbox" class="btn btn-info " onclick="NormaliseMode()"><div class="txt-responsive">Normalise</div></button>
-                    </div>
+                <div class="panel-body" style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setInteractiveMode()">
+                                <div class="txt-responsive">Interactive Mode</div>
+                            </button>
+                            <button type="checkbox" class="btn btn-info" onclick="setFocusMode()">
+                                <div class="txt-responsive">Navigation Chart</div>
+                            </button>
+                            <button type="checkbox" class="btn btn-info " onclick="NormaliseMode()">
+                                <div class="txt-responsive">Normalise</div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,52 +63,71 @@
                     </div>
                 </div>
             </div>{% endcomment %}
-            <div class="panel panel-info" >
+            <div class="panel panel-info">
                 <div class="panel-heading">Upper Visualisations Series</div>
-                <div class="panel-body " style="text-align: center"><div>
-                    <div class="btn-group-vertical btn-group-md" role="group">
-                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Inflation', 'Unemployment'])"><div class="txt-responsive" >Phillips Curve</div></button>
-                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'])"><div class="txt-responsive">Laffer Curve</div></button>
-                    <button type="button" class="btn btn-info " aria-label="true" onclick="setSeries(['Interest', 'Real GDP, billions'])"><div class="txt-responsive">IS-LM Model</div></button>
-                    </div>
+                <div class="panel-body " style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['Inflation', 'Unemployment'])">
+                                <div class="txt-responsive">Phillips Curve</div>
+                            </button>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'])">
+                                <div class="txt-responsive">Laffer Curve</div>
+                            </button>
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setSeries(['Interest', 'Real GDP, billions'])">
+                                <div class="txt-responsive">IS-LM Model</div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- Third, Style Control Panel-->
-            <div class="panel panel-info" >
+            <div class="panel panel-info">
                 <div class="panel-heading">Style</div>
-                <div class="panel-body " style="text-align: center"><div>
-                    <div class="btn-group-vertical btn-group-md" role="group">
-                    <button type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()"><div class="txt-responsive">Background Colour</div></button>
-                    </div>
+                <div class="panel-body " style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()">
+                                <div class="txt-responsive">Background Colour</div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
-        <!--The right side-->
-        <div class="" style=" float:left;  height: 100%; width: 77%;">
-            <!--The right side TOP-->
+        <!--The Middle, Visuallsations-->
+        <div class="" style=" float:left;  height: 100%; width: 64%;">
+            <!--The TOP-->
             <div class="" style=" height: 25%;">
-                <!--The right side TOP LEFT-->
+                <!--The TOP LEFT-->
                 <div class="topvis">
-                    <h5 class="toptitle" ><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Phillips Curve</a></h5>
+                    <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Phillips
+                        Curve</a></h5>
+
                     <div id="leftvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
-                         <svg></svg>
+                        <svg></svg>
                     </div>
                 </div>
-                <!--The right side TOP MIDDLE-->
+                <!--The TOP MIDDLE-->
                 <div class="topvis">
-                    <h5 class="toptitle" ><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Laffer Curve</a></h5>
+                    <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Laffer
+                        Curve</a></h5>
+
                     <div id="middlevis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
-                         <svg></svg>
+                        <svg></svg>
                     </div>
                 </div>
-                <!--The right side TOP RIGHT-->
-                <div class="topvis" style="float: right;">
-                    <h5 class="toptitle" ><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">IS-LM Model</a></h5>
+                <!--The TOP RIGHT-->
+                <div class="topvis" style="float: right; border-right: 0px;">
+                    <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">IS-LM
+                        Model</a></h5>
+
                     <div id="rightvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
-                         <svg></svg>
+                        <svg></svg>
                     </div>
                 </div>
             </div>
@@ -113,11 +143,54 @@
 
 
         </div>
+
+        <!--The Left Control Panel, Data Combinations-->
+        <div style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
+        background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
+            <h4 style="   text-align: center;">
+                Data Combinations
+            </h4>
+            <div class="panel panel-info">
+                <div class="panel-heading">Main Visualisation</div>
+                <div class="panel-body" style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button type="button" class="btn btn-info " aria-label="true"
+                                    onclick="setInteractiveMode()">
+                                <div class="txt-responsive">Interactive Mode</div>
+                            </button>
+                            <button type="checkbox" class="btn btn-info" onclick="setFocusMode()">
+                                <div class="txt-responsive">Navigation Chart</div>
+                            </button>
+                            <button type="checkbox" class="btn btn-info " onclick="NormaliseMode()">
+                                <div class="txt-responsive">Normalise</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
 
     <div class="references top-border">
         <h1>Data Attributes</h1>
+
+        <p>Data Source: The data is a compile data table comes from many sources. Most of the data comes from the ONS
+            (Office for National Statistics).
+            However, any data provided that is not available from the ONS was taken from these Sources:</p>
         <ul>
+
             <li>Real GDP - The inflation adjustment is set to reference 2008</li>
             <li>Tax Revenue- This includes all taxable income</li>
             <li>Inflation - The inflation relates the the Consumer Price Index, therefore consumer goods inflation</li>
