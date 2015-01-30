@@ -4744,7 +4744,7 @@ nv.models.lineChart = function() {
         , defaultState = null
         , noData = 'No Data Available.'
         , dispatch = d3.dispatch('tooltipShow', 'tooltipHide', 'stateChange', 'changeState', 'renderEnd')
-        , duration = 250
+        , duration = 0
         ;
 
     xAxis

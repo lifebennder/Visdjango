@@ -1,4 +1,4 @@
-    //main visualisation global variables.
+//main visualisation global variables.
 var mainVis = null;
 var maindata = null;
 var unNormalisedmaindata = null;
@@ -9,6 +9,8 @@ var maintooltips = true;
 var tickformat = '.2f';
 var backgroundcolour = true;
 var isMainNormalised = false;
+var navigationIndexes = [1692, 2019];
+var navigationFilter = true;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -48,6 +50,32 @@ function drawmain(data) {
             chart = nv.models.lineWithFocusChart().margin({left: 60});
             chart.y2Axis.tickFormat(d3.format(tickformat));
             //chart.useInteractiveGuideline(maininteractive);
+            chart.brushExtent(navigationIndexes);
+            chart.dispatch.on('brush.user', function (brush) {
+                //updateData(newState); //brush is returned and extent []
+                navigationIndexes = brush.extent;
+                //console.log(leftVis.xAxis.axisLabel());
+                /* leftVisData[0].values.forEach(function (value, i) {
+                 //value.series = 30; console.log(value);
+                 });*/
+                //leftVis.data = leftVisData;
+                //removeGraph('leftvis',leftVis);
+                if (navigationFilter) {
+                    leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve());
+                    middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve());
+                    rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve());
+                    //rightVis.data = rightVisData;
+                    //console.log(rightVisData);
+                    d3.select('#leftvis svg').datum(leftVisData);
+                    d3.select('#middlevis svg').datum(middleVisData);
+                    d3.select('#rightvis svg').datum(rightVisData);
+                    //drawUpperVisualisations();
+                    leftVis.update();
+                    middleVis.update();
+                    rightVis.update();
+                    //console.log(leftVis.data);
+                }
+            });
         } else {
             chart = nv.models.lineChart().margin({left: 60});
             chart.useInteractiveGuideline(maininteractive);
@@ -128,26 +156,27 @@ function drawmain(data) {
                 if (leftVis != null)leftVis.lines.clearHighlights();
                 if (middleVis != null)middleVis.lines.clearHighlights();
                 if (rightVis != null)rightVis.lines.clearHighlights();
-            });}
-            chart.dispatch.on('stateChange.main', function (newState) {
-                updateData(newState);
-                console.log('state change ');
             });
-            chart.dispatch.on('changeState.main', function (newState) {
-                updateData(newState);
-                console.log('change state');
-            });
+        }
+        chart.dispatch.on('stateChange.main', function (newState) {
+            updateData(newState);
+            console.log('state change ');
+        });
+        chart.dispatch.on('changeState.main', function (newState) {
+            updateData(newState);
+            console.log('change state');
+        });
 
         drawUpperVisualisations();
         return chart;
     });
     //});
 }
-function updateData(newState){
-                    newState.disabled.forEach(function (disabled, i) {
-                    if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
-                    unNormalisedmaindata[i].disabled = disabled;
-                });
+function updateData(newState) {
+    newState.disabled.forEach(function (disabled, i) {
+        if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
+        unNormalisedmaindata[i].disabled = disabled;
+    });
 }
 /*function getindexes(data) {
  data.forEach(function (series, i) {
@@ -185,7 +214,31 @@ function setFocusMode() {
     mainfocus = !mainfocus;
     drawmain(maindata);
 }
+function navigationFilterToggle() {
+    navigationFilter = !navigationFilter;
+    setUpperVisData();
+}
 
+function setUpperVisData(data) {
+    if (data == undefined || data == null) {
+        leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve());
+        middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve());
+        rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve());
+    }
+    else {
+        leftVisData = data;
+
+    }
+    //rightVis.data = rightVisData;
+    //console.log(rightVisData);
+    d3.select('#leftvis svg').datum(leftVisData);
+    d3.select('#middlevis svg').datum(middleVisData);
+    d3.select('#rightvis svg').datum(rightVisData);
+    //drawUpperVisualisations();
+    leftVis.update();
+    middleVis.update();
+    rightVis.update();
+}
 function NormaliseMode() {
     //TODO change teh maindata loading so that it loads the data seperatly from the drawing and then just pass in
     //TODO the actual data variable. This allows for normalisation to work and not need to get data every time.
@@ -220,7 +273,7 @@ function NormaliseMode() {
             });
         });
     }
-    console.log('Normalised: '+isMainNormalised);
+    console.log('Normalised: ' + isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
     drawmain(maindata);
@@ -240,31 +293,32 @@ function BackgroundColour() {
 }
 
 function spendingVsDebt() {
-    var keywords = ['Debt','Spending'];
+    var keywords = ['Debt', 'Spending'];
     setSeries(keywords);
 }
-function search(){
+function search() {
     var text = document.getElementById('searchbox').value.split(', ');
-    console.log('searching for: '+ text+'|');
-    if(text!='')setSeries(text);
+    console.log('searching for: ' + text + '|');
+    if (text != '')setSeries(text);
 }
 /*Set the series that will be displayed. input is a list of keywords*/
 function setSeries(keywords) {
-    if(keywords==undefined||keywords[0]=='') return;
+    if (keywords == undefined || keywords[0] == '') return;
     console.log(keywords);
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
-        state.disabled.push(function(kws){
+        state.disabled.push(function (kws) {
             //var match = false;
-            if(kws[0].toString().toLowerCase()=='all')return false;
-            for(var index in kws){
+            if (kws[0].toString().toLowerCase() == 'all')return false;
+            for (var index in kws) {
                 var key = series.key.toLowerCase();
                 var keyword = kws[index].toString();
-                console.log(key+'   '+keyword+' '+index+' '+keyword.toLowerCase());
-            if (key.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
-                return false;
+                console.log(key + '   ' + keyword + ' ' + index + ' ' + keyword.toLowerCase());
+                if (key.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
+                    return false;
+                }
             }
-            };
+            ;
             return true;
         }(keywords));
     });
@@ -314,6 +368,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             return parseFloat(d.y)
         });
         chart.x(function (d) {
+            if (d.y == "") return null;
             return parseFloat(d.x)
         });
         //chart.interpolate('linear-closed');
@@ -324,14 +379,14 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             var RGB = e.series.color;
             var alpha = '0.35';
             var year = ValueIndexList[leftLabel][y];
-            if(year == undefined) year = ValueIndexList[bottomLabel][x];
+            if (year == undefined) year = ValueIndexList[bottomLabel][x];
             var backgroundcolor = 'rgba(' + parseInt(RGB.substring(1, 3), 16) + ',' +
                 parseInt(RGB.substring(3, 5), 16) + ',' +
                 parseInt(RGB.substring(5, 7), 16) + ',' + alpha + ')';
             var content = '<div class="toptooltiptitle" style="background-color: ';
             content += backgroundcolor + '">';
             content += key + '</div><p>' + leftLabel + ': ' + y + ',<br> ' + bottomLabel + ': ' + x;
-            content += '<br> Year: '+ValueIndexList[leftLabel][y]+'</p>';
+            content += '<br> Year: ' + ValueIndexList[leftLabel][y] + '</p>';
             return content;
         });
         chart.margin({"left": 40, "right": 30, "top": 10, "bottom": 30});
@@ -358,7 +413,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
                 if (series.key == leftLabel)inflationIndex = i;
                 if (series.key == bottomLabel)unemploymentIndex = i;
             });
-            console.log('  x:'+ x+' '+' y:'+ y+' vind:'+ValueIndexList[leftLabel][y]+' xindex: '+ ValueIndexList[bottomLabel][x]);
+            //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+ValueIndexList[leftLabel][y]+' xindex: '+ ValueIndexList[bottomLabel][x]);
             if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, ValueIndexList[leftLabel][y] - mainMinVal, true);
             if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, ValueIndexList[bottomLabel][x] - mainMinVal, true);
         });
@@ -380,17 +435,21 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     });
     var first = false;
     for (var i = 0; i < unemploymentSeries.length; i++) {
-
-        var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
-        //console.log({x:unemploymentVal, y:inflationVal});
-        if (unemploymentVal != '' && inflationVal != '') {
-            if (first == false) {
-                unemploymentStartIndex = unemploymentSeries[i].x;
-                first = !first;
+        if ((navigationIndexes[0] <= parseInt(unemploymentSeries[i].x) && parseInt(unemploymentSeries[i].x) <= navigationIndexes[1]) || !navigationFilter) {
+            //console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));
+            //console.log(navigationIndexes[0]+!!(navigationIndexes[0]<=parseInt(unemploymentSeries[i].x))+'  '+unemploymentSeries[i].x+'  '+navigationIndexes[1]);
+            var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
+            //console.log({x:unemploymentVal, y:inflationVal});
+            if (unemploymentVal != '' && inflationVal != '') {
+                if (first == false) {
+                    unemploymentStartIndex = unemploymentSeries[i].x;
+                    first = !first;
+                }
+                historicPhillipsCurve.push({x: unemploymentVal, y: inflationVal, shape: 'circle'});
             }
-            historicPhillipsCurve.push({x: unemploymentVal, y: inflationVal, shape: 'circle'});
-        }
+        } //else{console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));}
     }
+    //console.log(historicPhillipsCurve); console.log(unemploymentSeries.length);
     var data = [
 //area: true,
         {
@@ -398,6 +457,11 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
             key: "Historic Values",
             color: "#2ca02c",
             startXIndex: unemploymentStartIndex
+        },
+        {
+            values: [],
+            key: "disabled",
+            color: "#cccccc"
         }
     ];
     theoreticalCurve.forEach(function (curve) {

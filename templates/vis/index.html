@@ -37,16 +37,20 @@
                 <div class="panel-body" style="text-align: center">
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
-                            <button type="button" class="btn btn-info " aria-label="true"
+                            <!--button type="button" class="btn btn-info " aria-label="true"
                                     onclick="setInteractiveMode()">
                                 <div class="txt-responsive">Interactive Mode</div>
-                            </button>
-                            <button type="checkbox" class="btn btn-info" onclick="setFocusMode()">
+                            </button-->
+                            <button type="button" class="btn btn-info" onclick="setFocusMode()">
                                 <div class="txt-responsive">Navigation Chart</div>
                             </button>
-                            <button type="checkbox" class="btn btn-info " onclick="NormaliseMode()">
+                            <button type="button" class="btn btn-info" onclick="navigationFilterToggle()">
+                                <div class="txt-responsive">Navigation Filter</div>
+                            </button>
+                            <button type="button" class="btn btn-info " onclick="NormaliseMode()">
                                 <div class="txt-responsive">Normalise</div>
                             </button>
+
                         </div>
                     </div>
                 </div>
@@ -113,7 +117,7 @@
                 </div>
                 <!--The TOP MIDDLE-->
                 <div class="topvis">
-                    <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}">Laffer
+                    <h5 class="toptitle"><a style="text-decoration: none;" href="{% url 'vis.views.help' %}">Laffer
                         Curve</a></h5>
                     <div id="middlevis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
                         <svg></svg>
