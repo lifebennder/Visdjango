@@ -41,13 +41,13 @@
                                     onclick="setInteractiveMode()">
                                 <div class="txt-responsive">Interactive Mode</div>
                             </button-->
-                            <button type="button" class="btn btn-info" onclick="setFocusMode()">
+                            <button id="setfocusmode" type="button" class="btn btn-default" onclick="setFocusMode()">
                                 <div class="txt-responsive">Navigation Chart</div>
                             </button>
-                            <button type="button" class="btn btn-info" onclick="navigationFilterToggle()">
+                            <button id="navigationfiltertoggle" type="button" class="btn btn-info" onclick="navigationFilterToggle()">
                                 <div class="txt-responsive">Navigation Filter</div>
                             </button>
-                            <button type="button" class="btn btn-info " onclick="NormaliseMode()">
+                            <button id="normalisemode" type="button" class="btn btn-default " onclick="NormaliseMode()">
                                 <div class="txt-responsive">Normalise</div>
                             </button>
 
@@ -72,16 +72,16 @@
                 <div class="panel-body " style="text-align: center">
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['Inflation', 'Unemployment'])">
+                            <button id="phillipscurve" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Inflation', 'Unemployment'],id)">
                                 <div class="txt-responsive">Phillips Curve</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'])">
+                            <button id="laffercurve" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'],id)">
                                 <div class="txt-responsive">Laffer Curve</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['Interest', 'Real GDP, billions'])">
+                            <button id="islmmodel" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Interest', 'Real GDP, billions'],id)">
                                 <div class="txt-responsive">IS-LM Model</div>
                             </button>
                         </div>
@@ -94,7 +94,7 @@
                 <div class="panel-body " style="text-align: center">
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
-                            <button type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()">
+                            <button id="backgroundcolour" type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()">
                                 <div class="txt-responsive">Background Colour</div>
                             </button>
                         </div>
@@ -156,28 +156,28 @@
                 <div class="panel-body" style="text-align: center">
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['Spending', 'Debt'])">
+                            <button id="data1" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Spending', 'Debt'],id)">
                                 <div class="txt-responsive">Spending Vs.<br> Public Debt</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['per capita'])">
+                            <button id="data2" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['per capita'],id)">
                                 <div class="txt-responsive">Real GDP (per Capita) <br>Vs. GDP (per Capita)</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['GDP %'])">
+                            <button id="data3" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['GDP %'],id)">
                                 <div class="txt-responsive">GDP %</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['GDP, billions','Real GDP, billions'])">
+                            <button id="data4" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['GDP, billions','Real GDP, billions'],id)">
                                 <div class="txt-responsive">Real GDP Vs. GDP</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['GDP, billions','per capita','Population'])">
+                            <button id="data5" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['GDP, billions','per capita','Population'],id)">
                                 <div class="txt-responsive">Population Vs. GDP</div>
                             </button>
-                            <button type="button" class="btn btn-info " aria-label="true"
-                                    onclick="setSeries(['unemployment','Tax Rev, GDP %'])">
+                            <button id="data6" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['unemployment','Tax Rev, GDP %'],id)">
                                 <div class="txt-responsive">Unemployment Vs. <br>Tax Revenue, GDP %</div>
                             </button>
                         </div>

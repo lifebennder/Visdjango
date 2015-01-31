@@ -11,6 +11,7 @@ var backgroundcolour = true;
 var isMainNormalised = false;
 var navigationIndexes = [1692, 2019];
 var navigationFilter = true;
+var buttonSelectID = null;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -207,15 +208,34 @@ function setInteractiveMode() {
         drawmain(maindata);
     }
 }
-
+function changeButtonColourClass(id,isOn,onClass,offClass){
+        if(isOn) {
+        d3.select(id).classed(offClass,false);
+        d3.select(id).classed(onClass,true);
+    }
+    else {
+        d3.select(id).classed(onClass,false);
+        d3.select(id).classed(offClass,true);
+    }
+}
 function setFocusMode() {
     console.log("setFocus Mode");
     //removeGraph('main');
     mainfocus = !mainfocus;
+    changeButtonColourClass('#setfocusmode',mainfocus,'btn-info','btn-default');
+   /* if(mainfocus) {
+        d3.select('#setfocusmode').classed('btn-danger',false);
+        d3.select('#setfocusmode').classed('btn-info',true);
+    }
+    else {
+        d3.select('#setfocusmode').classed('btn-info',false);
+        d3.select('#setfocusmode').classed('btn-danger',true);
+    }*/
     drawmain(maindata);
 }
 function navigationFilterToggle() {
     navigationFilter = !navigationFilter;
+        changeButtonColourClass('#navigationfiltertoggle',navigationFilter,'btn-info','btn-default');
     setUpperVisData();
 }
 
@@ -278,7 +298,7 @@ function NormaliseMode() {
     else maindata = Normalisedmaindata;
     drawmain(maindata);
     isMainNormalised = !isMainNormalised;
-
+    changeButtonColourClass('#normalisemode',isMainNormalised,'btn-info','btn-default');
 }
 function BackgroundColour() {
     var topcolour = d3.rgb("#c9c9c0");
@@ -290,6 +310,7 @@ function BackgroundColour() {
     d3.select('#main').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
     backgroundcolour = !backgroundcolour;
+    changeButtonColourClass('#backgroundcolour',backgroundcolour,'btn-info','btn-default');
 }
 
 function spendingVsDebt() {
@@ -299,12 +320,12 @@ function spendingVsDebt() {
 function search() {
     var text = document.getElementById('searchbox').value.split(', ');
     console.log('searching for: ' + text + '|');
-    if (text != '')setSeries(text);
+    if (text != ''&&text!= null)setSeries(text);
 }
 /*Set the series that will be displayed. input is a list of keywords*/
-function setSeries(keywords) {
+function setSeries(keywords,id) {
     if (keywords == undefined || keywords[0] == '') return;
-    console.log(keywords);
+    //console.log(id);
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
         state.disabled.push(function (kws) {
@@ -313,7 +334,7 @@ function setSeries(keywords) {
             for (var index in kws) {
                 var key = series.key.toLowerCase();
                 var keyword = kws[index].toString();
-                console.log(key + '   ' + keyword + ' ' + index + ' ' + keyword.toLowerCase());
+                //console.log(key + '   ' + keyword + ' ' + index + ' ' + keyword.toLowerCase());
                 if (key.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
                     return false;
                 }
@@ -324,6 +345,22 @@ function setSeries(keywords) {
     });
     //console.log(state);
     mainVis.dispatch.changeState(state);
+    //if(d3.select('#'+id).property('className').indexOf('btn-info')){
+
+    if(buttonSelectID!=null){
+        var istrue = (d3.select('#'+buttonSelectID).property('className').indexOf('btn-info')>=0);
+        console.log(buttonSelectID+' setting false '+ istrue);
+        changeButtonColourClass('#'+buttonSelectID,false,'btn-info','btn-default');
+        buttonSelectID=null;
+    }
+
+    if(id!=undefined){
+        console.log(id+' setting true');
+        buttonSelectID=id;
+        //d3.select('#'+id).property('className').indexOf('btn-info')>=0
+        changeButtonColourClass('#'+id,true,'btn-info','btn-default');
+    }
+    //}
 }
 
 //TOP RIGHT CHART
