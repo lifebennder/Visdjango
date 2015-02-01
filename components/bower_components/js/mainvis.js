@@ -27,6 +27,7 @@ var leftVisData = null;
 var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
+    $('[data-toggle="tooltip"]').tooltip({trigger: 'hover','placement': 'bottom', delay: { "show": 800, "hide": 100 }}); //activate tooltip plugin
     removeGraph('main', mainVis);
     removeGraph('leftvis', leftVis);
     removeGraph('middlevis', middleVis);

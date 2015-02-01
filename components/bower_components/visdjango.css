@@ -106,3 +106,9 @@ svg {
     border-color: #bdbdbd;
 
 }
+
+.tooltiphelp {
+    data-placement: "bottom";
+    data-toggle: "tooltip";
+
+}
