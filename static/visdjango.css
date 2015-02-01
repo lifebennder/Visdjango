@@ -106,3 +106,22 @@ svg {
     border-color: #bdbdbd;
 
 }
+
+.tooltiphelp {
+    data-placement: "bottom";
+    data-toggle: "tooltip";
+
+}
+.startfooter {
+cursor:pointer;
+    opacity:0;
+    background-color: rgba(4, 167, 202, 0.77);
+    position: fixed;
+    bottom: 0px;
+    width:80%;
+    float:right;
+    padding: 5px 0px 2px 5px;
+    margin-right: 10%;
+    margin-left: 10%;
+    box-shadow: 0px 0px 10px 2px #888888;
+}

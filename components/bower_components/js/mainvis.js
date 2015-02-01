@@ -37,12 +37,15 @@ window.onload = function (e) {
         maindata = unNormalisedmaindata;
         drawmain(maindata);
     });
+    d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
     nv.log('loaded');
     //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
 
 };
-
+function hide(id){
+    d3.select('#'+id).transition().delay(100).duration(2000).style("opacity", 0).remove();
+}
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
     removeGraph('main', mainVis);
