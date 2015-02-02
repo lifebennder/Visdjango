@@ -47,7 +47,7 @@
                                     title="Adds time selection control underneath the main graph that allows you to zoom
                                      in on the time axis. This will also affect upper visualisation historic data
                                      values if the &quot;Navigation Filter&quot; is enabled."  data-toggle="tooltip">
-                                <div class="txt-responsive">Navigation Chart</div>
+                                <div class="txt-responsive">Navigation Bar</div>
                             </button>
                             <button id="navigationfiltertoggle" type="button" class="btn btn-info" onclick="navigationFilterToggle()"
                                     title="Toggles if the upper Visualisations limit the Historic Values (green) according to time zooming in the main graph."  data-toggle="tooltip">
@@ -271,9 +271,24 @@
         </ul>
     </div>{% endblock %}
 {% block extrafooter %}
-<div id="startfooter" class="startfooter " onclick="hide('startfooter')";>whatever floats your goat
-    <img id="_evh-ric-c" style="float:right; cursor:pointer; margin: 2px 5px 3px 3px; opacity:0.75;
+<div id="startfooter" class="startfooter " onclick="hide('startfooter')";>
+<img style="float:right; cursor:pointer; margin: 2px 2px 2px 5px; opacity:0.75;
     width:23px !important; height:23px !important;" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
+    <b>Welcome to the Economic Visualisation Application!</b><br>
+    If you don't know how anything works look at the <a style="font-weight: bold;" href="{% url 'vis.views.help' %}">help page</a> or hover over the item to get more
+    information in the tooltip <br>
+    <b>Left Control</b> - This area allows to change the properties of the visualisations. From activating a navigation Bar to zoom
+    in the graph, to background colour selection.<br>
+    <b>Visualisation Area</b> - This area is split into the Main, Historic Visualisation of UK economic properties over the past 300 years.
+    Then you get the upper visualisations that show the relation between economic theory and their models (blue curves), with the historic
+    data from the Historic graph (green dots).<br>
+    <b>Series Selection</b> - You can select or deselect which series (economic property) you want by either clicking
+    on the label of it; toggling that series,
+    or double clicking which selects only that value or selects all values.<br>
+    <b>Right Control</b> - This shows a list of data combinations that will limit the series that are shown by the main (historic) visualisation.
+    Hover over the buttons to see details about each category.<br>
+    <b>For extra info you can scroll down.</b>
+
 </div>
 {% endblock %}
 
