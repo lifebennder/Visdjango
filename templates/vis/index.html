@@ -272,13 +272,12 @@
     </div>{% endblock %}
 {% block extrafooter %}
 <div id="startfooter" class="startfooter " onclick="hide('startfooter')";>
-<img style="float:right; cursor:pointer; margin: 2px 2px 2px 5px; opacity:0.75;
-    width:30px !important; height:30px !important;" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
-    <div style="text-align: center"><b>     Welcome to the Economic Visualisation Application!<br>
-        An Application for the economic analysis of Historic data and its comparison to economic theory and their models.<br></b></div>
-
-    If you don't know how anything works look at the <a style="font-weight: bold;" href="{% url 'vis.views.help' %}">help page</a> or hover over the item to get more
-    information in the tooltip <br>
+<img style="float:right; margin: 2px 2px 2px 5px; opacity:0.75;
+    width:30px; height:30px;" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
+    <div style="text-align: center;"><b>     Welcome to the Economic Visualisation Application!<br>
+        An Application for the economic analysis of Historic data and its comparison to economic theory and their models.<br></b>
+        If you don't know how anything works look at the <a style="font-weight: bold;" href="{% url 'vis.views.help' %}">help page</a> or hover over the item to get more
+    information in the tooltip </div>
     <b>Left Control</b> - This area allows to change the properties of the visualisations. From activating a navigation Bar to zoom
     in the graph, to background colour selection.<br>
     <b>Visualisation Area</b> - This area is split into the Main, Historic Visualisation of UK economic properties over the past 300 years.

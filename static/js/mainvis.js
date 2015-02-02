@@ -48,7 +48,7 @@ function hide(id){
 }
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
-    removeGraph('main', mainVis);
+    //removeGraph('main', mainVis);
     nv.addGraph(function () {
         var chart;
         if (mainfocus) {
@@ -196,7 +196,8 @@ function removeGraph(graph, chartobject) {
 function setInteractiveMode() {
     console.log("setting interactive   ");
     //removeGraph('main');
-    mainVis.tooltips(false); //TODO MAYBE REMOVE THIS
+     //TODO MAYBE REMOVE THIS
+    removeGraph('main', mainVis);
     if (mainfocus) {
         mainfocus = !mainfocus;
         drawmain(maindata);
@@ -224,7 +225,7 @@ function changeButtonColourClass(id,isOn,onClass,offClass){
 }
 function setFocusMode() {
     console.log("setFocus Mode");
-    //removeGraph('main');
+    removeGraph('main', mainVis);
     mainfocus = !mainfocus;
     changeButtonColourClass('#setfocusmode',mainfocus,'btn-info','btn-default');
    /* if(mainfocus) {
@@ -235,6 +236,7 @@ function setFocusMode() {
         d3.select('#setfocusmode').classed('btn-info',false);
         d3.select('#setfocusmode').classed('btn-danger',true);
     }*/
+
     drawmain(maindata);
 }
 function navigationFilterToggle() {
@@ -300,7 +302,10 @@ function NormaliseMode() {
     console.log('Normalised: ' + isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
-    drawmain(maindata);
+    d3.select('#main svg').datum(maindata);
+    mainVis.update();
+
+    //drawmain(maindata);
     isMainNormalised = !isMainNormalised;
     changeButtonColourClass('#normalisemode',isMainNormalised,'btn-info','btn-default');
 }
