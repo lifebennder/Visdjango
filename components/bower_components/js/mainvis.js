@@ -321,6 +321,14 @@ function BackgroundColour() {
     backgroundcolour = !backgroundcolour;
     changeButtonColourClass('#backgroundcolour',backgroundcolour,'btn-info','btn-default');
 }
+function FancyVis(id) {
+    var istrue = (d3.select('#' + id).property('className').indexOf('btn-info') >= 0);
+    d3.select('#leftvis').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
+    d3.select('#middlevis').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
+    d3.select('#rightvis').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
+    d3.select('#main').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
+    changeButtonColourClass('#'+id,!istrue,'btn-info','btn-default');
+}
 
 function spendingVsDebt() {
     var keywords = ['Debt', 'Spending'];

@@ -16,7 +16,7 @@
     </div>
 
     <!-- The Application-->
-    <div style="height:92%; min-height: 500px; ">
+    <div style="height:92%; min-height: 500px; min-width: 1100px; ">
         <div style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
         background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
             <h4 style="   text-align: center;">
@@ -101,20 +101,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Third, Style Control Panel-->
-            <div class="panel panel-info">
-                <div class="panel-heading">Style</div>
-                <div class="panel-body " style="text-align: center">
-                    <div>
-                        <div class="btn-group-vertical btn-group-md" role="group">
-                            <button id="backgroundcolour" type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()"
-                                    title="Toggles if to have the visualisation background white or with colours"  data-toggle="tooltip">
-                                <div class="txt-responsive">Background Colour</div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
         </div>
         <!--The Middle, Visuallsations-->
@@ -167,7 +154,7 @@
             <!--The right side BOTTOM-->
             <div id="mainparent" class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
 
-                <div id="main" class="with-3d-shadow with-transitions"
+                <div id="main" class=""
                      style="  height:100%; width: 100%; background-color: rgb(255, 250,0); ">
                     <svg></svg>
                 </div>
@@ -225,6 +212,25 @@
                                     This illustrates the affect of unemployment on tax revenue. Bigger Unemployment would
                                     mean lower Tax Revenue."  data-toggle="tooltip">
                                 <div class="txt-responsive">Unemployment Vs. <br>Tax Revenue, GDP %</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <!-- Third, Style Control Panel-->
+            <div class="panel panel-info">
+                <div class="panel-heading">Style</div>
+                <div class="panel-body " style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button id="backgroundcolour" type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()"
+                                    title="Toggles if to have the visualisation background white or with colours"  data-toggle="tooltip">
+                                <div class="txt-responsive">Background Colour</div>
+                            </button>
+                            <button id="fancyvis" type="button" class="btn btn-info " aria-label="true" onclick="FancyVis('fancyvis')"
+                                    title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
+                                    increases Performance."  data-toggle="tooltip">
+                                <div class="txt-responsive">Fancy Animation</div>
                             </button>
                         </div>
                     </div>

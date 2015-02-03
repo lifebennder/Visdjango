@@ -4760,12 +4760,13 @@ nv.models.lineChart = function() {
     //------------------------------------------------------------
 
     var showTooltip = function(e, offsetElement) {
+
         var left = e.pos[0] + ( offsetElement.offsetLeft || 0 ),
             top = e.pos[1] + ( offsetElement.offsetTop || 0),
             x = xAxis.tickFormat()(lines.x()(e.point, e.pointIndex)),
             y = yAxis.tickFormat()(lines.y()(e.point, e.pointIndex)),
             content = tooltip(e.series.key, x, y, e, chart);
-
+        console.log(left    +'   '+top+'  '+e.pointIndex);
         nv.tooltip.show([left, top], content, null, null, offsetElement);
     };
 
@@ -4964,6 +4965,7 @@ nv.models.lineChart = function() {
                     })
                     .forEach(function(series,i) {
                         pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+
                         lines.highlightPoint(i, pointIndex, true);
                         var point = series.values[pointIndex];
                         if (typeof point === 'undefined') return;
