@@ -39,7 +39,7 @@ window.onload = function (e) {
         drawmain(maindata);
     });
     d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
-        BackgroundColour();
+    BackgroundColour();
     nv.log('loaded');
     //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
@@ -215,28 +215,26 @@ function setInteractiveMode() {
         drawmain(maindata);
     }
 }
-function changeButtonColourClass(id, isOn, onClass, offClass, onText, offText) {
-    var oldText = d3.select(id).text();
+function changeButtonColourClass(id, isOn, onClass, offClass) {
+    var text = d3.select(id).text();
     var lastIndex = -1;// = oldText.lastIndexOf(" ");
-    if (oldText.indexOf(' Off') > 1)lastIndex = oldText.indexOf(' Off');
-    else lastIndex = oldText.indexOf(' On');
-   // var newText = oldText.replace('');
-    var rootText = oldText.substring(0, lastIndex);
-    //console.log('|'+oldText+' '+rootText+'|');
-    var element =  d3.select(id).style();
+    if (text.indexOf(' Off') > 0) {
+        console.log();
+        text = text.replace(' Off', ' On');
+    }
+    else text = text.replace(' On', ' Off');
     if (isOn) {
         d3.select(id).classed(offClass, false);
         d3.select(id).classed(onClass, true);
-        if (lastIndex > -1)d3.select(id).text(rootText + ' On');
     }
     else {
         d3.select(id).classed(onClass, false);
         d3.select(id).classed(offClass, true);
-        if (lastIndex > -1)d3.select(id).html(rootText + ' Off');
     }
-    //console.log(element.style('font-size'));
-    //console.log(element.style('font-family'));//element.style('font-size')
-    if (lastIndex > -1)d3.select(id).style({'font-size':'calc(50% + 0.8vw)'});
+    if (text.indexOf(' Off') > 0 || text.indexOf(' On') > 0) {
+        d3.select(id).text(text);
+        d3.select(id).style({'font-size': 'calc(50% + 0.8vw)'});
+    }
 }
 function setFocusMode() {
     console.log("setFocus Mode");
