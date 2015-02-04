@@ -332,7 +332,7 @@ function BackgroundColour() {
     d3.select('#main').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
     backgroundcolour = !backgroundcolour;
-    changeButtonColourClass('#backgroundcolour', backgroundcolour, 'btn-info', 'btn-default');
+    changeButtonColourClass('#backgroundcolour', !backgroundcolour, 'btn-info', 'btn-default');
 }
 function FancyVis(id) {
     var istrue = (d3.select('#' + id).property('className').indexOf('btn-info') >= 0);
