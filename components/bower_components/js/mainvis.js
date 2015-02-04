@@ -7,7 +7,7 @@ var mainfocus = false;
 var maininteractive = true;
 var maintooltips = true;
 var tickformat = '.2f';
-var backgroundcolour = true;
+var backgroundcolour = false;
 var isMainNormalised = false;
 var navigationIndexes = [1692, 2019];
 var navigationFilter = true;
@@ -27,24 +27,26 @@ var leftVisData = null;
 var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
-    $('[data-toggle="tooltip"]').tooltip({trigger: 'hover','placement': 'bottom', delay: { "show": 800, "hide": 100 }}); //activate tooltip plugin
+    $('[data-toggle="tooltip"]').tooltip({trigger: 'hover', 'placement': 'bottom', delay: {"show": 800, "hide": 100}}); //activate tooltip plugin
     removeGraph('main', mainVis);
     removeGraph('leftvis', leftVis);
     removeGraph('middlevis', middleVis);
     removeGraph('rightvis', rightVis);
+
     d3.json("/vis/main_data/", function (error, data) {
         unNormalisedmaindata = data;
         maindata = unNormalisedmaindata;
         drawmain(maindata);
     });
     d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
+        BackgroundColour();
     nv.log('loaded');
     //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
 
 };
-function hide(id){
-    d3.select('#'+id).transition().delay(100).duration(2000).style("opacity", 0).remove();
+function hide(id) {
+    d3.select('#' + id).transition().delay(100).duration(2000).style("opacity", 0).remove();
 }
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
@@ -196,7 +198,7 @@ function removeGraph(graph, chartobject) {
 function setInteractiveMode() {
     console.log("setting interactive   ");
     //removeGraph('main');
-     //TODO MAYBE REMOVE THIS
+    //TODO MAYBE REMOVE THIS
     removeGraph('main', mainVis);
     if (mainfocus) {
         mainfocus = !mainfocus;
@@ -213,35 +215,48 @@ function setInteractiveMode() {
         drawmain(maindata);
     }
 }
-function changeButtonColourClass(id,isOn,onClass,offClass){
-        if(isOn) {
-        d3.select(id).classed(offClass,false);
-        d3.select(id).classed(onClass,true);
+function changeButtonColourClass(id, isOn, onClass, offClass, onText, offText) {
+    var oldText = d3.select(id).text();
+    var lastIndex = -1;// = oldText.lastIndexOf(" ");
+    if (oldText.indexOf(' Off') > 1)lastIndex = oldText.indexOf(' Off');
+    else lastIndex = oldText.indexOf(' On');
+   // var newText = oldText.replace('');
+    var rootText = oldText.substring(0, lastIndex);
+    //console.log('|'+oldText+' '+rootText+'|');
+    var element =  d3.select(id).style();
+    if (isOn) {
+        d3.select(id).classed(offClass, false);
+        d3.select(id).classed(onClass, true);
+        if (lastIndex > -1)d3.select(id).text(rootText + ' On');
     }
     else {
-        d3.select(id).classed(onClass,false);
-        d3.select(id).classed(offClass,true);
+        d3.select(id).classed(onClass, false);
+        d3.select(id).classed(offClass, true);
+        if (lastIndex > -1)d3.select(id).html(rootText + ' Off');
     }
+    //console.log(element.style('font-size'));
+    //console.log(element.style('font-family'));//element.style('font-size')
+    if (lastIndex > -1)d3.select(id).style({'font-size':'calc(50% + 0.8vw)'});
 }
 function setFocusMode() {
     console.log("setFocus Mode");
     removeGraph('main', mainVis);
     mainfocus = !mainfocus;
-    changeButtonColourClass('#setfocusmode',mainfocus,'btn-info','btn-default');
-   /* if(mainfocus) {
-        d3.select('#setfocusmode').classed('btn-danger',false);
-        d3.select('#setfocusmode').classed('btn-info',true);
-    }
-    else {
-        d3.select('#setfocusmode').classed('btn-info',false);
-        d3.select('#setfocusmode').classed('btn-danger',true);
-    }*/
+    changeButtonColourClass('#setfocusmode', mainfocus, 'btn-info', 'btn-default');//,'Navigation Bar On','Navigation Bar Off');
+    /* if(mainfocus) {
+     d3.select('#setfocusmode').classed('btn-danger',false);
+     d3.select('#setfocusmode').classed('btn-info',true);
+     }
+     else {
+     d3.select('#setfocusmode').classed('btn-info',false);
+     d3.select('#setfocusmode').classed('btn-danger',true);
+     }*/
 
     drawmain(maindata);
 }
 function navigationFilterToggle() {
     navigationFilter = !navigationFilter;
-        changeButtonColourClass('#navigationfiltertoggle',navigationFilter,'btn-info','btn-default');
+    changeButtonColourClass('#navigationfiltertoggle', navigationFilter, 'btn-info', 'btn-default');
     setUpperVisData();
 }
 
@@ -307,27 +322,27 @@ function NormaliseMode() {
 
     //drawmain(maindata);
     isMainNormalised = !isMainNormalised;
-    changeButtonColourClass('#normalisemode',isMainNormalised,'btn-info','btn-default');
+    changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
 }
 function BackgroundColour() {
     var topcolour = d3.rgb("#c9c9c0");
     var maincolour = d3.rgb(255, 250, 0);
-    if (backgroundcolour) {
+    if (!backgroundcolour) {
         topcolour = d3.rgb(255, 255, 255);
         maincolour = d3.rgb(255, 255, 255);
     }
     d3.select('#main').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
     backgroundcolour = !backgroundcolour;
-    changeButtonColourClass('#backgroundcolour',backgroundcolour,'btn-info','btn-default');
+    changeButtonColourClass('#backgroundcolour', backgroundcolour, 'btn-info', 'btn-default');
 }
 function FancyVis(id) {
     var istrue = (d3.select('#' + id).property('className').indexOf('btn-info') >= 0);
-    d3.select('#leftvis').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
-    d3.select('#middlevis').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
-    d3.select('#rightvis').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
-    d3.select('#main').classed({'with-3d-shadow':!istrue,'with-transitions':!istrue});
-    changeButtonColourClass('#'+id,!istrue,'btn-info','btn-default');
+    d3.select('#leftvis').classed({'with-3d-shadow': !istrue, 'with-transitions': !istrue});
+    d3.select('#middlevis').classed({'with-3d-shadow': !istrue, 'with-transitions': !istrue});
+    d3.select('#rightvis').classed({'with-3d-shadow': !istrue, 'with-transitions': !istrue});
+    d3.select('#main').classed({'with-3d-shadow': !istrue, 'with-transitions': !istrue});
+    changeButtonColourClass('#' + id, !istrue, 'btn-info', 'btn-default');
 }
 
 function spendingVsDebt() {
@@ -337,10 +352,10 @@ function spendingVsDebt() {
 function search() {
     var text = document.getElementById('searchbox').value.split(', ');
     console.log('searching for: ' + text + '|');
-    if (text != ''&&text!= null)setSeries(text);
+    if (text != '' && text != null)setSeries(text);
 }
 /*Set the series that will be displayed. input is a list of keywords*/
-function setSeries(keywords,id) {
+function setSeries(keywords, id) {
     if (keywords == undefined || keywords[0] == '') return;
     //console.log(id);
     var state = {disabled: []};
@@ -364,18 +379,18 @@ function setSeries(keywords,id) {
     mainVis.dispatch.changeState(state);
     //if(d3.select('#'+id).property('className').indexOf('btn-info')){
 
-    if(buttonSelectID!=null){
-        var istrue = (d3.select('#'+buttonSelectID).property('className').indexOf('btn-info')>=0);
-        console.log(buttonSelectID+' setting false '+ istrue);
-        changeButtonColourClass('#'+buttonSelectID,false,'btn-info','btn-default');
-        buttonSelectID=null;
+    if (buttonSelectID != null) {
+        var istrue = (d3.select('#' + buttonSelectID).property('className').indexOf('btn-info') >= 0);
+        console.log(buttonSelectID + ' setting false ' + istrue);
+        changeButtonColourClass('#' + buttonSelectID, false, 'btn-info', 'btn-default');
+        buttonSelectID = null;
     }
 
-    if(id!=undefined){
-        console.log(id+' setting true');
-        buttonSelectID=id;
+    if (id != undefined) {
+        console.log(id + ' setting true');
+        buttonSelectID = id;
         //d3.select('#'+id).property('className').indexOf('btn-info')>=0
-        changeButtonColourClass('#'+id,true,'btn-info','btn-default');
+        changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
     }
     //}
 }

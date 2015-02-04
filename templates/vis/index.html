@@ -47,17 +47,19 @@
                                     title="Adds time selection control underneath the main graph that allows you to zoom
                                      in on the time axis. This will also affect upper visualisation historic data
                                      values if the &quot;Navigation Filter&quot; is enabled."  data-toggle="tooltip">
-                                <div class="txt-responsive">Navigation Bar</div>
+                                <div class="txt-responsive">Navigation Bar Off</div>
                             </button>
                             <button id="navigationfiltertoggle" type="button" class="btn btn-info" onclick="navigationFilterToggle()"
                                     title="Toggles if the upper Visualisations limit the Historic Values (green) according to time zooming in the main graph."  data-toggle="tooltip">
-                                <div class="txt-responsive">Navigation Filter</div>
-                            </button>
-                            <button id="normalisemode" type="button" class="btn btn-default " onclick="NormaliseMode()"
-                                    title="Toggles if to normalise the Historic Data. Makes all the data points be between 0 and 1."  data-toggle="tooltip">
-                                <div class="txt-responsive">Normalise</div>
+                                <div class="txt-responsive">Navigation Filter On</div>
                             </button>
 
+                        </div>
+                        <div class="btn-group-vertical btn-group-md" role="group" style="margin-top:15px;  ">
+                            <button id="normalisemode" type="button" class="btn btn-default" onclick="NormaliseMode()"
+                                    title="Toggles if to normalise the Historic Data. Makes all the data points be between 0 and 1."  data-toggle="tooltip">
+                                <div class="txt-responsive">&nbsp&nbsp&nbspNormalise Off&nbsp&nbsp&nbsp&nbsp</div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -225,12 +227,12 @@
                         <div class="btn-group-vertical btn-group-md" role="group">
                             <button id="backgroundcolour" type="button" class="btn btn-info " aria-label="true" onclick="BackgroundColour()"
                                     title="Toggles if to have the visualisation background white or with colours"  data-toggle="tooltip">
-                                <div class="txt-responsive">Background Colour</div>
+                                <div class="txt-responsive">Background Colour Off</div>
                             </button>
                             <button id="fancyvis" type="button" class="btn btn-info " aria-label="true" onclick="FancyVis('fancyvis')"
                                     title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
                                     increases Performance."  data-toggle="tooltip">
-                                <div class="txt-responsive">Fancy Animation</div>
+                                <div class="txt-responsive">Fancy Animation On</div>
                             </button>
                         </div>
                     </div>

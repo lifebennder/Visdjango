@@ -81,7 +81,7 @@ svg {
     font-size: 10px;
     /*font-size: 1.3vmin;*/
       /*font-size: 80%;*/
-      font-size:calc(50% + 0.8vw);
+      font-size:calc(50% + 0.8vw) !important;
     /*padding:0% 0% 0% 0%;
       margin:0% 0% 0% 0%;*/
     /*line-height: 100%;*/
