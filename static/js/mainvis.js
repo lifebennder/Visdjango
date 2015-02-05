@@ -7,7 +7,7 @@ var mainfocus = false;
 var maininteractive = true;
 var maintooltips = true;
 var tickformat = '.2f';
-var backgroundcolour = false;
+var backgroundcolour = true;
 var isMainNormalised = false;
 var navigationIndexes = [1692, 2019];
 var navigationFilter = true;
@@ -323,6 +323,7 @@ function NormaliseMode() {
     changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
 }
 function BackgroundColour() {
+        backgroundcolour = !backgroundcolour;
     var topcolour = d3.rgb("#c9c9c0");
     var maincolour = d3.rgb(255, 250, 0);
     if (!backgroundcolour) {
@@ -331,8 +332,8 @@ function BackgroundColour() {
     }
     d3.select('#main').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
-    backgroundcolour = !backgroundcolour;
-    changeButtonColourClass('#backgroundcolour', !backgroundcolour, 'btn-info', 'btn-default');
+
+    changeButtonColourClass('#backgroundcolour', backgroundcolour, 'btn-info', 'btn-default');
 }
 function FancyVis(id) {
     var istrue = (d3.select('#' + id).property('className').indexOf('btn-info') >= 0);
