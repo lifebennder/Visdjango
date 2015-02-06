@@ -94,6 +94,7 @@ function drawmain(data) {
         //chart.height(parseInt(d3.select('#main').style('height')));
         chart.xAxis.axisLabel('Years');
         chart.xAxis.tickFormat(d3.format('f'));
+        //chart.xDomain([1600,2019]);
         chart.yAxis.tickFormat(d3.format(tickformat));
         //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
         //chart.clipEdge(true);
@@ -279,8 +280,6 @@ function setUpperVisData(data) {
     rightVis.update();
 }
 function NormaliseMode() {
-    //TODO change teh maindata loading so that it loads the data seperatly from the drawing and then just pass in
-    //TODO the actual data variable. This allows for normalisation to work and not need to get data every time.
     if (!isMainNormalised && Normalisedmaindata == null) {
         console.log('calculating normalisation values');
         Normalisedmaindata = [];
@@ -300,14 +299,13 @@ function NormaliseMode() {
                 ;
             //console.log('k: ' + series.key + ' min: ' + min + ' max: ' + max);
             series.values.forEach(function (s, i) {
-                if (s.y == "") return;
+                //if (s.y == "") {return;}
                 var x = s.x;
                 var y = //d3.format(tickformat)(
                         s.y//)
                     ;
-                y = d3.format(tickformat)(
-                    (y - min) / (max - min))
-                ;
+                if(y!= "")y = d3.format(tickformat)(
+                    (y - min) / (max - min));
                 Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
             });
         });
@@ -315,6 +313,7 @@ function NormaliseMode() {
     console.log('Normalised: ' + isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
+    console.log(maindata);
     d3.select('#main svg').datum(maindata);
     mainVis.update();
 
