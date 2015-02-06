@@ -111,13 +111,13 @@ function drawmain(data) {
         });
 
         chart.y(function (d) {
-            if (d.y == "") return null;
+            if (d ==null || d.y == "") return null;
             //var yy = d3.format(tickformat)(d.y);
             return parseFloat(d.y)
         });
 
         chart.x(function (d) {
-            if (d.x == null) return null;
+            if (d == null || d.x =="") return null;
             return parseFloat(d.x)
         });
         chart.tooltips(maintooltips);
@@ -432,13 +432,15 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.yAxis.tickValues([]).showMaxMin(true);
         chart.showLegend(false);
         chart.y(function (d) {
-            if (d.y == "") return null;
+            if (d == null|| d.y =="") return null;
             return parseFloat(d.y)
         });
         chart.x(function (d) {
-            if (d.y == "") return null;
+            if (d == null|| d.x =="") return null;
             return parseFloat(d.x)
         });
+        chart.useVoronoi(false);
+        //chart.useInteractiveGuideline(true);
         //chart.interpolate('linear-closed');
         //chart.pointShape('cross');
         if (leftLabel != null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
@@ -457,6 +459,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             content += '<br> Year: ' + ValueIndexList[leftLabel][y] + '</p>';
             return content;
         });
+
         chart.margin({"left": 40, "right": 30, "top": 10, "bottom": 30});
         d3.select('#' + visid + ' svg').datum(data).call(chart);
         nv.utils.windowResize(chart.update);
@@ -487,6 +490,9 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         });
         chart.dispatch.on('tooltipHide.upper', function (e) {
             mainVis.clearHighlights();
+        });
+         chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
+            console.log(e);
         });
     });
 }
@@ -525,12 +531,12 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
             key: "Historic Values",
             color: "#2ca02c",
             startXIndex: unemploymentStartIndex
-        },
+        }/*,
         {
             values: [],
             key: "disabled",
             color: "#cccccc"
-        }
+        }*/
     ];
     theoreticalCurve.forEach(function (curve) {
         data.push(curve);
