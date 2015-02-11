@@ -56,7 +56,7 @@ function drawmain(data) {
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 60});
             chart.y2Axis.tickFormat(d3.format(tickformat));
-            //chart.useInteractiveGuideline(maininteractive);
+            chart.useInteractiveGuideline(maininteractive);
             chart.brushExtent(navigationIndexes);
             chart.dispatch.on('brush.user', function (brush) {
                 //updateData(newState); //brush is returned and extent []
