@@ -76,6 +76,7 @@ function drawmain(data) {
                     d3.select('#leftvis svg').datum(leftVisData);
                     d3.select('#middlevis svg').datum(middleVisData);
                     d3.select('#rightvis svg').datum(rightVisData);
+                    chart.useVoronoi(false);
                     //drawUpperVisualisations();
                     leftVis.update();
                     middleVis.update();
