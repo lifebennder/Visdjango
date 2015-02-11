@@ -46,7 +46,7 @@ window.onload = function (e) {
 
 };
 function hide(id) {
-    d3.select('#' + id).transition().delay(100).duration(2000).style("opacity", 0).remove();
+    d3.select('#' + id).transition().delay(100).duration(1500).style("opacity", 0).remove();
 }
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
@@ -112,13 +112,13 @@ function drawmain(data) {
         });
 
         chart.y(function (d) {
-            if (d ==null || d.y == "") return null;
+            if (d == null || d.y == "") return null;
             //var yy = d3.format(tickformat)(d.y);
             return parseFloat(d.y)
         });
 
         chart.x(function (d) {
-            if (d == null || d.x =="") return null;
+            if (d == null || d.x == "") return null;
             return parseFloat(d.x)
         });
         chart.tooltips(maintooltips);
@@ -147,6 +147,7 @@ function drawmain(data) {
                     //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
                     //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
                     //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
+                    //console.log(e.pointXValue);
                     var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[0].startXIndex);
                     var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[0].startXIndex);
                     var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[0].startXIndex);
@@ -167,7 +168,7 @@ function drawmain(data) {
             });
         }
         chart.dispatch.on('stateChange.main', function (newState) {
-            updateData(newState);
+            updateData(newState);// console.log(newState.disabled);
             console.log('state change ');
         });
         chart.dispatch.on('changeState.main', function (newState) {
@@ -181,10 +182,17 @@ function drawmain(data) {
     //});
 }
 function updateData(newState) {
+    //console.log(newState);
+    //console.log(mainVis.state);
     newState.disabled.forEach(function (disabled, i) {
         if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
+        else {
+            console.log('normalised is null');
+        }
         unNormalisedmaindata[i].disabled = disabled;
     });
+    //mainVis.legend.update(maindata);
+    //mainVis.update(maindata);
 }
 /*function getindexes(data) {
  data.forEach(function (series, i) {
@@ -193,7 +201,11 @@ function updateData(newState) {
  });
  }*/
 function removeGraph(graph, chartobject) {
-    if (chartobject != null) chartobject.tooltips(false);//chartobject.useInteractiveGuideLines(false);
+
+    if (chartobject != undefined && chartobject != null) {
+        chartobject.tooltips(false);
+        if (chartobject.useInteractiveGuideline != undefined)chartobject.useInteractiveGuideline(false);
+    }
     d3.selectAll("#" + graph + " svg > *").remove();
 }
 function setInteractiveMode() {
@@ -220,7 +232,6 @@ function changeButtonColourClass(id, isOn, onClass, offClass) {
     var text = d3.select(id).text();
     var lastIndex = -1;// = oldText.lastIndexOf(" ");
     if (text.indexOf(' Off') > 0) {
-        console.log();
         text = text.replace(' Off', ' On');
     }
     else text = text.replace(' On', ' Off');
@@ -304,7 +315,7 @@ function NormaliseMode() {
                 var y = //d3.format(tickformat)(
                         s.y//)
                     ;
-                if(y!= "")y = d3.format(tickformat)(
+                if (y != "")y = d3.format(tickformat)(
                     (y - min) / (max - min));
                 Normalisedmaindata[seriesi].values.push({x: x, 'y': y});
             });
@@ -313,16 +324,21 @@ function NormaliseMode() {
     console.log('Normalised: ' + isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
-    console.log(maindata);
-    d3.select('#main svg').datum(maindata);
-    mainVis.update();
-
+    //console.log(maindata);
+    d3.select('#main svg ').datum(maindata);
+    var wrap = d3.select('#main svg ').selectAll('g.nv-wrap.nv-lineChart').data([maindata]);
+    var g = wrap.select('g');
+    g.select('.nv-legendWrap').select('g.nv-legend')
+        .datum(maindata);//.transition().call(mainVis.legend);
+    //g.selectAll('.nv-series').datum([maindata]);
+    mainVis.legend.update(maindata);
+    mainVis.update(maindata);
     //drawmain(maindata);
     isMainNormalised = !isMainNormalised;
     changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
 }
 function BackgroundColour() {
-        backgroundcolour = !backgroundcolour;
+    backgroundcolour = !backgroundcolour;
     var topcolour = d3.rgb("#c9c9c0");
     var maincolour = d3.rgb(255, 250, 0);
     if (!backgroundcolour) {
@@ -343,10 +359,6 @@ function FancyVis(id) {
     changeButtonColourClass('#' + id, !istrue, 'btn-info', 'btn-default');
 }
 
-function spendingVsDebt() {
-    var keywords = ['Debt', 'Spending'];
-    setSeries(keywords);
-}
 function search() {
     var text = document.getElementById('searchbox').value.split(', ');
     console.log('searching for: ' + text + '|');
@@ -431,11 +443,11 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.yAxis.tickValues([]).showMaxMin(true);
         chart.showLegend(false);
         chart.y(function (d) {
-            if (d == null|| d.y =="") return null;
+            if (d == null || d.y == "") return null;
             return parseFloat(d.y)
         });
         chart.x(function (d) {
-            if (d == null|| d.x =="") return null;
+            if (d == null || d.x == "") return null;
             return parseFloat(d.x)
         });
         chart.useVoronoi(false);
@@ -490,7 +502,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.dispatch.on('tooltipHide.upper', function (e) {
             mainVis.clearHighlights();
         });
-         chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
+        chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
             console.log(e);
         });
     });
@@ -531,11 +543,11 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
             color: "#2ca02c",
             startXIndex: unemploymentStartIndex
         }/*,
-        {
-            values: [],
-            key: "disabled",
-            color: "#cccccc"
-        }*/
+         {
+         values: [],
+         key: "disabled",
+         color: "#cccccc"
+         }*/
     ];
     theoreticalCurve.forEach(function (curve) {
         data.push(curve);

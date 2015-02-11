@@ -4295,7 +4295,19 @@ nv.models.ohlcBarChart = function() {
             var g = wrap.select('g');
 
             wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            chart.update = function(dataa) {
+                                    console.log('legend update');
+                if(dataa!=undefined && dataa!=null){
+                    console.log(data[0].values[320].y);
+                    data = dataa;console.log('updating');
+                    //console.log(container);
+                    container.datum(dataa);
+                    console.log(data[0].values[320].y+'  '+dataa[0].values[320].y);
+                    container.transition().duration(0).call(chart);}
+            else {
 
+                    container.call(chart);}
+            };
             var series = g.selectAll('.nv-series')
                 .data(function(d) { return d });
             var seriesEnter = series.enter().append('g').attr('class', 'nv-series')
@@ -4308,24 +4320,63 @@ nv.models.ohlcBarChart = function() {
                 .on('click', function(d,i) {
                     dispatch.legendClick(d,i);
                     if (updateState) {
+                        //var dstate = false;
+                        var every = false;
                         if (radioButtonMode) {
                             //Radio button mode: set every series to disabled,
                             //  and enable the clicked series.
-                            data.forEach(function(series) { series.disabled = true});
+                            data.forEach(function(series) { series['disabled'] = true});
+                            d['disabled'] = false;
+                        }
+                        else {
+                            //console.log(d);
+                            d.disabled = !d.disabled;
+                            //dstate= d.disabled;
+                            //console.log('upper legendclick: '+data[0].values[320].y);
+                            //console.log(d);
+                            //console.log(d['disabled']+' '+!d['disabled']+'  !!d: '+!!d.disabled);
+                            if (data.every(function(series,ii) {
+                                    if(i==ii) return d.disabled;
+                                    return series.disabled})) {
+                                //the default behavior of NVD3 legends is, if every single series
+                                // is disabled, turn all series' back on.
+                                every = true;
+                                data.forEach(function(series) { series.disabled = false});
+                            }
+                        }
+                        //console.log(d);
+                        var newState = {
+                            disabled: data.map(function(dd,ii) {
+                                //console.log(dd.disabled+'  '+dd.key);
+                                //console.log('inside legendclick: '+dd.values[310].y);
+                                //if(ii==0)console.log(data);
+                                if(i==ii && !every) return d.disabled;
+                                //console.log('data: '+(!!dd.disabled)+'  leg '+dstate+' '+ii);
+                                //if(ii== d.seriesIndex && (!!d.disabled)!= dstate)return dstate;
+                                return !!dd.disabled })};
+                        //console.log(newState);
+                        //newState  = d;
+                        dispatch.stateChange(newState);
+                    }
+                    /*if (updateState) {
+                        if (radioButtonMode) {
+                            //Radio button mode: set every series to disabled,
+                            // and enable the clicked series.
+                            data.forEach(function (series) { series.disabled = true });
                             d.disabled = false;
                         }
                         else {
                             d.disabled = !d.disabled;
-                            if (data.every(function(series) { return series.disabled})) {
+                            if (data.every(function (series) { return series.disabled })) {
                                 //the default behavior of NVD3 legends is, if every single series
                                 // is disabled, turn all series' back on.
-                                data.forEach(function(series) { series.disabled = false});
+                                data.forEach(function (series) { series.disabled = false});
                             }
                         }
                         dispatch.stateChange({
-                            disabled: data.map(function(d) { return !!d.disabled })
+                            disabled: data.map(function (d) { return !!d.disabled })
                         });
-                    }
+                    }*/
                 })
                 .on('dblclick', function(d,i) {
                     dispatch.legendDblclick(d,i);
@@ -4337,7 +4388,9 @@ nv.models.ohlcBarChart = function() {
                         });
                         d.disabled = false;
                         dispatch.stateChange({
-                            disabled: data.map(function(d) { return !!d.disabled })
+                            disabled: data.map(function(dd,ii) {
+                                if(i==ii) return false;
+                                return !!dd.disabled })
                         });
                     }
                 });
@@ -4784,6 +4837,7 @@ nv.models.lineChart = function() {
         return function(state) {
             if (state.active !== undefined)
                 data.forEach(function(series,i) {
+                    console.log(series.disabled+'  '+(!state.active[i]));
                     series.disabled = !state.active[i];
                 });
         }
@@ -4805,11 +4859,21 @@ nv.models.lineChart = function() {
                     - margin.top - margin.bottom;
 
 
-            chart.update = function() {
-                if (duration === 0)
+            chart.update = function(dataa) {
+                if(dataa!=undefined || dataa!=null){
+                    data = dataa;console.log('updating');
+                    //console.log(container);
+                if (duration === 0){
+                container.datum(dataa);
+                    container.call(chart);}
+                else{
+                    container.datum(dataa);
+                    container.transition().duration(duration).call(chart);}}
+            else {
+                    if (duration === 0)
                     container.call(chart);
                 else
-                    container.transition().duration(duration).call(chart)
+                    container.transition().duration(duration).call(chart);}
             };
             chart.container = this;
 
@@ -4949,6 +5013,7 @@ nv.models.lineChart = function() {
             //------------------------------------------------------------
 
             legend.dispatch.on('stateChange', function(newState) {
+                //console.log(newState);
                 for (var key in newState)
                     state[key] = newState[key];
                 dispatch.stateChange(state);
@@ -5082,6 +5147,7 @@ nv.models.lineChart = function() {
     chart.dispatch = dispatch;
     chart.lines = lines;
     chart.legend = legend;
+    chart.state = state;
     chart.xAxis = xAxis;
     chart.yAxis = yAxis;
     chart.interactiveLayer = interactiveLayer;
@@ -5856,7 +5922,13 @@ nv.models.lineWithFocusChart = function() {
                     - margin.top - margin.bottom - height2,
                 availableHeight2 = height2 - margin2.top - margin2.bottom;
 
-            chart.update = function() { container.transition().duration(transitionDuration).call(chart) };
+            chart.update = function(dataa) {
+                if(dataa!=undefined || dataa!=null){
+                data = dataa;
+                container.datum(dataa);
+                }
+                container.transition().duration(transitionDuration).call(chart);
+            };
             chart.container = this;
 
             state
