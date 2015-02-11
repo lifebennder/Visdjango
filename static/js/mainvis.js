@@ -56,7 +56,6 @@ function drawmain(data) {
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 60});
             chart.y2Axis.tickFormat(d3.format(tickformat));
-            chart.useInteractiveGuideline(maininteractive);
             chart.brushExtent(navigationIndexes);
             chart.dispatch.on('brush.user', function (brush) {
                 //updateData(newState); //brush is returned and extent []
@@ -97,6 +96,7 @@ function drawmain(data) {
         chart.xAxis.tickFormat(d3.format('f'));
         //chart.xDomain([1600,2019]);
         chart.yAxis.tickFormat(d3.format(tickformat));
+        chart.useInteractiveGuideline(maininteractive);
         //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
         //chart.clipEdge(true);
 
