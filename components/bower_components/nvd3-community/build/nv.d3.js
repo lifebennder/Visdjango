@@ -928,6 +928,7 @@ Binds callback function to run when window is resized
  */
 nv.utils.windowResize = function(handler) {
     if (window.addEventListener) {
+        console.log('window resize');
         window.addEventListener('resize', handler);
     } else {
         nv.log("ERROR: Failed to bind to window.resize with: ", handler);
@@ -4298,11 +4299,11 @@ nv.models.ohlcBarChart = function() {
             chart.update = function(dataa) {
                                     console.log('legend update');
                 if(dataa!=undefined && dataa!=null){
-                    console.log(data[0].values[320].y);
-                    data = dataa;console.log('updating');
+                    //console.log(data[0].values[320].y);
+                    data = dataa;//console.log('updating');
                     //console.log(container);
-                    container.datum(dataa);
-                    console.log(data[0].values[320].y+'  '+dataa[0].values[320].y);
+                    //container.datum(dataa);
+                    //console.log(data[0].values[320].y+'  '+dataa[0].values[320].y);
                     container.transition().duration(0).call(chart);}
             else {
 
@@ -4861,13 +4862,13 @@ nv.models.lineChart = function() {
 
             chart.update = function(dataa) {
                 if(dataa!=undefined || dataa!=null){
-                    data = dataa;console.log('updating');
+                    data = dataa;//console.log('updating');
                     //console.log(container);
                 if (duration === 0){
-                container.datum(dataa);
+                //container.datum(data);
                     container.call(chart);}
                 else{
-                    container.datum(dataa);
+                    //container.datum(data);
                     container.transition().duration(duration).call(chart);}}
             else {
                     if (duration === 0)
@@ -5930,7 +5931,7 @@ nv.models.lineWithFocusChart = function() {
             chart.update = function(dataa) {
                 if(dataa!=undefined || dataa!=null){
                 data = dataa;
-                container.datum(dataa);
+                //container.datum(dataa);
                 }
                 container.transition().duration(transitionDuration).call(chart);
             };

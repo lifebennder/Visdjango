@@ -193,7 +193,9 @@
                                     onclick="setSeries(['GDP, billions','Real GDP, billions'],id)"
                                     title="Shows the correlation between Nominal GDP in billions and Real GDP (inflation adjusted) in billions. This illustrates
                                     the actual production of the UK as compared to the nominal value.
-                                    It shows the decreasing value of money £, due to inflation (higher prices)."
+                                    It shows the decreasing value of money £, due to inflation (higher prices).
+                                    As you can see after 2008 the Real GDP (wealth) of the UK didn't increase, however
+                                    the GDP did (nominal value). This shows money printing."
                                     data-toggle="tooltip">
                                 <div class="txt-responsive">Real GDP Vs. GDP</div>
                             </button>
@@ -224,6 +226,12 @@
                                     mean lower Tax Revenue." data-toggle="tooltip">
                                 <div class="txt-responsive">Unemployment Vs. <br>Tax Revenue, GDP %</div>
                             </button>
+                            <button id="data7" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Interest Rate %','Net Debt, GDP %'],id)"
+                                    title="Shows the correlation between the Interest Rate and Public Debt.
+                                    The amount of debt is directly tied to the interest rate on it." data-toggle="tooltip">
+                                <div class="txt-responsive">Public Debt Vs. <br>Interest Rate, %</div>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -235,13 +243,13 @@
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
                             <button id="backgroundcolour" type="button" class="btn btn-default " aria-label="true"
-                                    onclick="BackgroundColour()"
+                                    onclick="BackgroundColour(id)"
                                     title="Toggles if to have the visualisation background white or with colours"
                                     data-toggle="tooltip">
                                 <div class="txt-responsive">Background Colour On</div>
                             </button>
                             <button id="fancyvis" type="button" class="btn btn-info " aria-label="true"
-                                    onclick="FancyVis('fancyvis')"
+                                    onclick="FancyVis(id)"
                                     title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
                                     increases Performance." data-toggle="tooltip">
                                 <div class="txt-responsive">Fancy Animation On</div>
@@ -297,8 +305,10 @@
         <img style="float:right; margin: 2px 2px 2px 5px; opacity:0.75;
     width:30px; height:30px;" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
 
-        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation Application!<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;An Application for the economic analysis of Historic data and its comparison to economic theory and their
+        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation
+            Application!<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;An Application for the economic analysis of Historic data and its comparison to
+            economic theory and their
             models.<br>
             Best performance is achieved using Chrome (around 3x as fast). It is recommended to use Chrome!</b><br>
             If you don't know how anything works look at the <a style="font-weight: bold;"

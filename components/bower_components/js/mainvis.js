@@ -39,7 +39,7 @@ window.onload = function (e) {
         drawmain(maindata);
     });
     d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
-    BackgroundColour();
+    BackgroundColour('backgroundcolour');
     nv.log('loaded');
     //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
@@ -188,7 +188,7 @@ function updateData(newState) {
     newState.disabled.forEach(function (disabled, i) {
         if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
         else {
-            console.log('normalised is null');
+            //console.log('normalised is null');
         }
         unNormalisedmaindata[i].disabled = disabled;
     });
@@ -231,7 +231,7 @@ function setInteractiveMode() {
 }
 function changeButtonColourClass(id, isOn, onClass, offClass) {
     var text = d3.select(id).text();
-    var lastIndex = -1;// = oldText.lastIndexOf(" ");
+    //var lastIndex = -1;// = oldText.lastIndexOf(" ");
     if (text.indexOf(' Off') > 0) {
         text = text.replace(' Off', ' On');
     }
@@ -244,10 +244,12 @@ function changeButtonColourClass(id, isOn, onClass, offClass) {
         d3.select(id).classed(onClass, false);
         d3.select(id).classed(offClass, true);
     }
+    //console.log('befo: '+d3.select(id).style('font-size'));
     if (text.indexOf(' Off') > 0 || text.indexOf(' On') > 0) {
         d3.select(id).text(text);
-        d3.select(id).style({'font-size': 'calc(50% + 0.8vw)'});
+   // d3.select(id).style({'font-size': 'calc(50% + 0.8vw) !important'});
     }
+    //console.log('after: '+d3.select(id).style('font-size'));
 }
 function setFocusMode() {
     console.log("setFocus Mode");
@@ -322,7 +324,7 @@ function NormaliseMode() {
             });
         });
     }
-    console.log('Normalised: ' + isMainNormalised);
+    //console.log('Normalised: ' + isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
     //console.log(maindata);
@@ -338,7 +340,7 @@ function NormaliseMode() {
     isMainNormalised = !isMainNormalised;
     changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
 }
-function BackgroundColour() {
+function BackgroundColour(id) {
     backgroundcolour = !backgroundcolour;
     var topcolour = d3.rgb("#c9c9c0");
     var maincolour = d3.rgb(255, 250, 0);
@@ -349,7 +351,7 @@ function BackgroundColour() {
     d3.select('#main').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
 
-    changeButtonColourClass('#backgroundcolour', backgroundcolour, 'btn-info', 'btn-default');
+    changeButtonColourClass('#' + id, backgroundcolour, 'btn-info', 'btn-default');
 }
 function FancyVis(id) {
     var istrue = (d3.select('#' + id).property('className').indexOf('btn-info') >= 0);
