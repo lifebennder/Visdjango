@@ -521,7 +521,7 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     });
     var first = false;
     for (var i = 0; i < unemploymentSeries.length; i++) {
-        if ((navigationIndexes[0] <= parseInt(unemploymentSeries[i].x) && parseInt(unemploymentSeries[i].x) <= navigationIndexes[1]) || !navigationFilter) {
+        if ((navigationIndexes[0] <= parseInt(unemploymentSeries[i].x) && parseInt(unemploymentSeries[i].x) <= navigationIndexes[1]) || !navigationFilter || !mainfocus) {
             //console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));
             //console.log(navigationIndexes[0]+!!(navigationIndexes[0]<=parseInt(unemploymentSeries[i].x))+'  '+unemploymentSeries[i].x+'  '+navigationIndexes[1]);
             var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;

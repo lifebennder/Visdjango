@@ -6060,7 +6060,7 @@ nv.models.lineWithFocusChart = function() {
             );
 
             g.select('.nv-context')
-                .attr('transform', 'translate(0,' + ( availableHeight1 + margin.bottom + margin2.top) + ')')
+                .attr('transform', 'translate(0,' + ( availableHeight1 + margin.bottom + margin2.top) + ')');
 
             var contextLinesWrap = g.select('.nv-context .nv-linesWrap')
                 .datum(data.filter(function(d) { return !d.disabled }))
@@ -6163,12 +6163,13 @@ nv.models.lineWithFocusChart = function() {
                         return !series.disabled;
                     })
                     .forEach(function(series,i) {
-                        pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                        //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                        pointIndex = (Math.round(e.pointXValue) - Math.round(brushExtent[0]));
                         lines.highlightPoint(i, pointIndex, true);
                         var point = series.values[pointIndex];
                         if (typeof point === 'undefined') return;
                         if (typeof singlePoint === 'undefined') singlePoint = point;
-                        if (typeof pointXLocation === 'undefined') pointXLocation = chart.xScale()(chart.x()(point,pointIndex));
+                        if (typeof pointXLocation === 'undefined') pointXLocation = e.mouseX;// chart.xScale()(chart.x()(point,pointIndex));
                         allData.push({
                             key: series.key,
                             value: chart.y()(point, pointIndex),
