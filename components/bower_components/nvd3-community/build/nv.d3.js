@@ -6164,12 +6164,13 @@ nv.models.lineWithFocusChart = function() {
                     })
                     .forEach(function(series,i) {
                         //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                        //pointIndex = Math.round((e.pointXValue - brushExtent[0]));
                         pointIndex = (Math.round(e.pointXValue) - Math.round(brushExtent[0]));
                         lines.highlightPoint(i, pointIndex, true);
                         var point = series.values[pointIndex];
                         if (typeof point === 'undefined') return;
                         if (typeof singlePoint === 'undefined') singlePoint = point;
-                        if (typeof pointXLocation === 'undefined') pointXLocation = e.mouseX;// chart.xScale()(chart.x()(point,pointIndex));
+                        if (typeof pointXLocation === 'undefined') pointXLocation = e.mouseX;//(brushExtent[1]-brushExtent[0])-pointIndex;//chart.xScale()(chart.x()(point,pointIndex));
                         allData.push({
                             key: series.key,
                             value: chart.y()(point, pointIndex),
