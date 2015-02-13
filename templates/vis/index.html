@@ -17,7 +17,8 @@
 
     <!-- The Application-->
     <div style="height:92%; min-height: 500px; min-width: 1100px; ">
-        <div style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
+        <!--Left Control -->
+        <div id="leftcontrol" style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
         background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
             <h4 style="   text-align: center;">
                 Series Search
@@ -109,9 +110,9 @@
 
         </div>
         <!--The Middle, Visuallsations-->
-        <div class="" style=" float:left;  height: 100%; width: 64%;">
+        <div id="visualisation" class="" style=" float:left;  height: 100%; width: 64%;">
             <!--The TOP-->
-            <div class="" style=" height: 25%;">
+            <div id="upperparent" class="" style=" height: 25%;">
                 <!--The TOP LEFT-->
                 <div class="topvis">
                     <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}"
@@ -159,19 +160,23 @@
             </div>
 
             <!--The right side BOTTOM-->
-            <div id="mainparent" class="" style=" width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
-
+            <div id="mainparent" class="" style=" position:relative; width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
+                    <button type="button" class="btn btn-default resizebutton" style="right:38px;" id="upperhide" alt="hide upper" onclick="upperhide('mainparent',id)">
+                        <span class=" glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-default resizebutton" id="fullscreenbt" alt="resize" onclick="fullscreen('visualisation',id)">
+                        <span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+                    </button>
                 <div id="main" class=""
                      style="  height:100%; width: 100%; background-color: rgb(255, 250,0); ">
+
                     <svg></svg>
                 </div>
             </div>
-
-
         </div>
 
         <!--The Right Control Panel, Data Combinations-->
-        <div style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
+        <div id="rightcontrol" style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
         background-color: #ffffff; padding: 0px 00px 10px 10px;  margin: 0px 00px 20px 00px;">
             <h4 style="   text-align: center;" title="This panel shows interesting data combinations that tell you the
             evolution of the UK economy over the last 3 centuries." data-toggle="tooltip">
@@ -229,7 +234,8 @@
                             <button id="data7" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['Interest Rate %','Net Debt, GDP %'],id)"
                                     title="Shows the correlation between the Interest Rate and Public Debt.
-                                    The amount of debt is directly tied to the interest rate on it." data-toggle="tooltip">
+                                    The amount of debt is directly tied to the interest rate on it."
+                                    data-toggle="tooltip">
                                 <div class="txt-responsive">Public Debt Vs. <br>Interest Rate, %</div>
                             </button>
                         </div>

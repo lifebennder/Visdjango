@@ -928,7 +928,6 @@ Binds callback function to run when window is resized
  */
 nv.utils.windowResize = function(handler) {
     if (window.addEventListener) {
-        console.log('window resize');
         window.addEventListener('resize', handler);
     } else {
         nv.log("ERROR: Failed to bind to window.resize with: ", handler);
@@ -4278,7 +4277,7 @@ nv.models.ohlcBarChart = function() {
         , getKey = function(d) { return d.key }
         , color = nv.utils.defaultColor()
         , align = true
-        , rightAlign = true
+        , rightAlign = false
         , updateState = true   //If true, legend will update data.disabled and trigger a 'stateChange' dispatch.
         , radioButtonMode = false   //If true, clicking legend items will cause it to behave like a radio button. (only one can be selected at a time)
         , dispatch = d3.dispatch('legendClick', 'legendDblclick', 'legendMouseover', 'legendMouseout', 'stateChange')
@@ -4858,7 +4857,6 @@ nv.models.lineChart = function() {
                     - margin.left - margin.right,
                 availableHeight = (height || parseInt(container.style('height')) || 400)
                     - margin.top - margin.bottom;
-
 
             chart.update = function(dataa) {
                 if(dataa!=undefined || dataa!=null){

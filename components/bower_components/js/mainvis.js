@@ -12,6 +12,8 @@ var isMainNormalised = false;
 var navigationIndexes = [1692, 2019];
 var navigationFilter = true;
 var buttonSelectID = null;
+var isFullscreen = false;
+var isUpperHidden = false;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -46,7 +48,7 @@ window.onload = function (e) {
 
 };
 function hide(id) {
-    d3.select('#' + id).transition().delay(100).duration(1500).style("opacity", 0).remove();
+    d3.select('#' + id).transition().delay(100).duration(1200).style("opacity", 0).remove();
 }
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
@@ -54,7 +56,7 @@ function drawmain(data) {
     nv.addGraph(function () {
         var chart;
         if (mainfocus) {
-            chart = nv.models.lineWithFocusChart().margin({left: 60});
+            chart = nv.models.lineWithFocusChart().margin({left: 40});
             chart.y2Axis.tickFormat(d3.format(tickformat));
             chart.brushExtent(navigationIndexes);
             chart.dispatch.on('brush.user', function (brush) {
@@ -84,7 +86,7 @@ function drawmain(data) {
                 }
             });
         } else {
-            chart = nv.models.lineChart().margin({left: 60});
+            chart = nv.models.lineChart().margin({left: 55});
             chart.useInteractiveGuideline(maininteractive);
         }
         //chart.interpolate("step");
@@ -247,7 +249,7 @@ function changeButtonColourClass(id, isOn, onClass, offClass) {
     //console.log('befo: '+d3.select(id).style('font-size'));
     if (text.indexOf(' Off') > 0 || text.indexOf(' On') > 0) {
         d3.select(id).text(text);
-   // d3.select(id).style({'font-size': 'calc(50% + 0.8vw) !important'});
+        // d3.select(id).style({'font-size': 'calc(50% + 0.8vw) !important'});
     }
     //console.log('after: '+d3.select(id).style('font-size'));
 }
@@ -406,6 +408,55 @@ function setSeries(keywords, id) {
         changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
     }
     //}
+}
+
+function fullscreen(id, selfid) {
+    isFullscreen = !isFullscreen;
+    var display = 'inline', width = '64%';
+    if (isFullscreen) {
+        display = 'none';
+        width = '100%';
+        d3.select('#' + selfid + ' span').classed('glyphicon-resize-full', false);
+        d3.select('#' + selfid + ' span').classed('glyphicon-resize-small', true);
+    }
+    else {
+        d3.select('#' + selfid + ' span').classed('glyphicon-resize-small', false);
+        d3.select('#' + selfid + ' span').classed('glyphicon-resize-full', true);
+
+
+    }
+    d3.select('#leftcontrol').style('display', display);
+    d3.select('#rightcontrol').style('display', display);
+    d3.select('#' + id).style('width', width);
+    mainVis.update();
+    leftVis.update();
+    middleVis.update();
+    rightVis.update();
+}
+
+function upperhide(id, selfid) {
+    isUpperHidden = !isUpperHidden;
+    var display = 'block', height = '75%';
+    if (isUpperHidden) {
+        display = 'none';
+        height = '100%';
+        d3.select('#' + selfid + ' span').classed('glyphicon-arrow-up', false);
+        d3.select('#' + selfid + ' span').classed('glyphicon-arrow-down', true);
+    }
+    else {
+        d3.select('#' + selfid + ' span').classed('glyphicon-arrow-down', false);
+        d3.select('#' + selfid + ' span').classed('glyphicon-arrow-up', true);
+
+
+    }
+    d3.select('#upperparent').style('display', display);
+    //d3.select('#middlevis').style('display', display);
+    //d3.select('#rightvis').style('display', display);
+    d3.select('#' + id).style('height', height);
+    mainVis.update();
+    leftVis.update();
+    middleVis.update();
+    rightVis.update();
 }
 
 //TOP RIGHT CHART
