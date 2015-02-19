@@ -349,7 +349,7 @@ function BackgroundColour(id) {
     backgroundcolour = !backgroundcolour;
     var topcolour = d3.rgb("#c9c9c0");
     var maincolour = "rgba(0,0,0,0.1)";//d3.rgb(255, 250, 0);
-    if (!backgroundcolour) {
+    if (!backgroundcolour) { 
         topcolour = d3.rgb(255, 255, 255);
         maincolour = d3.rgb(255, 255, 255);
     }
