@@ -16,7 +16,7 @@
     </div>
 
     <!-- The Application-->
-    <div style="height:92%; min-height: 500px; min-width: 1100px; ">
+    <div style="height:94%; min-height: 500px; min-width: 1100px; ">
         <!--Left Control -->
         <div id="leftcontrol" style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
         background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
@@ -48,14 +48,14 @@
                             <button id="setfocusmode" type="button" class="btn btn-default" onclick="setFocusMode()"
                                     title="Adds time selection control underneath the main graph that allows you to zoom
                                      in on the time axis. This will also affect upper visualisation historic data
-                                     values if the &quot;Navigation Filter&quot; is enabled." data-toggle="tooltip">
-                                <div class="txt-responsive">Navigation Bar Off</div>
+                                     values if the &quot;Time Range Filter&quot; is enabled." data-toggle="tooltip">
+                                <div class="txt-responsive">Time Range Bar Off</div>
                             </button>
                             <button id="navigationfiltertoggle" type="button" class="btn btn-info"
                                     onclick="navigationFilterToggle()"
                                     title="Toggles if the upper Visualisations limit the Historic Values (green) according to time zooming in the main graph."
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Navigation Filter On</div>
+                                <div class="txt-responsive">Time Range Filter On</div>
                             </button>
                             <button id="normalisemode" type="button" class="btn btn-default" style="margin-top: 15px;"
                                     onclick="NormaliseMode()"
@@ -79,28 +79,23 @@
                     </div>
                 </div>
             </div>{% endcomment %}
+            <!-- Third, Style Control Panel-->
             <div class="panel panel-info">
-                <div class="panel-heading">Upper Visualisations Series</div>
+                <div class="panel-heading">Style</div>
                 <div class="panel-body " style="text-align: center">
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
-                            <button id="phillipscurve" type="button" class="btn btn-default " aria-label="true"
-                                    title="Selects the series from the axis of the Phillips Curve Graph.
-                                     &quot;Inflation, Unemployment&quot;" data-toggle="tooltip"
-                                    onclick="setSeries(['Inflation', 'Unemployment'],id)">
-                                <div class="txt-responsive">Phillips Curve</div>
+                            <button id="backgroundcolour" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="BackgroundColour(id)"
+                                    title="Toggles if to have the visualisation background white or with colours"
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">Background Colour On</div>
                             </button>
-                            <button id="laffercurve" type="button" class="btn btn-default " aria-label="true"
-                                    title="Selects the series from the axis of the Laffer Curve Graph.
-                                     &quot;Tax Rev, Income Tax&quot;" data-toggle="tooltip"
-                                    onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'],id)">
-                                <div class="txt-responsive">Laffer Curve</div>
-                            </button>
-                            <button id="islmmodel" type="button" class="btn btn-default " aria-label="true"
-                                    title="Selects the series from the axis of the IS-LM Model Graph.
-                                     &quot;Interest Rate, Real GDP, billions&quot;" data-toggle="tooltip"
-                                    onclick="setSeries(['Interest', 'Real GDP, billions'],id)">
-                                <div class="txt-responsive">IS-LM Model</div>
+                            <button id="fancyvis" type="button" class="btn btn-info " aria-label="true"
+                                    onclick="FancyVis(id)"
+                                    title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
+                                    increases Performance." data-toggle="tooltip">
+                                <div class="txt-responsive">Fancy Animation On</div>
                             </button>
                         </div>
                     </div>
@@ -159,19 +154,24 @@
                 </div>
             </div>
 
-            <!--The right side BOTTOM-->
-            <div id="mainparent" class="" style=" position:relative; width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
-                    <button type="button" class="btn btn-default resizebutton" style="right:38px;" id="upperhide" alt="hide upper" onclick="upperhide('mainparent',id)">
-                        <span class=" glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-default resizebutton" id="fullscreenbt" alt="resize" onclick="fullscreen('visualisation',id)">
-                        <span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
-                    </button>
+            <!--The MAIN VISUALISATION right side BOTTOM-->
+            <div id="mainparent" class=""
+                 style=" background-color: rgb(255, 250,0); position:relative; width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
+                <div id="mainstatus" class="status"></div>
+                <button type="button" class="btn btn-default resizebutton" style="right:38px;" id="upperhide"
+                        alt="hide upper" onclick="upperhide('mainparent',id)">
+                    <span class=" glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default resizebutton" id="fullscreenbt" alt="resize"
+                        onclick="fullscreen('visualisation',id)">
+                    <span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+                </button>
                 <div id="main" class=""
-                     style="  height:100%; width: 100%; background-color: rgb(255, 250,0); ">
+                     style="  height:97%; width: 100%;  ">
 
                     <svg></svg>
                 </div>
+
             </div>
         </div>
 
@@ -187,7 +187,12 @@
                 <div class="panel-heading">Main Visualisation</div>
                 <div class="panel-body" style="text-align: center">
                     <div>
-                        <div class="btn-group-vertical btn-group-md" role="group">
+                        <div class="btn-group-vertical btn-group-md" role="group" style="margin-bottom: 15px;">
+                            <button id="data0" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['All'],id)"
+                                    title="Select all the Series." data-toggle="tooltip">
+                                <div class="txt-responsive">Select All</div>
+                            </button>
                             <button id="data1" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['Spending', 'Debt'],id)"
                                     title="Shows the correlation between Spending and Public Debt. This illustrates how increased spending
@@ -239,31 +244,39 @@
                                 <div class="txt-responsive">Public Debt Vs. <br>Interest Rate, %</div>
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Third, Style Control Panel-->
-            <div class="panel panel-info">
-                <div class="panel-heading">Style</div>
-                <div class="panel-body " style="text-align: center">
-                    <div>
+                        <div class="bootstrapfont">
+                            <b>Theoretic Axis</b></div>
+                        <!--THE UPPER VISUALISATIONS SERIES SELECTORS -->
                         <div class="btn-group-vertical btn-group-md" role="group">
-                            <button id="backgroundcolour" type="button" class="btn btn-default " aria-label="true"
-                                    onclick="BackgroundColour(id)"
-                                    title="Toggles if to have the visualisation background white or with colours"
-                                    data-toggle="tooltip">
-                                <div class="txt-responsive">Background Colour On</div>
+                            <button id="phillipscurve" type="button" class="btn btn-default " aria-label="true"
+                                    title="Selects the series from the axis of the Phillips Curve Graph.
+                                     &quot;Inflation, Unemployment&quot;" data-toggle="tooltip"
+                                    onclick="setSeries(['Inflation', 'Unemployment'],id)">
+                                <div class="txt-responsive">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phillips Curve&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
                             </button>
-                            <button id="fancyvis" type="button" class="btn btn-info " aria-label="true"
-                                    onclick="FancyVis(id)"
-                                    title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
-                                    increases Performance." data-toggle="tooltip">
-                                <div class="txt-responsive">Fancy Animation On</div>
+                            <button id="laffercurve" type="button" class="btn btn-default " aria-label="true"
+                                    title="Selects the series from the axis of the Laffer Curve Graph.
+                                     &quot;Tax Rev, Income Tax&quot;" data-toggle="tooltip"
+                                    onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'],id)">
+                                <div class="txt-responsive">Laffer Curve</div>
+                            </button>
+                            <button id="islmmodel" type="button" class="btn btn-default " aria-label="true"
+                                    title="Selects the series from the axis of the IS-LM Model Graph.
+                                     &quot;Interest Rate, Real GDP, billions&quot;" data-toggle="tooltip"
+                                    onclick="setSeries(['Interest', 'Real GDP, billions'],id)">
+                                <div class="txt-responsive">IS-LM Model</div>
                             </button>
                         </div>
+
                     </div>
                 </div>
             </div>
+            <!--div class="panel panel-info">
+                <div class="panel-heading">Upper Visualisations Series</div>
+                <div class="panel-body " style="text-align: center">
+
+                </div>
+            </div-->
         </div>
     </div>
 
@@ -323,7 +336,7 @@
             information in the tooltip
         </div>
         <b>Left Control</b> - This area allows to change the properties of the visualisations. From activating a
-        navigation Bar to zoom
+        Time Range Bar to zoom
         in the graph, to background colour selection.<br>
         <b>Visualisation Area</b> - This area is split into the Main, Historic Visualisation of UK economic properties
         over the past 300 years.

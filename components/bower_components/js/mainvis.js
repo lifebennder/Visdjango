@@ -249,8 +249,10 @@ function changeButtonColourClass(id, isOn, onClass, offClass) {
     //console.log('befo: '+d3.select(id).style('font-size'));
     if (text.indexOf(' Off') > 0 || text.indexOf(' On') > 0) {
         d3.select(id).text(text);
-        // d3.select(id).style({'font-size': 'calc(50% + 0.8vw) !important'});
+        d3.select(id).style({'font-weight': 'bold'});
+        //d3.select(id).style({'font-size': 'calc(50% + 0.8vw) !important'});
     }
+    changeStatus();
     //console.log('after: '+d3.select(id).style('font-size'));
 }
 function setFocusMode() {
@@ -273,6 +275,7 @@ function navigationFilterToggle() {
     navigationFilter = !navigationFilter;
     changeButtonColourClass('#navigationfiltertoggle', navigationFilter, 'btn-info', 'btn-default');
     setUpperVisData();
+    //changeStatus();
 }
 
 function setUpperVisData(data) {
@@ -345,12 +348,12 @@ function NormaliseMode() {
 function BackgroundColour(id) {
     backgroundcolour = !backgroundcolour;
     var topcolour = d3.rgb("#c9c9c0");
-    var maincolour = d3.rgb(255, 250, 0);
+    var maincolour = "rgba(0,0,0,0.1)";//d3.rgb(255, 250, 0);
     if (!backgroundcolour) {
         topcolour = d3.rgb(255, 255, 255);
         maincolour = d3.rgb(255, 255, 255);
     }
-    d3.select('#main').style('background-color', maincolour);
+    d3.select('#mainparent').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
 
     changeButtonColourClass('#' + id, backgroundcolour, 'btn-info', 'btn-default');
@@ -409,7 +412,19 @@ function setSeries(keywords, id) {
     }
     //}
 }
-
+function changeStatus() {
+    /*var text = "<b>Time Range Bar: </b>"+mainfocus
+     +"<b>,&nbsp; Normalised: </b>"+isMainNormalised
+     +"<b>,&nbsp; Background Colour: </b>"+backgroundcolour
+     +"<b>,&nbsp; Fancy Animation: </b>"+(d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0);*/
+    var text = "Time Range Bar: <b>" + mainfocus
+            + "</b>,&nbsp; Time Range Filter: <b>" + navigationFilter
+            + "</b>,&nbsp; Normalised: <b>" + isMainNormalised
+            + "</b>,&nbsp; Background Colour: <b>" + backgroundcolour
+            + "</b>,&nbsp; Fancy Animation: <b>" + (d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0)
+        ;
+    d3.select("#" + 'mainstatus').attr('text-anchor', 'middle').html(text);
+}
 function fullscreen(id, selfid) {
     isFullscreen = !isFullscreen;
     var display = 'inline', width = '64%';

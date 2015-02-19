@@ -84,6 +84,7 @@ svg {
 
 .txt-responsive {
     font-weight: bold;
+    padding: 0 0 0 0;
     /*font-size: 14px;*/
     /*font-size: 1.3vmin;*/
     /*font-size: 80%;*/
@@ -92,6 +93,15 @@ svg {
       margin:0% 0% 0% 0%;*/
     /*line-height: 100%;*/
     /*border-radius:1px;*/
+}
+.panel-body {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+.btn {
+    padding-right: 0.8vw;
+    padding-left: 0.8vw;
+
 }
 
 .twocolumns {
@@ -136,4 +146,18 @@ svg {
     width: 30px;
     height: 30px;
     padding: 3px 0 0 0;
+}
+
+.bootstrapfont {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.4;
+    font-weight: normal;
+    line-height: 1.42857143;
+}
+
+.status {
+    font-size: 0.85em;
+    text-align: center;
 }
