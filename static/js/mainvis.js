@@ -151,18 +151,17 @@ function drawmain(data) {
                     //var unemployment = unemploymentSeries[Math.round(e.pointXValue) - unemploymentSeries[0].x].y;
                     //var inflationIn = Math.round(e.pointXValue) - (inflationSeries[0].x);
                     //var unemploymentIn = Math.round(e.pointXValue) - (startingXVal + leftVisData[1].values.length);
-                    //console.log(e.pointXValue);
                     var leftPointIndex = Math.round(e.pointXValue) - (leftVisData[0].startXIndex);
                     var middlePointIndex = Math.round(e.pointXValue) - (middleVisData[0].startXIndex);
                     var rightPointIndex = Math.round(e.pointXValue) - (rightVisData[0].startXIndex);
                     //console.log(e.pointXValue+' '+ (unemploymentSeries[0].x+leftVisData[1].values.length));
                     //console.log(' pointIndex: '+pointIndex);
                     leftVis.lines.highlightPoint(0, leftPointIndex, true);
-                    leftVis.lines.highlightPoint(1, leftPointIndex, true);
+                    //leftVis.lines.highlightPoint(1, leftPointIndex, true);
                     middleVis.lines.highlightPoint(0, middlePointIndex, true);
-                    middleVis.lines.highlightPoint(1, middlePointIndex, true);
+                    //middleVis.lines.highlightPoint(1, middlePointIndex, true);
                     rightVis.lines.highlightPoint(0, rightPointIndex, true);
-                    rightVis.lines.highlightPoint(1, rightPointIndex, true);
+                   // rightVis.lines.highlightPoint(1, rightPointIndex, true);
                 }
             });
             chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
@@ -530,14 +529,14 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             var RGB = e.series.color;
             var alpha = '0.35';
             var year = ValueIndexList[leftLabel][y];
-            if (year == undefined) {year = ValueIndexList[bottomLabel][x];console.log('undef: '+ValueIndexList[leftLabel][y]+'  '+year);}
+            if (year == undefined) {year = ValueIndexList[bottomLabel][x];}
             var backgroundcolor = 'rgba(' + parseInt(RGB.substring(1, 3), 16) + ',' +
                 parseInt(RGB.substring(3, 5), 16) + ',' +
                 parseInt(RGB.substring(5, 7), 16) + ',' + alpha + ')';
             var content = '<div class="toptooltiptitle" style="background-color: ';
             content += backgroundcolor + '">';
             content += key + '</div><p>' + leftLabel + ': ' + y + ',<br> ' + bottomLabel + ': ' + x;
-            content += '<br> Year: ' + year + '</p>';
+            if(e.seriesIndex==0)content += '<br> Year: ' + year + '</p>';
             return content;
         });
 
