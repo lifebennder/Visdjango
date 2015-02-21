@@ -14,6 +14,7 @@ var navigationFilter = true;
 var buttonSelectID = null;
 var isFullscreen = false;
 var isUpperHidden = false;
+//var isQuiz = false;
 //data indexes to speedup data retrieval. Otherwise its too laggy
 //var inflationIndex;
 //var unemploymentIndex;
@@ -45,11 +46,13 @@ window.onload = function (e) {
     nv.log('loaded');
     //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
-
+    //if(isQuiz) isQuiz=true;
 };
 function hide(id) {
-    d3.select('#' + id).transition().delay(100).duration(1200).style("opacity", 0).remove();
+    d3.select('#' + id).transition().delay(100).duration(1000).style({"opacity": 0,height:'0px'}).remove();
 }
+
+
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
     //removeGraph('main', mainVis);
@@ -418,10 +421,10 @@ function changeStatus() {
      +"<b>,&nbsp; Background Colour: </b>"+backgroundcolour
      +"<b>,&nbsp; Fancy Animation: </b>"+(d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0);*/
     var text = "Time Range Bar: <b>" + mainfocus
-            + "</b>,&nbsp; Time Range Filter: <b>" + navigationFilter
-            + "</b>,&nbsp; Normalised: <b>" + isMainNormalised
-            + "</b>,&nbsp; Background Colour: <b>" + backgroundcolour
-            + "</b>,&nbsp; Fancy Animation: <b>" + (d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0)
+            + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + navigationFilter
+            + "</b>,&nbsp;&nbsp; Normalised: <b>" + isMainNormalised
+            + "</b>,&nbsp;&nbsp; Background Colour: <b>" + backgroundcolour
+            + "</b>,&nbsp;&nbsp; Fancy Animation: <b>" + (d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0)
         ;
     d3.select("#" + 'mainstatus').attr('text-anchor', 'middle').html(text);
 }

@@ -2,17 +2,14 @@
 {% load staticfiles %}
 {% block title %}Economic Visualisation{% endblock %}
 {% block extrahead %}
-    <link href="{% static 'nvd3-community/build/nv.d3.css' %}" rel="stylesheet">
-    <script src="{% static 'd3/d3.js' %}"></script>
-    <script src="{% static 'nvd3-community/build/nv.d3.js' %}"></script>
+
     <script src="{% static 'js/mainvis.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
-    <div class="page-header" style="  margin-top: 0px; margin-bottom:10px;  padding-bottom: 0px;">
-        <h2 style="    margin-top: 0.00em;
-    margin-bottom: 0.0em;">Economic Visualisation</h2>
+    <div class="page-header">
+        <h2>Economic Visualisation</h2>
     </div>
 
     <!-- The Application-->
@@ -320,9 +317,8 @@
         </ul>
     </div>{% endblock %}
 {% block extrafooter %}
-    <div id="startfooter" class="startfooter " onclick="hide('startfooter')" ;>
-        <img style="float:right; margin: 2px 2px 2px 5px; opacity:0.75;
-    width:30px; height:30px;" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
+    <div id="startfooter" class="startfooter " onclick="hide('startfooter')" >
+        <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
 
         <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation
             Application!<br>
