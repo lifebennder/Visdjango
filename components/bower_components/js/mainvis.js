@@ -48,9 +48,7 @@ window.onload = function (e) {
     //drawUpperVisualisations();
     //if(isQuiz) isQuiz=true;
 };
-function hide(id) {
-    d3.select('#' + id).transition().delay(100).duration(1000).style({"opacity": 0,height:'0px'}).remove();
-}
+
 
 
 function drawmain(data) {
@@ -107,7 +105,7 @@ function drawmain(data) {
 
         //getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
 
-        data.forEach(function (series, i) {
+        unNormalisedmaindata.forEach(function (series, i) {
             ValueIndexList[series.key] = {};
             series.values.forEach(function (values, i) {
                 if (values.y == "") return;
@@ -532,14 +530,14 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             var RGB = e.series.color;
             var alpha = '0.35';
             var year = ValueIndexList[leftLabel][y];
-            if (year == undefined) year = ValueIndexList[bottomLabel][x];
+            if (year == undefined) {year = ValueIndexList[bottomLabel][x];console.log('undef: '+ValueIndexList[leftLabel][y]+'  '+year);}
             var backgroundcolor = 'rgba(' + parseInt(RGB.substring(1, 3), 16) + ',' +
                 parseInt(RGB.substring(3, 5), 16) + ',' +
                 parseInt(RGB.substring(5, 7), 16) + ',' + alpha + ')';
             var content = '<div class="toptooltiptitle" style="background-color: ';
             content += backgroundcolor + '">';
             content += key + '</div><p>' + leftLabel + ': ' + y + ',<br> ' + bottomLabel + ': ' + x;
-            content += '<br> Year: ' + ValueIndexList[leftLabel][y] + '</p>';
+            content += '<br> Year: ' + year + '</p>';
             return content;
         });
 

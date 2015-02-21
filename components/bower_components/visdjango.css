@@ -105,7 +105,9 @@ svg {
     padding-right: 0px;
     padding-left: 0px;
 }
-
+.notbold {
+    font-weight:normal;
+}​
 .btn {
     padding-right: 0.8vw;
     padding-left: 0.8vw;
@@ -186,9 +188,10 @@ svg {
 
 dt {
     margin-top: 20px;
+    margin-bottom: 5px;
 }
 .quit {
-    right: 0px;
+
     cursor: pointer;
     float:right; margin: 2px 2px 2px 5px; opacity:0.75; position: relative;
     width:30px; height:30px;

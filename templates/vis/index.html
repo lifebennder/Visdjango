@@ -194,7 +194,7 @@
                                     onclick="setSeries(['Spending', 'Debt'],id)"
                                     title="Shows the correlation between Spending and Public Debt. This illustrates how increased spending
                                     of the government causes ever increasing public debt." data-toggle="tooltip">
-                                <div class="txt-responsive">Spending Vs.<br> Public Debt</div>
+                                <div class="txt-responsive">Spending &<br> Public Debt</div>
                             </button>
                             <button id="data4" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['GDP, billions','Real GDP, billions'],id)"
@@ -204,14 +204,14 @@
                                     As you can see after 2008 the Real GDP (wealth) of the UK didn't increase, however
                                     the GDP did (nominal value). This shows money printing."
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Real GDP Vs. GDP</div>
+                                <div class="txt-responsive">Real GDP & GDP</div>
                             </button>
                             <button id="data2" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['per capita'],id)"
                                     title="Shows the correlation between Real GDP per capita (inflation adjusted) and Nominal GDP per capita. This illustrates
                                     the production of each citizen and the difference between actual and nominal values, caused by inflation."
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Real GDP (per Capita) <br>Vs. GDP (per Capita)</div>
+                                <div class="txt-responsive">Real GDP (per Capita) <br>& GDP (per Capita)</div>
                             </button>
                             <button id="data3" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['GDP %'],id)"
@@ -224,21 +224,21 @@
                                     onclick="setSeries(['GDP, billions','per capita','Population'],id)"
                                     title="Shows the correlation between GDP, per capita values and Population. This illustrates the increasing wealth of
                                     UK Citizens." data-toggle="tooltip">
-                                <div class="txt-responsive">Population Vs. GDP</div>
+                                <div class="txt-responsive">Population & GDP</div>
                             </button>
                             <button id="data6" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['unemployment','Tax Rev, GDP %'],id)"
                                     title="Shows the correlation between Unemployment and Tax Revenue
                                     This illustrates the affect of unemployment on tax revenue. Bigger Unemployment would
                                     mean lower Tax Revenue." data-toggle="tooltip">
-                                <div class="txt-responsive">Unemployment Vs. <br>Tax Revenue, GDP %</div>
+                                <div class="txt-responsive">Unemployment & <br>Tax Revenue, GDP %</div>
                             </button>
                             <button id="data7" type="button" class="btn btn-default " aria-label="true"
                                     onclick="setSeries(['Interest Rate %','Net Debt, GDP %'],id)"
                                     title="Shows the correlation between the Interest Rate and Public Debt.
                                     The amount of debt is directly tied to the interest rate on it."
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Public Debt Vs. <br>Interest Rate, %</div>
+                                <div class="txt-responsive">Public Debt & <br>Interest Rate, %</div>
                             </button>
                         </div>
                         <div class="bootstrapfont">
@@ -249,19 +249,22 @@
                                     title="Selects the series from the axis of the Phillips Curve Graph.
                                      &quot;Inflation, Unemployment&quot;" data-toggle="tooltip"
                                     onclick="setSeries(['Inflation', 'Unemployment'],id)">
-                                <div class="txt-responsive">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phillips Curve&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                                <div class="txt-responsive">Phillips Curve<br>
+                                    <span class="notbold">Unemployment, Inflation</span></div>
                             </button>
                             <button id="laffercurve" type="button" class="btn btn-default " aria-label="true"
                                     title="Selects the series from the axis of the Laffer Curve Graph.
                                      &quot;Tax Rev, Income Tax&quot;" data-toggle="tooltip"
                                     onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'],id)">
-                                <div class="txt-responsive">Laffer Curve</div>
+                                <div class="txt-responsive">Laffer Curve<br>
+                                    <span class="notbold">Tax Rev, Income Tax</span></div>
                             </button>
                             <button id="islmmodel" type="button" class="btn btn-default " aria-label="true"
                                     title="Selects the series from the axis of the IS-LM Model Graph.
                                      &quot;Interest Rate, Real GDP, billions&quot;" data-toggle="tooltip"
                                     onclick="setSeries(['Interest', 'Real GDP, billions'],id)">
-                                <div class="txt-responsive">IS-LM Model</div>
+                                <div class="txt-responsive">IS-LM Model<br>
+                                    <span class="notbold">Interest, Real GDP</span></div>
                             </button>
                         </div>
 

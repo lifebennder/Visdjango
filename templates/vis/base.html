@@ -19,7 +19,7 @@
     <link href="{% static 'google-code-prettify/bin/prettify.min.css' %}" rel="stylesheet">
     <link href="{% static 'visdjango.css' %}" rel="stylesheet">
     <link href="{% static 'nvd3-community/build/nv.d3.css' %}" rel="stylesheet">
-    <script src="{% static 'js/quiz.js' %}" %}></script>
+    <script src="{% static 'js/panels.js' %}" %}></script>
     <script src="{% static 'd3/d3.js' %}"></script>
     <script src="{% static 'nvd3-community/build/nv.d3.js' %}"></script>
     <script src="{% static 'jquery/dist/jquery.js' %}"></script>
@@ -57,7 +57,7 @@
             </ul>
             <!-- navbar-nav (left)-->
             <ul id="navbarright" class="nav navbar-nav navbar-right">
-                <li><a   href="#"  onclick="quiz()" >Quiz</a></li>
+                <li><a href="#" onclick="quiz()">Quiz</a></li>
                 <li><a target="_blank" href="https://github.com/lifebennder/Visdjango">Source on GitHub</a></li>
             </ul>
             <!-- navbar-right -->
@@ -69,24 +69,32 @@
 <!-- navbar -->
 <div class=" home-container" style="  height: 88vh; min-width: 800px;
     ">
-<div class="quiz" id="quiz">
-    <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="quiz()">
-    <div style="text-align: center"><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quiz</h1></div>
-<dl>
-    <dt>1. asdad</dt>
-    <dd>asdad</dd>
-    <dt>2. asdad</dt>
-    <dd>asdad</dd>
-    <dt>3. asdad</dt>
-    <dd>asdad</dd>
-</dl>
+    <div class="quiz" id="quiz">
+        <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="quiz()">
+
+        <div style="text-align: center"><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Quiz</h1></div>
+        <form>
+            <dl>
+                <dt>1. How did the disparity between Real and Nominal Debt affect the UK economy?</dt>
+               <dd><form role="form">
+                    <label class="radio-inline">
+                        <input type="radio" name="q1">Increase Debt
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="q1">Increase Inflation
+                    </label>
+                </form>
+
+                </dd>
+                <dt>2. asdad</dt>
+                <dd>asdad</dd>
+                <dt>3. asdad</dt>
+                <dd>asdad</dd>
+            </dl>
+        </form>
 
 
-
-
-
-
-</div>
+    </div>
     {% block sub_menu %}{% endblock %}
     {# include "messages.html" #}
     {% block content %}(no content){% endblock %}
