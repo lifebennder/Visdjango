@@ -571,9 +571,9 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.dispatch.on('tooltipHide.upper', function (e) {
             mainVis.clearHighlights();
         });
-        chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
+        /*chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
             console.log(e);
-        });
+        });*/
     });
 }
 
