@@ -3,7 +3,7 @@
  */
 
 var isQuiz = false;
-var correctAnswers = [0, 0, 0, 1, 1, 0, 1, 1, 1];
+var correctAnswers = [0, 0, 0, 1, 1, 0, 1, 0, 1,0];
 window.onload = function (e) {
 
 };
@@ -12,7 +12,6 @@ function hide(id) {
 }
 
 function quiz() {
-    console.log('quiz');
     //document.getElementsByName('q1').addEventListener("click", validate);
     // document.getElementById("qqq1").addEventListener("click", validate);
     d3.selectAll('.radio-inline').on('click', function (d) {
@@ -34,21 +33,26 @@ function quiz() {
     isQuiz = !isQuiz;
 }
 
-function hint(buttonid) {
-    var button = document.getElementById(buttonid);
-    button.click();
+function hint(series) {
+    if (!(series instanceof Array)) {
+        var button = document.getElementById(series);
+        button.click();
+    }
+    else
+    setSeries(series);
+    quiz();
 }
 
 function validate(id) {
     var parent = id.parentNode.id;
     var radios = -1;
-    if (document.getElementsByName(parent.slice(-2))[0].checked) radios = 0;
-    else if (document.getElementsByName(parent.slice(-2))[1].checked) radios = 1;
+    if (document.getElementsByName(parent)[0].checked) radios = 0;
+    else if (document.getElementsByName(parent)[1].checked) radios = 1;
     else return;
     //console.log(radios);
     var text = "not set";
-    var isCorrect = radios == correctAnswers[parseInt(parent.slice(-1))-1];
-    console.log(isCorrect+'  '+parseInt(parent.slice(-1))+' '+correctAnswers[parseInt(parent.slice(-1))-1]);
+    var isCorrect = radios == correctAnswers[parseInt(parent.slice(1)) - 1];
+    //console.log(isCorrect + '  ' + parseInt(parent.slice(-1)) + ' ' + correctAnswers[parseInt(parent.slice(-1)) - 1]);
     var correct = '✓ Correct';
     var wrong = '✘ Wrong';
     //var status = correct;

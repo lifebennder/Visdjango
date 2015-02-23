@@ -167,11 +167,11 @@ function drawmain(data) {
         }
         chart.dispatch.on('stateChange.main', function (newState) {
             updateData(newState);// console.log(newState.disabled);
-            console.log('state change ');
+            //console.log('state change ');
         });
         chart.dispatch.on('changeState.main', function (newState) {
             updateData(newState);
-            console.log('change state');
+            //console.log('change state');
         });
 
         drawUpperVisualisations();
@@ -394,13 +394,13 @@ function setSeries(keywords, id) {
 
     if (buttonSelectID != null) {
         var istrue = (d3.select('#' + buttonSelectID).property('className').indexOf('btn-info') >= 0);
-        console.log(buttonSelectID + ' setting false ' + istrue);
+        //console.log(buttonSelectID + ' setting false ' + istrue);
         changeButtonColourClass('#' + buttonSelectID, false, 'btn-info', 'btn-default');
         buttonSelectID = null;
     }
 
     if (id != undefined) {
-        console.log(id + ' setting true');
+        //console.log(id + ' setting true');
         buttonSelectID = id;
         //d3.select('#'+id).property('className').indexOf('btn-info')>=0
         changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
@@ -415,7 +415,7 @@ function changeStatus() {
     var text = "Time Range Bar: <b>" + boolToOnOff(mainfocus)
             + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(navigationFilter)
             + "</b>,&nbsp;&nbsp; Normalised: <b>" + boolToOnOff(isMainNormalised)
-            + "</b>,&nbsp;&nbsp; Background Colour: <b>" + boolToOnOff(backgroundcolour)
+            + "</b>,&nbsp;&nbsp; Background Col.: <b>" + boolToOnOff(backgroundcolour)
             + "</b>,&nbsp;&nbsp; High Quality: <b>" + boolToOnOff((d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0));
     if(mainfocus) text+= "</b>,&nbsp;&nbsp; Year Range: <b>"+navigationIndexes[0]+':'+navigationIndexes[1];
 
