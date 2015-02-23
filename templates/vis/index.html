@@ -13,7 +13,7 @@
     </div>
 
     <!-- The Application-->
-    <div style="height:94%; min-height: 500px; min-width: 1100px; ">
+    <div style="height:93%; min-height: 600px; min-width: 1100px; ">
         <!--Left Control -->
         <div id="leftcontrol" style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
         background-color: #ffffff; padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
@@ -46,19 +46,19 @@
                                     title="Adds time selection control underneath the main graph that allows you to zoom
                                      in on the time axis. This will also affect upper visualisation historic data
                                      values if the &quot;Time Range Filter&quot; is enabled." data-toggle="tooltip">
-                                <div class="txt-responsive">Time Range Bar Off</div>
+                                <div class="txt-responsive">Time Range Bar</div>
                             </button>
                             <button id="navigationfiltertoggle" type="button" class="btn btn-info"
                                     onclick="navigationFilterToggle()"
                                     title="Toggles if the upper Visualisations limit the Historic Values (green) according to time zooming in the main graph."
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Time Range Filter On</div>
+                                <div class="txt-responsive">Time Range Filter</div>
                             </button>
                             <button id="normalisemode" type="button" class="btn btn-default" style="margin-top: 15px;"
                                     onclick="NormaliseMode()"
                                     title="Toggles if to normalise the Historic Data. Makes all the data points be between 0 and 1."
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Normalise Off</div>
+                                <div class="txt-responsive">Normalise</div>
                             </button>
                         </div>
                     </div>
@@ -86,13 +86,13 @@
                                     onclick="BackgroundColour(id)"
                                     title="Toggles if to have the visualisation background white or with colours"
                                     data-toggle="tooltip">
-                                <div class="txt-responsive">Background Colour On</div>
+                                <div class="txt-responsive">Background Colour</div>
                             </button>
-                            <button id="fancyvis" type="button" class="btn btn-info " aria-label="true"
+                            <button id="fancyvis" type="button" class="btn btn-default " aria-label="true"
                                     onclick="FancyVis(id)"
                                     title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
                                     increases Performance." data-toggle="tooltip">
-                                <div class="txt-responsive">Fancy Animation On</div>
+                                <div class="txt-responsive">High Quality</div>
                             </button>
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                              there being more money decreasing its value as there is more of it." data-toggle="tooltip">Phillips
                         Curve</a></h5>
 
-                    <div id="leftvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
+                    <div id="leftvis" style="height: 90%; width:100%">
                         <svg></svg>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                                             too small % of the economic production." data-toggle="tooltip">Laffer
                         Curve</a></h5>
 
-                    <div id="middlevis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
+                    <div id="middlevis" style="height: 90%; width:100%">
                         <svg></svg>
                     </div>
                 </div>
@@ -145,7 +145,7 @@
                              shows the equilibrium interest rate and price level. " data-toggle="tooltip">IS-LM
                         Model</a></h5>
 
-                    <div id="rightvis" class="with-3d-shadow with-transitions" style="height: 90%; width:100%">
+                    <div id="rightvis" style="height: 90%; width:100%">
                         <svg></svg>
                     </div>
                 </div>

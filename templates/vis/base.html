@@ -67,24 +67,24 @@
     <!-- container -->
 </div>
 <!-- navbar -->
-<div class=" home-container" style="  height: 88vh; min-width: 800px;
+<div class=" home-container" style="  height: 93vh; min-width: 800px;
     ">
     <div class="quiz" id="quiz">
         <img class="quit" style="" src="{% static 'images/cancel.png' %}" alt="close" onclick="quiz()">
 
-        <div style="text-align: center;"><h1 style="margin-top: 0">&nbsp;&nbsp;&nbsp;&nbsp; Quiz</h1></div>
+        <div class="simhref" style="text-align: center;" onclick="quiz()"><h1 style="margin-top: 0">&nbsp;&nbsp;&nbsp;&nbsp; Quiz</h1></div>
 
             <dl>
                 <dt>1. How did the disparity between Real and Nominal Debt affect the UK economy?
-                    <button class="btn btn-default " onclick="hint('data7')">Hint</button>
+                    <a class="simhref" onclick="hint('data7')">Hint</a>
                 </dt>
                 <dd>
                     <form id="qqq1"  role="form">
                         <label class="radio-inline">
-                            <input type="radio" name="q1" value=0>Increase Debt
+                            <input type="radio" name="q1">Increase Debt
                         </label>
                         <label class="radio-inline">
-                            <input type="radio" name="q1" value=1>Increase Inflation
+                            <input type="radio" name="q1">Increase Inflation
                         </label>
 
                     </form>

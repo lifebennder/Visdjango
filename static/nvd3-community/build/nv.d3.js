@@ -6161,19 +6161,26 @@ nv.models.lineWithFocusChart = function() {
                         series.seriesIndex = i;
                         return !series.disabled;
                     })
-                    .forEach(function(series,i) {
-                        //pointIndex = nv.interactiveBisect(series.values, e.pointXValue, chart.x());
+                    .forEach(function (series, i) {
                         //pointIndex = Math.round((e.pointXValue - brushExtent[0]));
-                        pointIndex = (Math.round(e.pointXValue) - Math.round(brushExtent[0]));
+                        var brush0 = 0;//, brushmax = series.values.length-1;
+                        if (brushExtent != null && brushExtent != undefined) {
+                            brush0 = Math.round(brushExtent[0]);
+                            //brushmax = Math.round(brushExtent[1]);
+                        }
+                        pointIndex = (Math.round(e.pointXValue) - brush0);
                         lines.highlightPoint(i, pointIndex, true);
-                        var point = series.values[pointIndex];
+                        //pointIndex = nv.interactiveBisect(series.values.slice(brush0,brushmax), e.pointXValue, chart.x().slice(brush0,brushmax));
+                        var point = series.values[(brush0 - series.values[0].x) + pointIndex];
                         if (typeof point === 'undefined') return;
                         if (typeof singlePoint === 'undefined') singlePoint = point;
-                        if (typeof pointXLocation === 'undefined') pointXLocation = e.mouseX;//(brushExtent[1]-brushExtent[0])-pointIndex;//chart.xScale()(chart.x()(point,pointIndex));
+                        if (typeof pointXLocation === 'undefined') pointXLocation = chart.xScale()(chart.x()(point, pointIndex));
+                        //e.mouseX;//(brushExtent[1]-brushExtent[0])-pointIndex;//chart.xScale()(chart.x()(point,pointIndex));
+                        //console.log(pointIndex+' '+brushExtent+' '+pointXLocation);
                         allData.push({
                             key: series.key,
                             value: chart.y()(point, pointIndex),
-                            color: color(series,series.seriesIndex)
+                            color: color(series, series.seriesIndex)
                         });
                     });
                 //Highlight the tooltip entry based on which point the mouse is closest to.
@@ -6187,6 +6194,7 @@ nv.models.lineWithFocusChart = function() {
                 }
 
                 var xValue = xAxis.tickFormat()(chart.x()(singlePoint,pointIndex));
+                //console.log(xValue);
                 interactiveLayer.tooltip
                     .position({left: pointXLocation + margin.left, top: e.mouseY + margin.top})
                     .chartContainer(that.parentNode)
@@ -6293,7 +6301,8 @@ nv.models.lineWithFocusChart = function() {
                 if (Math.abs(extent[0] - extent[1]) <= 1) {
                     return;
                 }
-
+                extent = [Math.floor(extent[0]), Math.round(extent[1])];
+                brushExtent = extent;
                 dispatch.brush({extent: extent, brush: brush});
 
 

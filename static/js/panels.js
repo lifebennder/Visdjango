@@ -47,7 +47,8 @@ function validate(id) {
     else return;
     //console.log(radios);
     var text = "not set";
-    var isCorrect = radios == correctAnswers[parseInt(parent.slice(-1))];
+    var isCorrect = radios == correctAnswers[parseInt(parent.slice(-1))-1];
+    console.log(isCorrect+'  '+parseInt(parent.slice(-1))+' '+correctAnswers[parseInt(parent.slice(-1))-1]);
     var correct = '✓ Correct';
     var wrong = '✘ Wrong';
     //var status = correct;

@@ -50,7 +50,6 @@ window.onload = function (e) {
 };
 
 
-
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
     //removeGraph('main', mainVis);
@@ -62,13 +61,9 @@ function drawmain(data) {
             chart.brushExtent(navigationIndexes);
             chart.dispatch.on('brush.user', function (brush) {
                 //updateData(newState); //brush is returned and extent []
-                navigationIndexes = brush.extent;
-                //console.log(leftVis.xAxis.axisLabel());
-                /* leftVisData[0].values.forEach(function (value, i) {
-                 //value.series = 30; console.log(value);
-                 });*/
-                //leftVis.data = leftVisData;
-                //removeGraph('leftvis',leftVis);
+                navigationIndexes[0] = Math.round(brush.extent[0]);
+                navigationIndexes[1] = Math.round(brush.extent[1]);
+                changeStatus();
                 if (navigationFilter) {
                     leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve());
                     middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve());
@@ -83,12 +78,11 @@ function drawmain(data) {
                     leftVis.update();
                     middleVis.update();
                     rightVis.update();
-                    //console.log(leftVis.data);
                 }
             });
         } else {
             chart = nv.models.lineChart().margin({left: 55});
-            chart.useInteractiveGuideline(maininteractive);
+            //chart.useInteractiveGuideline(maininteractive);
         }
         //chart.interpolate("step");
         //chart.title('Historic Data Visualisation').titleOffset(-10);
@@ -100,20 +94,21 @@ function drawmain(data) {
         //chart.xDomain([1600,2019]);
         chart.yAxis.tickFormat(d3.format(tickformat));
         chart.useInteractiveGuideline(maininteractive);
+
         //chart.yAxis.axisLabel('£ Thousands').axisLabelDistance(-10);
         //chart.clipEdge(true);
 
         //getindexes(data); // get indexes of all needed series. e.g. index 1 is inflation
 
-        unNormalisedmaindata.forEach(function (series, i) {
-            ValueIndexList[series.key] = {};
-            series.values.forEach(function (values, i) {
-                if (values.y == "") return;
-                var yy = d3.format(tickformat)(values.y);
-                //console.log(value);
-                ValueIndexList[series.key][yy] = values.x;
-            });
-        });
+        /*unNormalisedmaindata.forEach(function (series, i) {
+         ValueIndexList[series.key] = {};
+         series.values.forEach(function (values, i) {
+         if (values.y == "") return;
+         var yy = d3.format(tickformat)(values.y);
+         //console.log(value);
+         ValueIndexList[series.key][yy] = values.x;
+         });
+         });*/
 
         chart.y(function (d) {
             if (d == null || d.y == "") return null;
@@ -161,7 +156,7 @@ function drawmain(data) {
                     middleVis.lines.highlightPoint(0, middlePointIndex, true);
                     //middleVis.lines.highlightPoint(1, middlePointIndex, true);
                     rightVis.lines.highlightPoint(0, rightPointIndex, true);
-                   // rightVis.lines.highlightPoint(1, rightPointIndex, true);
+                    // rightVis.lines.highlightPoint(1, rightPointIndex, true);
                 }
             });
             chart.interactiveLayer.dispatch.on('elementMouseout.mainphillips', function (e) {
@@ -417,13 +412,19 @@ function changeStatus() {
      +"<b>,&nbsp; Normalised: </b>"+isMainNormalised
      +"<b>,&nbsp; Background Colour: </b>"+backgroundcolour
      +"<b>,&nbsp; Fancy Animation: </b>"+(d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0);*/
-    var text = "Time Range Bar: <b>" + mainfocus
-            + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + navigationFilter
-            + "</b>,&nbsp;&nbsp; Normalised: <b>" + isMainNormalised
-            + "</b>,&nbsp;&nbsp; Background Colour: <b>" + backgroundcolour
-            + "</b>,&nbsp;&nbsp; Fancy Animation: <b>" + (d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0)
-        ;
+    var text = "Time Range Bar: <b>" + boolToOnOff(mainfocus)
+            + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(navigationFilter)
+            + "</b>,&nbsp;&nbsp; Normalised: <b>" + boolToOnOff(isMainNormalised)
+            + "</b>,&nbsp;&nbsp; Background Colour: <b>" + boolToOnOff(backgroundcolour)
+            + "</b>,&nbsp;&nbsp; High Quality: <b>" + boolToOnOff((d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0));
+    if(mainfocus) text+= "</b>,&nbsp;&nbsp; Year Range: <b>"+navigationIndexes[0]+':'+navigationIndexes[1];
+
     d3.select("#" + 'mainstatus').attr('text-anchor', 'middle').html(text);
+}
+
+function boolToOnOff(bool) {
+    if (bool) return 'On';
+    else return 'Off';
 }
 function fullscreen(id, selfid) {
     isFullscreen = !isFullscreen;
@@ -528,15 +529,16 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.tooltipContent(function (key, x, y, e, graph) {
             var RGB = e.series.color;
             var alpha = '0.35';
-            var year = ValueIndexList[leftLabel][y];
-            if (year == undefined) {year = ValueIndexList[bottomLabel][x];}
+            var year = e.point.year;
+            //var year = ValueIndexList[leftLabel][y];
+            //if (year == undefined) {year = ValueIndexList[bottomLabel][x];}
             var backgroundcolor = 'rgba(' + parseInt(RGB.substring(1, 3), 16) + ',' +
                 parseInt(RGB.substring(3, 5), 16) + ',' +
                 parseInt(RGB.substring(5, 7), 16) + ',' + alpha + ')';
             var content = '<div class="toptooltiptitle" style="background-color: ';
             content += backgroundcolor + '">';
             content += key + '</div><p>' + leftLabel + ': ' + y + ',<br> ' + bottomLabel + ': ' + x;
-            if(e.seriesIndex==0)content += '<br> Year: ' + year + '</p>';
+            if (e.seriesIndex == 0)content += '<br> Year: ' + year + '</p>';
             return content;
         });
 
@@ -550,8 +552,12 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
 
         /*Event Handlers*/
         chart.dispatch.on('tooltipShow.upper', function (e) {
-            var x = (d3.format(tickformat)(e.point.x)), y = (d3.format(tickformat)(e.point.y)),
-                mainMinVal = maindata[0].values[0].x;
+            //console.log(e);
+            //var x = (d3.format(tickformat)(e.point.x)), y = (d3.format(tickformat)(e.point.y)),
+            var mainMinVal = //(maindata[0].values[0].x)
+                navigationIndexes[0];
+            //console.log(navigationIndexes[0]);
+            var year = e.point.year;
             var inflationIndex;
             var unemploymentIndex;
             maindata.filter(function (series, i) {
@@ -565,15 +571,17 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
                 if (series.key == bottomLabel)unemploymentIndex = i;
             });
             //console.log('  x:'+ x+' '+' y:'+ y+' vind:'+ValueIndexList[leftLabel][y]+' xindex: '+ ValueIndexList[bottomLabel][x]);
-            if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, ValueIndexList[leftLabel][y] - mainMinVal, true);
-            if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, ValueIndexList[bottomLabel][x] - mainMinVal, true);
+            //if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, ValueIndexList[leftLabel][y] - mainMinVal, true);
+            //if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, ValueIndexList[bottomLabel][x] - mainMinVal, true);
+            if (mainVis != null)mainVis.lines.highlightPoint(inflationIndex, year - mainMinVal, true);
+            if (mainVis != null)mainVis.lines.highlightPoint(unemploymentIndex, year - mainMinVal, true);
         });
         chart.dispatch.on('tooltipHide.upper', function (e) {
             mainVis.clearHighlights();
         });
         /*chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
-            console.log(e);
-        });*/
+         console.log(e);
+         });*/
     });
 }
 
@@ -599,11 +607,16 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
                     unemploymentStartIndex = unemploymentSeries[i].x;
                     first = !first;
                 }
-                historicPhillipsCurve.push({x: unemploymentVal, y: inflationVal, shape: 'circle'});
+                historicPhillipsCurve.push({
+                    x: unemploymentVal,
+                    y: inflationVal,
+                    year: unemploymentSeries[i].x,
+                    shape: 'circle'
+                });
             }
         } //else{console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));}
     }
-    //console.log(historicPhillipsCurve); console.log(unemploymentSeries.length);
+    //console.log(historicPhillipsCurve[0]);
     var data = [
 //area: true,
         {
