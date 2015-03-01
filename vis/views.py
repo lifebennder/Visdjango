@@ -77,12 +77,15 @@ def readcsv(path):
     return chartdata
 
 
-def main_data(request):
+def main_data(request,country):
+    #country='debtdata'
+    #country=request.GET.get('country', 'debtdata')
     tooltip_date = "%d %b %Y %H:%M:%S %p"
     extra_serie = {"tooltip": {"y_start": "There are ", "y_end": " calls"},
                    "date_format": tooltip_date}
-    chartdata = readcsv(os.path.join(settings.STATIC_PATH, 'debtdata.csv'))
+    chartdata = readcsv(os.path.join(settings.STATIC_PATH, country+'.csv'))
     charttype = "lineWithFocusChart"
+
     chartcontainer = 'linewithfocuschart_container'  # container name
     data = {
         'charttype': charttype,

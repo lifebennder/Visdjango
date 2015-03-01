@@ -19,7 +19,7 @@ function quiz() {
     });
     //document.getElementById("qqq1")
     var id = '#quiz';
-    var opacity = 1, width = window.innerWidth * 0.3 + 'px';
+    var opacity = 1, width = window.innerWidth * 0.25 + 'px';
     if (isQuiz) {
         opacity = 0;
         width = '0px';

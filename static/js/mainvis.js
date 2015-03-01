@@ -7,9 +7,11 @@ var mainfocus = false;
 var maininteractive = true;
 var maintooltips = true;
 var tickformat = '.2f';
+var currency = 'Kč';//'£';
+var country = 'czechrepublic';//'unitedkingdom';
 var backgroundcolour = true;
 var isMainNormalised = false;
-var navigationIndexes = [1692, 2019];
+var navigationIndexes;
 var navigationFilter = true;
 var buttonSelectID = null;
 var isFullscreen = false;
@@ -30,34 +32,58 @@ var leftVisData = null;
 var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
+    loadpage();
+};
+
+function loadpage(newCountry, currencyId) {
     $('[data-toggle="tooltip"]').tooltip({trigger: 'hover', 'placement': 'bottom', delay: {"show": 800, "hide": 100}}); //activate tooltip plugin
     removeGraph('main', mainVis);
     removeGraph('leftvis', leftVis);
     removeGraph('middlevis', middleVis);
     removeGraph('rightvis', rightVis);
-
-    d3.json("/vis/main_data/", function (error, data) {
+    //console.log(e);
+    navigationIndexes = undefined;
+    //var countryinput = country;
+    if (newCountry != undefined && newCountry != null) country = newCountry;
+    d3.json("/vis/data/" + country + "data/", function (error, data) {
         unNormalisedmaindata = data;
         maindata = unNormalisedmaindata;
+        //if (currencyId != undefined)currency = currencyId;
+        //if (data[0].key.indexOf('č') > 0)currency = 'Kč';
+        //else currency = '£';
+        var keystr = data[0].key;
+        currency = keystr.substr(keystr.indexOf('ns ') + 3);
+        console.log('Currency: ' + currency);
         drawmain(maindata);
     });
-    d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
-    BackgroundColour('backgroundcolour');
-    nv.log('loaded');
+    if (newCountry == undefined) {
+        d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
+        BackgroundColour('backgroundcolour');
+        console.log('loaded');
+    }
     //drawmain(mainfocus, true, true);
     //drawUpperVisualisations();
     //if(isQuiz) isQuiz=true;
-};
+}
 
+//TODO FIX MAIN DATA LINK
 
 function drawmain(data) {
     //d3.json("/vis/main_data/", function (error, data) {
     //removeGraph('main', mainVis);
     nv.addGraph(function () {
+        console.log('focus: ' + mainfocus + ' norm: ' + isMainNormalised);
         var chart;
+        console.log(data[0]);
+        if (navigationIndexes == undefined) {
+            navigationIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
+
+            console.log(navigationIndexes + " ");
+        }
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 40});
             chart.y2Axis.tickFormat(d3.format(tickformat));
+
             chart.brushExtent(navigationIndexes);
             chart.dispatch.on('brush.user', function (brush) {
                 //updateData(newState); //brush is returned and extent []
@@ -192,12 +218,15 @@ function updateData(newState) {
     //mainVis.legend.update(maindata);
     //mainVis.update(maindata);
 }
-/*function getindexes(data) {
- data.forEach(function (series, i) {
- if (!series.key.indexOf('Inflation'))inflationIndex = i;
- if (!series.key.indexOf('Unemployment'))unemploymentIndex = i;
- });
- }*/
+function SelectCountry(id, currencyId) {
+
+    changeButtonColourClass('#' + country, false, 'btn-info', 'btn-default');
+
+    changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
+    country = id;
+    //removeGraph('main', mainVis);
+    loadpage(country, currencyId);
+}
 function removeGraph(graph, chartobject) {
 
     if (chartobject != undefined && chartobject != null) {
@@ -275,9 +304,9 @@ function navigationFilterToggle() {
 
 function setUpperVisData(data) {
     if (data == undefined || data == null) {
-        leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve());
-        middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve());
-        rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve());
+        leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve(country));
+        middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve(country));
+        rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve(country));
     }
     else {
         leftVisData = data;
@@ -348,6 +377,7 @@ function BackgroundColour(id) {
         topcolour = d3.rgb(255, 255, 255);
         maincolour = d3.rgb(255, 255, 255);
     }
+    d3.select('body').style('background-color', maincolour);
     d3.select('#mainparent').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
 
@@ -413,11 +443,11 @@ function changeStatus() {
      +"<b>,&nbsp; Background Colour: </b>"+backgroundcolour
      +"<b>,&nbsp; Fancy Animation: </b>"+(d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0);*/
     var text = "Time Range Bar: <b>" + boolToOnOff(mainfocus)
-            + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(navigationFilter)
-            + "</b>,&nbsp;&nbsp; Normalised: <b>" + boolToOnOff(isMainNormalised)
-            + "</b>,&nbsp;&nbsp; Background Col.: <b>" + boolToOnOff(backgroundcolour)
-            + "</b>,&nbsp;&nbsp; High Quality: <b>" + boolToOnOff((d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0));
-    if(mainfocus) text+= "</b>,&nbsp;&nbsp; Year Range: <b>"+navigationIndexes[0]+':'+navigationIndexes[1];
+        + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(navigationFilter)
+        + "</b>,&nbsp;&nbsp; Normalised: <b>" + boolToOnOff(isMainNormalised)
+        + "</b>,&nbsp;&nbsp; Background Col.: <b>" + boolToOnOff(backgroundcolour)
+        + "</b>,&nbsp;&nbsp; High Quality: <b>" + boolToOnOff((d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0));
+    if (mainfocus) text += "</b>,&nbsp;&nbsp; Year Range: <b>" + navigationIndexes[0] + ':' + navigationIndexes[1];
 
     d3.select("#" + 'mainstatus').attr('text-anchor', 'middle').html(text);
 }
@@ -479,29 +509,29 @@ function upperhide(id, selfid) {
 //Draw the top left visualisation
 function drawleftvis(leftAxis, bottomAxis) {
     removeGraph('leftvis', leftVis);
-    leftVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve());
+    leftVisData = upperVisData(leftAxis, bottomAxis, phillipsCurve(country));
     drawUpperVis('leftvis', leftAxis, bottomAxis, leftVisData);
 }
 
 //Draw the top middle visualisation
 function drawmiddlevis(leftAxis, bottomAxis) {
     removeGraph('middlevis', middleVis);
-    middleVisData = upperVisData(leftAxis, bottomAxis, lafferCurve());
+    middleVisData = upperVisData(leftAxis, bottomAxis, lafferCurve(country));
     drawUpperVis('middlevis', leftAxis, bottomAxis, middleVisData);
 }
 
 //Draw the top right visualisation
 function drawrightvis(leftAxis, bottomAxis) {
     removeGraph('rightvis', rightVis);
-    rightVisData = upperVisData(leftAxis, bottomAxis, ISLMCurve());
+    rightVisData = upperVisData(leftAxis, bottomAxis, ISLMCurve(country));
     drawUpperVis('rightvis', leftAxis, bottomAxis, rightVisData);
 }
 
 /*A asynchronous callback wrapper. This makes the upper visualisations wait for the main visualisation to be drawn*/
 function drawUpperVisualisations() {
-    drawleftvis('Inflation (CPI) %', 'Unemployment %');
+    drawleftvis('Inflation, (CPI) %', 'Unemployment, %');
     drawmiddlevis('Tax Rev, GDP %', 'Income Tax Rate, avg %');
-    drawrightvis('Interest Rate %', 'Real GDP, billions £');
+    drawrightvis('Interest Rate, %', ('Real GDP, billions ' + currency));
 }
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
@@ -590,12 +620,19 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
         inflationSeries,
         unemploymentSeries;
     if (unNormalisedmaindata == null) return;
-    //console.log('drawing scatter phillips');
+    if (theoreticalCurve[0].key == 'Phillips Curve')console.log(unNormalisedmaindata);
     unNormalisedmaindata.forEach(function (series, i) {
         if (series.key == leftAxis)inflationSeries = series.values;
-        if (series.key == bottomAxis)unemploymentSeries = series.values;
+        if (series.key == bottomAxis) {
+            unemploymentSeries = series.values;
+        }
+        else {
+            console.log('ERRPR: ' + bottomAxis);
+        }
     });
     var first = false;
+    // console.log(theoreticalCurve[0].key);
+    //console.log(unemploymentSeries);
     for (var i = 0; i < unemploymentSeries.length; i++) {
         if ((navigationIndexes[0] <= parseInt(unemploymentSeries[i].x) && parseInt(unemploymentSeries[i].x) <= navigationIndexes[1]) || !navigationFilter || !mainfocus) {
             //console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));
@@ -637,12 +674,21 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     return data;
 }
 
-function phillipsCurve() {
+function phillipsCurve(countryy) {
     var curve = [];
-    for (var i = 1; i < 25; i++) {
-        var y = Math.round(100 * ((1 / (i)) * 30 - 5)) / 100;
-        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
-        curve.push({x: i, y: y == 0 ? 0.01 : y});
+    if (countryy == 'czechrepublic') {
+        for (var i = 1; i < 20; i++) {
+            var y = Math.round(100 * ((1 / (i)) * 100  )) / 350;
+            //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+            curve.push({x: i, y: y == 0 ? 0.01 : y});
+        }
+    }
+    else {
+        for (var i = 1; i < 25; i++) {
+            var y = Math.round(100 * ((1 / (i)) * 30 - 5)) / 100;
+            //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+            curve.push({x: i, y: y == 0 ? 0.01 : y});
+        }
     }
     return [{
         values: curve,
@@ -651,14 +697,25 @@ function phillipsCurve() {
     }];
 }
 
-function lafferCurve() {
+function lafferCurve(countryy) {
     var curve = [];
-    for (var i = 0; i < 101; i++) {
-        var iShift = i - 50;
-        var y = (-Math.pow((iShift) / 10, 2) + 40);
-        y = Math.round(100 * y) / 100; //round the value
-        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
-        curve.push({x: i, y: y < 0 ? 0 : y});
+    if (countryy == 'czechrepublic') {
+        for (var i = 0; i < 101; i++) {
+            var iShift = i - 50;
+            var y = (-Math.pow((iShift) / 10, 2) + 26);
+            y = Math.round(100 * y) / 100; //round the value
+            //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+            curve.push({x: i, y: y < 0 ? 0 : y});
+        }
+    }
+    else {
+        for (var i = 0; i < 101; i++) {
+            var iShift = i - 50;
+            var y = (-Math.pow((iShift) / 10, 2) + 40);
+            y = Math.round(100 * y) / 100; //round the value
+            //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+            curve.push({x: i, y: y < 0 ? 0 : y});
+        }
     }
     return [{
         values: curve,
@@ -667,15 +724,25 @@ function lafferCurve() {
     }];
 }
 
-function ISLMCurve() {
+function ISLMCurve(countryy) {
     var IScurve = [], LMcurve = [];
-    for (var i = 0; i < 1445; i = i + 20) {
-        var iShift = i;
-        var ISy = Math.round(100 * (-0.008 * i + 11)) / 100;
-        var LMy = Math.round(100 * (0.008 * i)) / 100;
-        //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
-        IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
-        LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
+    if (countryy == 'czechrepublic') {
+        for (var i = 2400; i < 4000; i = i + 30) {
+            var iShift = i;
+            var ISy = Math.round(100*(-0.005 * i +20))/100;
+            var LMy = Math.round(100*(0.005 * i- 12))/100;
+            IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
+            LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
+        }
+    }
+    else {
+        for (var i = 0; i < 1445; i = i + 20) {
+            var iShift = i;
+            var ISy = Math.round(100 * (-0.008 * i + 11)) / 100;
+            var LMy = Math.round(100 * (0.008 * i)) / 100;
+            IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
+            LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
+        }
     }
     return [{
         values: IScurve,

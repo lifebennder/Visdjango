@@ -223,3 +223,9 @@ dt {
     font-weight: bold;
     color: green;
 }
+
+.countrylist {
+    overflow: scroll;
+    overflow-x: hidden;
+    height: 130px;
+}

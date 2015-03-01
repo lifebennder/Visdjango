@@ -98,6 +98,27 @@
                     </div>
                 </div>
             </div>
+                        <!-- Third, Style Control Panel-->
+            <div class="panel panel-info">
+                <div class="panel-heading" title="This lists all the possible countries to choose from and their data." data-toggle="tooltip">Country Selection</div>
+                <div class="panel-body countrylist" style="text-align: center; padding-bottom: 30px">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button id="unitedkingdom" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="SelectCountry(id,'£')"
+                                    title="Selects United Kingdom Data."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">United Kingdom</div>
+                            </button>
+                            <button id="czechrepublic" type="button" class="btn btn-info " aria-label="true"
+                                    onclick="SelectCountry(id,'Kč')"
+                                    title="Selects Czech Republic Data." data-toggle="tooltip">
+                                <div class="txt-responsive">Czech Republic</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
         </div>
@@ -174,7 +195,7 @@
 
         <!--The Right Control Panel, Data Combinations-->
         <div id="rightcontrol" style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
-        background-color: #ffffff; padding: 0px 00px 10px 10px;  margin: 0px 00px 20px 00px;">
+        background-color: #ffffff; padding: 0px 0px 10px 10px;  margin: 0px 00px 20px 00px;">
             <h4 style="   text-align: center;" title="This panel shows interesting data combinations that tell you the
             evolution of the UK economy over the last 3 centuries." data-toggle="tooltip">
                 Data Combinations
@@ -234,7 +255,7 @@
                                 <div class="txt-responsive">Unemployment & <br>Tax Revenue, GDP %</div>
                             </button>
                             <button id="data7" type="button" class="btn btn-default " aria-label="true"
-                                    onclick="setSeries(['Interest Rate %','Net Debt, GDP %'],id)"
+                                    onclick="setSeries(['Interest','Debt, GDP %'],id)"
                                     title="Shows the correlation between the Interest Rate and Public Debt.
                                     The amount of debt is directly tied to the interest rate on it."
                                     data-toggle="tooltip">
