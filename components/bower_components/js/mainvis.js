@@ -74,7 +74,6 @@ function drawmain(data) {
     nv.addGraph(function () {
         console.log('focus: ' + mainfocus + ' norm: ' + isMainNormalised);
         var chart;
-        console.log(data[0]);
         if (navigationIndexes == undefined) {
             navigationIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
 
@@ -83,29 +82,8 @@ function drawmain(data) {
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 40});
             chart.y2Axis.tickFormat(d3.format(tickformat));
-
-            chart.brushExtent(navigationIndexes);
-            chart.dispatch.on('brush.user', function (brush) {
-                //updateData(newState); //brush is returned and extent []
-                navigationIndexes[0] = Math.round(brush.extent[0]);
-                navigationIndexes[1] = Math.round(brush.extent[1]);
-                changeStatus();
-                if (navigationFilter) {
-                    leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve());
-                    middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve());
-                    rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve());
-                    //rightVis.data = rightVisData;
-                    //console.log(rightVisData);
-                    d3.select('#leftvis svg').datum(leftVisData);
-                    d3.select('#middlevis svg').datum(middleVisData);
-                    d3.select('#rightvis svg').datum(rightVisData);
-                    chart.useVoronoi(false);
-                    //drawUpperVisualisations();
-                    leftVis.update();
-                    middleVis.update();
-                    rightVis.update();
-                }
-            });
+            console.log('brush extent setting');
+                        chart.brushExtent(navigationIndexes);
         } else {
             chart = nv.models.lineChart().margin({left: 55});
             //chart.useInteractiveGuideline(maininteractive);
@@ -201,6 +179,30 @@ function drawmain(data) {
         });
 
         drawUpperVisualisations();
+        if (mainfocus) {
+
+            chart.dispatch.on('brush.user', function (brush) {
+                //updateData(newState); //brush is returned and extent []
+                navigationIndexes[0] = Math.round(brush.extent[0]);
+                navigationIndexes[1] = Math.round(brush.extent[1]);
+                changeStatus();
+                if (navigationFilter) {
+                    leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve(country));
+                    middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve(country));
+                    rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve(country));
+                    //rightVis.data = rightVisData;
+                    //console.log(rightVisData);
+                    d3.select('#leftvis svg').datum(leftVisData);
+                    d3.select('#middlevis svg').datum(middleVisData);
+                    d3.select('#rightvis svg').datum(rightVisData);
+                    chart.useVoronoi(false);
+                    //drawUpperVisualisations();
+                    leftVis.update();
+                    middleVis.update();
+                    rightVis.update();
+                }
+            });
+        }
         return chart;
     });
     //});
@@ -620,14 +622,10 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
         inflationSeries,
         unemploymentSeries;
     if (unNormalisedmaindata == null) return;
-    if (theoreticalCurve[0].key == 'Phillips Curve')console.log(unNormalisedmaindata);
     unNormalisedmaindata.forEach(function (series, i) {
         if (series.key == leftAxis)inflationSeries = series.values;
         if (series.key == bottomAxis) {
             unemploymentSeries = series.values;
-        }
-        else {
-            console.log('ERRPR: ' + bottomAxis);
         }
     });
     var first = false;
@@ -729,8 +727,8 @@ function ISLMCurve(countryy) {
     if (countryy == 'czechrepublic') {
         for (var i = 2400; i < 4000; i = i + 30) {
             var iShift = i;
-            var ISy = Math.round(100*(-0.005 * i +20))/100;
-            var LMy = Math.round(100*(0.005 * i- 12))/100;
+            var ISy = Math.round(100 * (-0.005 * i + 20)) / 100;
+            var LMy = Math.round(100 * (0.005 * i - 12)) / 100;
             IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
             LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
         }

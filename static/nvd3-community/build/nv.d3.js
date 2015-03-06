@@ -6301,7 +6301,8 @@ nv.models.lineWithFocusChart = function() {
                 if (Math.abs(extent[0] - extent[1]) <= 1) {
                     return;
                 }
-                extent = [Math.floor(extent[0]), Math.round(extent[1])];
+                //extent = [Math.floor(extent[0]), Math.round(extent[1])];
+                extent = [extent[0], extent[1]];
                 brushExtent = extent;
                 dispatch.brush({extent: extent, brush: brush});
 
