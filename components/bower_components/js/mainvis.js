@@ -83,7 +83,7 @@ function drawmain(data) {
             chart = nv.models.lineWithFocusChart().margin({left: 40});
             chart.y2Axis.tickFormat(d3.format(tickformat));
             console.log('brush extent setting');
-                        chart.brushExtent(navigationIndexes);
+            chart.brushExtent(navigationIndexes);
         } else {
             chart = nv.models.lineChart().margin({left: 55});
             //chart.useInteractiveGuideline(maininteractive);
@@ -380,7 +380,8 @@ function BackgroundColour(id) {
         maincolour = d3.rgb(255, 255, 255);
     }
     d3.select('body').style('background-color', maincolour);
-    d3.select('#mainparent').style('background-color', maincolour);
+    d3.select('.background').style('background-color', maincolour);
+    //d3.select('#mainparent').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
 
     changeButtonColourClass('#' + id, backgroundcolour, 'btn-info', 'btn-default');

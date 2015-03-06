@@ -223,7 +223,9 @@ dt {
     font-weight: bold;
     color: green;
 }
-
+.background {
+    background-color: white;
+}
 .countrylist {
     overflow: scroll;
     overflow-x: hidden;
