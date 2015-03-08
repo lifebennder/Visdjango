@@ -9,5 +9,6 @@ urlpatterns = patterns('',
     url(r'^about/$', views.about, name='about'),
       # data URLS
     url(r'^data/ukdata/$', views.main_data),
+    url(r'^data/(?P<country>\w+)ref/$', views.main_ref),
     url(r'^data/(?P<country>\w+)/$', views.main_data),
 )

@@ -302,7 +302,7 @@
         </div>
     </div>
 
-    <div class="references top-border">
+    <div id="ref" class="references top-border">
         <h1>Data Attributes</h1>
         <h4>Series Details</h4>
         <ul>
@@ -340,7 +340,10 @@
             <li><a href="http://en.wikipedia.org/wiki/Laffer_curve">Laffer Curve</a>:
                 <a href="https://www.youtube.com/watch?v=bnyeWcA2nXo"> Video Explanation</a></li>
         </ul>
-    </div>{% endblock %}
+    </div>
+
+
+{% endblock %}
 {% block extrafooter %}
     <div id="startfooter" class="startfooter " onclick="hide('startfooter')" >
         <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">

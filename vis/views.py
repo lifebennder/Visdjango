@@ -101,6 +101,8 @@ def main_data(request,country):
     }
     return JsonResponse(chartdata, safe=False)
 
+def main_ref(request, country):
+    return render_to_response('vis/'+country+'reference.html')
 
 def index(request):
     return render_to_response('vis/index.html')
@@ -122,4 +124,5 @@ def decode_url(param):  # helper function just to mak things that little easier
 
 def encode_url(str):
     return str.replace(' ', '_')
+
 

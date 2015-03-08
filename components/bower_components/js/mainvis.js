@@ -11,8 +11,8 @@ var currency = 'Kč';//'£';
 var country = 'czechrepublic';//'unitedkingdom';
 var backgroundcolour = true;
 var isMainNormalised = false;
-var navigationIndexes;
-var navigationFilter = true;
+var timeBarIndexes;
+var timeBarFilter = true;
 var buttonSelectID = null;
 var isFullscreen = false;
 var isUpperHidden = false;
@@ -36,7 +36,7 @@ function loadpage(newCountry, currencyId) {
     removeGraph('middlevis', middleVis);
     removeGraph('rightvis', rightVis);
     //console.log(e);
-    navigationIndexes = undefined;
+    //timeBarIndexes = undefined;
     //var countryinput = country;
     if (newCountry != undefined && newCountry != null) country = newCountry;
     d3.json("/vis/data/" + country + "data/", function (error, data) {
@@ -52,6 +52,7 @@ function loadpage(newCountry, currencyId) {
         drawmain(maindata);
         //if (!isMainNormalised)NormaliseMode();
     });
+    loadresource();
     if (newCountry == undefined) {
         d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
         BackgroundColour('backgroundcolour');
@@ -62,20 +63,36 @@ function loadpage(newCountry, currencyId) {
     //if(isQuiz) isQuiz=true;
 }
 
+function loadresource(){
+    d3.text("/vis/data/" + country + "ref/", function (error, data) {
+        //console.log(data);
+        //console.log(d3.select(data)[0][0].innerHTML);//'#document-fragment'));
+        //d3.selectAll('#ref').html(d3.select(data)[0][0].innerHTML);;
+        d3.selectAll('#ref').html(data);
+    });
+}
+
 function drawmain(data) {
     //removeGraph('main', mainVis);
     nv.addGraph(function () {
-        console.log('focus: ' + mainfocus + ' norm: ' + isMainNormalised);
+        //console.log('focus: ' + mainfocus + ' norm: ' + isMainNormalised);
         var chart;
-        if (navigationIndexes == undefined) {
-            navigationIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
-            //console.log(navigationIndexes + " ");
+        if (timeBarIndexes == undefined) {
+            timeBarIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
+            //console.log(timeBarIndexes + " ");
+        }
+        else if(timeBarIndexes !=undefined){
+            var minX = data[0].values[0].x;
+            var maxX = data[0].values[data[0].values.length - 1].x;
+            //console.log(timeBarIndexes+(timeBarIndexes[0]<minX||timeBarIndexes[0]>maxX));
+            if(timeBarIndexes[0]<minX||timeBarIndexes[0]>maxX)timeBarIndexes[0]=minX;
+            if(timeBarIndexes[1]<minX||timeBarIndexes[1]>maxX)timeBarIndexes[1]=maxX;
         }
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 40});
             chart.y2Axis.tickFormat(d3.format(tickformat));
             //console.log('brush extent setting');
-            chart.brushExtent(navigationIndexes);
+            chart.brushExtent(timeBarIndexes);
         } else {
             chart = nv.models.lineChart().margin({left: 55});
             //chart.useInteractiveGuideline(maininteractive);
@@ -182,11 +199,11 @@ function upperDrawWait(chart) {
     if (mainfocus) {
         chart.dispatch.on('brush.user', function (brush) {
             //updateData(newState); //brush is returned and extent []
-            navigationIndexes[0] = Math.round(brush.extent[0]);
-            navigationIndexes[1] = Math.round(brush.extent[1]);
+            timeBarIndexes[0] = Math.round(brush.extent[0]);
+            timeBarIndexes[1] = Math.round(brush.extent[1]);
             changeStatus();
-            if (navigationFilter) {
-                console.log(country);
+            if (timeBarFilter) {
+                //console.log(country);
                 leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve(country));
                 middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve(country));
                 rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve(country));
@@ -221,7 +238,7 @@ function updateData(newState) {
             legendState.push(str.join(" "));
         }
     });
-    console.log('update: ' + legendState);
+    //console.log('update: ' + legendState);
     //mainVis.legend.update(maindata);
     //mainVis.update(maindata);
 }
@@ -298,8 +315,8 @@ function setFocusMode() {
     drawmain(maindata);
 }
 function navigationFilterToggle() {
-    navigationFilter = !navigationFilter;
-    changeButtonColourClass('#navigationfiltertoggle', navigationFilter, 'btn-info', 'btn-default');
+    timeBarFilter = !timeBarFilter;
+    changeButtonColourClass('#navigationfiltertoggle', timeBarFilter, 'btn-info', 'btn-default');
     setUpperVisData();
     //changeStatus();
 }
@@ -438,11 +455,11 @@ function changeStatus() {
      +"<b>,&nbsp; Background Colour: </b>"+backgroundcolour
      +"<b>,&nbsp; Fancy Animation: </b>"+(d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0);*/
     var text = "Time Range Bar: <b>" + boolToOnOff(mainfocus)
-        + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(navigationFilter)
+        + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(timeBarFilter)
         + "</b>,&nbsp;&nbsp; Normalised: <b>" + boolToOnOff(isMainNormalised)
         + "</b>,&nbsp;&nbsp; Night Mode: <b>" + boolToOnOff(backgroundcolour)
         + "</b>,&nbsp;&nbsp; High Quality: <b>" + boolToOnOff((d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0));
-    if (mainfocus) text += "</b>,&nbsp;&nbsp; Year Range: <b>" + navigationIndexes[0] + ':' + navigationIndexes[1];
+    if (mainfocus) text += "</b>,&nbsp;&nbsp; Year Range: <b>" + timeBarIndexes[0] + ':' + timeBarIndexes[1];
 
     d3.select("#" + 'mainstatus').attr('text-anchor', 'middle').html(text);
 }
@@ -571,8 +588,8 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         /*Event Handlers*/
         chart.dispatch.on('tooltipShow.upper', function (e) {
             var mainMinVal = //(maindata[0].values[0].x)
-                navigationIndexes[0];
-            //console.log(navigationIndexes[0]);
+                timeBarIndexes[0];
+            //console.log(timeBarIndexes[0]);
             var year = e.point.year;
             var inflationIndex;
             var unemploymentIndex;
@@ -613,7 +630,7 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     });
     var first = false;
     for (var i = 0; i < bottomAxisSeries.length; i++) {
-        if ((navigationIndexes[0] <= parseInt(bottomAxisSeries[i].x) && parseInt(bottomAxisSeries[i].x) <= navigationIndexes[1]) || !navigationFilter || !mainfocus) {
+        if ((timeBarIndexes[0] <= parseInt(bottomAxisSeries[i].x) && parseInt(bottomAxisSeries[i].x) <= timeBarIndexes[1]) || !timeBarFilter || !mainfocus) {
             var bottomVal = bottomAxisSeries[i].y, leftVal = leftAxisSeries[i].y;
             if (bottomVal != '' && leftVal != '') {
                 if (first == false) {
@@ -627,7 +644,7 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
                     shape: 'circle'
                 });
             }
-        } //else{console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));}
+        } //else{console.log((timeBarIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=timeBarIndexes[1]));}
     }
     var data = [
 //area: true,
