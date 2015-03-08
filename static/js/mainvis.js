@@ -157,16 +157,18 @@ function drawmain(data) {
             });
         }
         chart.dispatch.on('stateChange.main', function (newState) {
-            updateData(newState);// console.log(newState.disabled);
+            updateData(newState);
+            if (buttonSelectID != null || buttonSelectID != undefined) {
+                changeButtonColourClass('#' + buttonSelectID, false, 'btn-info', 'btn-default');
+                buttonSelectID = null;
+            }
             //console.log('state change ');
         });
         chart.dispatch.on('changeState.main', function (newState) {
             updateData(newState);
             //console.log('change state');
         });
-        //console.log('BEFORE '+rightVis.xAxis.axisLabel());
         drawUpperVisualisations();
-        console.log('main: ' + legendState);
         //console.log(legendState+" "+(legendState!=[])+' '+(legendState!= undefined));
         if (legendState.length > 0 && legendState != undefined) setSeries(legendState, buttonSelectID, true);
         return chart;
@@ -187,10 +189,8 @@ function upperDrawWait(chart) {
                 console.log(country);
                 leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve(country));
                 middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve(country));
-
                 rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve(country));
                 //rightVis.data = rightVisData;
-
                 d3.select('#leftvis svg').datum(leftVisData);
                 d3.select('#middlevis svg').datum(middleVisData);
                 d3.select('#rightvis svg').datum(rightVisData);
@@ -209,9 +209,7 @@ function upperDrawWait(chart) {
 }
 
 function updateData(newState) {
-    //console.log('update: '+newState);
     legendState = [];
-    //console.log(mainVis.state);
     newState.disabled.forEach(function (disabled, i) {
         if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
         unNormalisedmaindata[i].disabled = disabled;
@@ -219,7 +217,6 @@ function updateData(newState) {
             var str = maindata[i].key.split(" ");
             if (str[str.length - 1] == currency)str = str.slice(0, -2);//maindata[i].key.split(" ").slice(0,-2).push(currency);
             //str= str.substring(0, str.lastIndexOf(" "));
-
             //legendState.push(str.substring(0, str.lastIndexOf(" ")));
             legendState.push(str.join(" "));
         }
@@ -236,7 +233,6 @@ function SelectCountry(id, currencyId) {
     loadpage(country, currencyId);
 }
 function removeGraph(graph, chartobject) {
-
     if (chartobject != undefined && chartobject != null) {
         chartobject.tooltips(false);
         if (chartobject.useInteractiveGuideline != undefined)chartobject.useInteractiveGuideline(false);
@@ -285,7 +281,6 @@ function changeButtonColourClass(id, isOn, onClass, offClass) {
         //d3.select(id).style({'font-size': 'calc(50% + 0.8vw) !important'});
     }
     changeStatus();
-    //console.log('after: '+d3.select(id).style('font-size'));
 }
 function setFocusMode() {
     console.log("setFocus Mode");
@@ -300,7 +295,6 @@ function setFocusMode() {
      d3.select('#setfocusmode').classed('btn-info',false);
      d3.select('#setfocusmode').classed('btn-danger',true);
      }*/
-
     drawmain(maindata);
 }
 function navigationFilterToggle() {
@@ -319,12 +313,9 @@ function setUpperVisData(data) {
     else {
         leftVisData = data;
     }
-    //rightVis.data = rightVisData;
-    //console.log(rightVisData);
     d3.select('#leftvis svg').datum(leftVisData);
     d3.select('#middlevis svg').datum(middleVisData);
     d3.select('#rightvis svg').datum(rightVisData);
-    //drawUpperVisualisations();
     leftVis.update();
     middleVis.update();
     rightVis.update();
@@ -335,24 +326,19 @@ function NormaliseMode(changeStatus) {
         Normalisedmaindata = [];
         unNormalisedmaindata.forEach(function (series, seriesi) {
             Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
-            var max = //d3.format(tickformat)(
-                    d3.max(series.values, function (d) {
+            var max = d3.max(series.values, function (d) {
                         return parseFloat(d.y)
                     })
-            // )
                 ;
-            var min = //d3.format(tickformat)(
-                    d3.min(series.values, function (d) {
+            var min = d3.min(series.values, function (d) {
                         return parseFloat(d.y)
                     })
-            //)
                 ;
             //console.log('k: ' + series.key + ' min: ' + min + ' max: ' + max);
             series.values.forEach(function (s, i) {
                 //if (s.y == "") {return;}
                 var x = s.x;
-                var y = //d3.format(tickformat)(
-                        s.y//)
+                var y = s.y
                     ;
                 if (y != "")y = d3.format(tickformat)(
                     (y - min) / (max - min));
@@ -363,12 +349,10 @@ function NormaliseMode(changeStatus) {
     //console.log('Normalised: ' + isMainNormalised);
     if (isMainNormalised)maindata = unNormalisedmaindata;
     else maindata = Normalisedmaindata;
-    //console.log(maindata);
     d3.select('#main svg ').datum(maindata);
     var wrap = d3.select('#main svg ').selectAll('g.nv-wrap.nv-lineChart').data([maindata]);
     var g = wrap.select('g');
-    g.select('.nv-legendWrap').select('g.nv-legend')
-        .datum(maindata);//.transition().call(mainVis.legend);
+    g.select('.nv-legendWrap').select('g.nv-legend').datum(maindata);//.transition().call(mainVis.legend);
     //g.selectAll('.nv-series').datum([maindata]);
     mainVis.legend.update(maindata);
     mainVis.update(maindata);
@@ -392,7 +376,6 @@ function BackgroundColour(id) {
     d3.select('.background').style('background-color', maincolour);
     //d3.select('#mainparent').style('background-color', maincolour);
     d3.selectAll('.topvis').style('background-color', topcolour);
-
     changeButtonColourClass('#' + id, backgroundcolour, 'btn-info', 'btn-default');
 }
 function FancyVis(id) {
@@ -412,7 +395,6 @@ function search() {
 /*Set the series that will be displayed. input is a list of keywords*/
 function setSeries(keywords, id, useEquals) {
     if (keywords == undefined || keywords == [] || keywords[0] == '') return;
-    console.log('setseries: ' + keywords + ' ' + keywords.length);
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
         state.disabled.push(function (kws) {
@@ -421,29 +403,19 @@ function setSeries(keywords, id, useEquals) {
             for (var index in kws) {
                 var datakey = series.key.toLowerCase();
                 var keyword = kws[index].toString();
-                //console.log(key + '   ' + keyword + ' ' + index + ' ' + keyword.toLowerCase());
                 //var shortKey = datakey.substring(0, datakey.lastIndexOf(" "));
-
                 var shortKey = datakey.split(" ");
                 if (shortKey[shortKey.length - 1] == currency.toLowerCase())shortKey = shortKey.slice(0, -2).join(" ");
-                else shortKey= datakey;//shortKey.join(" ");
+                else shortKey = datakey;//shortKey.join(" ");
                 //if (datakey.length >= 4) shortKey = datakey.substring(0, datakey.length - 4);
-                //console.log(shortKey + '|' + keyword.toLowerCase() + ' ' + (shortKey == keyword.toLowerCase()));
-                    if (useEquals != undefined && useEquals == true) {
-                        console.log(currency+' equaling ' + shortKey + '|' + keyword.toLowerCase());
-                        if (shortKey == keyword.toLowerCase()) return false;
-
-                        //return true;
-                    }
-                    else if (datakey.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
-                        return false;
-                    }
+                if (useEquals != undefined && useEquals == true) {
+                    //console.log(currency + ' equaling ' + shortKey + '|' + keyword.toLowerCase());
+                    if (shortKey == keyword.toLowerCase()) return false;}
+                else if (datakey.indexOf(keyword.toLowerCase()) >= 0) {return false;}
             }
-
             return true;
         }(keywords));
     });
-    //console.log(state);
     mainVis.dispatch.changeState(state);
     //if(d3.select('#'+id).property('className').indexOf('btn-info')){
 
@@ -453,14 +425,12 @@ function setSeries(keywords, id, useEquals) {
         changeButtonColourClass('#' + buttonSelectID, false, 'btn-info', 'btn-default');
         buttonSelectID = null;
     }
-
     if (id != undefined) {
         //console.log(id + ' setting true');
         buttonSelectID = id;
         //d3.select('#'+id).property('className').indexOf('btn-info')>=0
         changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
     }
-    //}
 }
 function changeStatus() {
     /*var text = "<b>Time Range Bar: </b>"+mainfocus
@@ -556,7 +526,6 @@ function drawUpperVisualisations() {
 }
 
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
-    //console.log('staradf ' + visid);
     nv.addGraph(function () {
         //console.log('drawing ' + visid);
         var chart = nv.models.lineChart();
@@ -592,19 +561,15 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             if (e.seriesIndex == 0)content += '<br> Year: ' + year + '</p>';
             return content;
         });
-
         chart.margin({"left": 40, "right": 30, "top": 10, "bottom": 30});
         d3.select('#' + visid + ' svg').datum(data).call(chart);
         nv.utils.windowResize(chart.update);
-
         if (visid == 'leftvis')leftVis = chart;
         else if (visid == 'middlevis')middleVis = chart;
         else if (visid == 'rightvis') rightVis = chart;
 
         /*Event Handlers*/
         chart.dispatch.on('tooltipShow.upper', function (e) {
-            //console.log(e);
-            //var x = (d3.format(tickformat)(e.point.x)), y = (d3.format(tickformat)(e.point.y)),
             var mainMinVal = //(maindata[0].values[0].x)
                 navigationIndexes[0];
             //console.log(navigationIndexes[0]);
@@ -613,7 +578,6 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             var unemploymentIndex;
             maindata.filter(function (series, i) {
                 series.seriesIndex = i;
-
                 return !series.disabled;
             }).forEach(function (series, i) {
                 //if (!series.key.indexOf(leftLabel.split(" ")[0]))inflationIndex = i;
@@ -630,9 +594,6 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         chart.dispatch.on('tooltipHide.upper', function (e) {
             mainVis.clearHighlights();
         });
-        /*chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
-
-         });*/
 
         return chart;
     }, function () { //callback function to be called after the uppver visualisations are drawn
@@ -651,14 +612,11 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
 
     });
     var first = false;
-    // console.log(theoreticalCurve[0].key);
-    //console.log(unemploymentSeries);
     for (var i = 0; i < unemploymentSeries.length; i++) {
         if ((navigationIndexes[0] <= parseInt(unemploymentSeries[i].x) && parseInt(unemploymentSeries[i].x) <= navigationIndexes[1]) || !navigationFilter || !mainfocus) {
             //console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));
             //console.log(navigationIndexes[0]+!!(navigationIndexes[0]<=parseInt(unemploymentSeries[i].x))+'  '+unemploymentSeries[i].x+'  '+navigationIndexes[1]);
             var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
-            //console.log({x:unemploymentVal, y:inflationVal});
             if (unemploymentVal != '' && inflationVal != '') {
                 if (first == false) {
                     unemploymentStartIndex = unemploymentSeries[i].x;
@@ -673,7 +631,6 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
             }
         } //else{console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));}
     }
-    //console.log(historicPhillipsCurve[0]);
     var data = [
 //area: true,
         {
