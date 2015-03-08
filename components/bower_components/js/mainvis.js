@@ -16,7 +16,7 @@ var navigationFilter = true;
 var buttonSelectID = null;
 var isFullscreen = false;
 var isUpperHidden = false;
-
+var legendState = [];
 var ValueIndexList = {}; // Data indexes for all the series. accessed using labels
 //upper visulisations
 var leftVis = null;
@@ -116,7 +116,7 @@ function drawmain(data) {
             return '<h3>' + key + '</h3>' +
                 '<p>' + y + ' in ' + x + '</p>'
         });
-        console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
+        //console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
         d3.select('#main svg')
             .datum(data)
             .transition()//.duration(300)
@@ -166,7 +166,9 @@ function drawmain(data) {
         });
         //console.log('BEFORE '+rightVis.xAxis.axisLabel());
         drawUpperVisualisations();
-
+        console.log('main: ' + legendState);
+        //console.log(legendState+" "+(legendState!=[])+' '+(legendState!= undefined));
+        if (legendState.length > 0 && legendState != undefined) setSeries(legendState, buttonSelectID, true);
         return chart;
     });
     //});
@@ -207,12 +209,22 @@ function upperDrawWait(chart) {
 }
 
 function updateData(newState) {
-    //console.log(newState);
+    //console.log('update: '+newState);
+    legendState = [];
     //console.log(mainVis.state);
     newState.disabled.forEach(function (disabled, i) {
         if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
         unNormalisedmaindata[i].disabled = disabled;
+        if (!disabled) {
+            var str = maindata[i].key.split(" ");
+            if (str[str.length - 1] == currency)str = str.slice(0, -2);//maindata[i].key.split(" ").slice(0,-2).push(currency);
+            //str= str.substring(0, str.lastIndexOf(" "));
+
+            //legendState.push(str.substring(0, str.lastIndexOf(" ")));
+            legendState.push(str.join(" "));
+        }
     });
+    console.log('update: ' + legendState);
     //mainVis.legend.update(maindata);
     //mainVis.update(maindata);
 }
@@ -398,23 +410,36 @@ function search() {
     if (text != '' && text != null)setSeries(text);
 }
 /*Set the series that will be displayed. input is a list of keywords*/
-function setSeries(keywords, id) {
-    if (keywords == undefined || keywords[0] == '') return;
-    //console.log(id);
+function setSeries(keywords, id, useEquals) {
+    if (keywords == undefined || keywords == [] || keywords[0] == '') return;
+    console.log('setseries: ' + keywords + ' ' + keywords.length);
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
         state.disabled.push(function (kws) {
             //var match = false;
             if (kws[0].toString().toLowerCase() == 'all')return false;
             for (var index in kws) {
-                var key = series.key.toLowerCase();
+                var datakey = series.key.toLowerCase();
                 var keyword = kws[index].toString();
                 //console.log(key + '   ' + keyword + ' ' + index + ' ' + keyword.toLowerCase());
-                if (key.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
-                    return false;
-                }
+                //var shortKey = datakey.substring(0, datakey.lastIndexOf(" "));
+
+                var shortKey = datakey.split(" ");
+                if (shortKey[shortKey.length - 1] == currency.toLowerCase())shortKey = shortKey.slice(0, -2).join(" ");
+                else shortKey= datakey;//shortKey.join(" ");
+                //if (datakey.length >= 4) shortKey = datakey.substring(0, datakey.length - 4);
+                //console.log(shortKey + '|' + keyword.toLowerCase() + ' ' + (shortKey == keyword.toLowerCase()));
+                    if (useEquals != undefined && useEquals == true) {
+                        console.log(currency+' equaling ' + shortKey + '|' + keyword.toLowerCase());
+                        if (shortKey == keyword.toLowerCase()) return false;
+
+                        //return true;
+                    }
+                    else if (datakey.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
+                        return false;
+                    }
             }
-            ;
+
             return true;
         }(keywords));
     });
@@ -531,9 +556,9 @@ function drawUpperVisualisations() {
 }
 
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
-    console.log('staradf ' + visid);
+    //console.log('staradf ' + visid);
     nv.addGraph(function () {
-        console.log('drawing ' + visid);
+        //console.log('drawing ' + visid);
         var chart = nv.models.lineChart();
         chart.tooltips(true);
         chart.xAxis.tickFormat(d3.format(tickformat)).tickValues([]);
@@ -622,9 +647,8 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     if (unNormalisedmaindata == null) return;
     unNormalisedmaindata.forEach(function (series, i) {
         if (series.key == leftAxis)inflationSeries = series.values;
-        if (series.key == bottomAxis) {
-            unemploymentSeries = series.values;
-        }
+        if (series.key == bottomAxis) unemploymentSeries = series.values;
+
     });
     var first = false;
     // console.log(theoreticalCurve[0].key);

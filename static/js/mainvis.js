@@ -16,14 +16,8 @@ var navigationFilter = true;
 var buttonSelectID = null;
 var isFullscreen = false;
 var isUpperHidden = false;
-//var isQuiz = false;
-//data indexes to speedup data retrieval. Otherwise its too laggy
-//var inflationIndex;
-//var unemploymentIndex;
+var legendState = [];
 var ValueIndexList = {}; // Data indexes for all the series. accessed using labels
-//var inflationValIndex = {};
-//var unemploymentValIndex = {};
-//var duplicate = 0;
 //upper visulisations
 var leftVis = null;
 var middleVis = null;
@@ -48,6 +42,7 @@ function loadpage(newCountry, currencyId) {
     d3.json("/vis/data/" + country + "data/", function (error, data) {
         unNormalisedmaindata = data;
         maindata = unNormalisedmaindata;
+        Normalisedmaindata = null;
         //if (currencyId != undefined)currency = currencyId;
         //if (data[0].key.indexOf('č') > 0)currency = 'Kč';
         //else currency = '£';
@@ -55,6 +50,7 @@ function loadpage(newCountry, currencyId) {
         currency = keystr.substr(keystr.indexOf('ns ') + 3);
         console.log('Currency: ' + currency);
         drawmain(maindata);
+        //if (!isMainNormalised)NormaliseMode();
     });
     if (newCountry == undefined) {
         d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
@@ -66,33 +62,24 @@ function loadpage(newCountry, currencyId) {
     //if(isQuiz) isQuiz=true;
 }
 
-//TODO FIX MAIN DATA LINK
-
 function drawmain(data) {
-    //d3.json("/vis/main_data/", function (error, data) {
     //removeGraph('main', mainVis);
     nv.addGraph(function () {
         console.log('focus: ' + mainfocus + ' norm: ' + isMainNormalised);
         var chart;
         if (navigationIndexes == undefined) {
             navigationIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
-
-            console.log(navigationIndexes + " ");
+            //console.log(navigationIndexes + " ");
         }
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 40});
             chart.y2Axis.tickFormat(d3.format(tickformat));
-            console.log('brush extent setting');
+            //console.log('brush extent setting');
             chart.brushExtent(navigationIndexes);
         } else {
             chart = nv.models.lineChart().margin({left: 55});
             //chart.useInteractiveGuideline(maininteractive);
         }
-        //chart.interpolate("step");
-        //chart.title('Historic Data Visualisation').titleOffset(-10);
-        //console.log('Main width: '+parseInt(d3.select('#main').style('width'))+' height: '+parseInt(d3.select('#main').style('height')));
-        //chart.width(parseInt(d3.select('#main').style('width')));
-        //chart.height(parseInt(d3.select('#main').style('height')));
         chart.xAxis.axisLabel('Years');
         chart.xAxis.tickFormat(d3.format('f'));
         //chart.xDomain([1600,2019]);
@@ -129,7 +116,7 @@ function drawmain(data) {
             return '<h3>' + key + '</h3>' +
                 '<p>' + y + ' in ' + x + '</p>'
         });
-        console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
+        //console.log('drawing main, interactive tooltip: ' + maininteractive + ' tooltip:' + maintooltips);
         d3.select('#main svg')
             .datum(data)
             .transition()//.duration(300)
@@ -177,53 +164,72 @@ function drawmain(data) {
             updateData(newState);
             //console.log('change state');
         });
-
+        //console.log('BEFORE '+rightVis.xAxis.axisLabel());
         drawUpperVisualisations();
-        if (mainfocus) {
-
-            chart.dispatch.on('brush.user', function (brush) {
-                //updateData(newState); //brush is returned and extent []
-                navigationIndexes[0] = Math.round(brush.extent[0]);
-                navigationIndexes[1] = Math.round(brush.extent[1]);
-                changeStatus();
-                if (navigationFilter) {
-                    leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve(country));
-                    middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve(country));
-                    rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve(country));
-                    //rightVis.data = rightVisData;
-                    //console.log(rightVisData);
-                    d3.select('#leftvis svg').datum(leftVisData);
-                    d3.select('#middlevis svg').datum(middleVisData);
-                    d3.select('#rightvis svg').datum(rightVisData);
-                    chart.useVoronoi(false);
-                    //drawUpperVisualisations();
-                    leftVis.update();
-                    middleVis.update();
-                    rightVis.update();
-                }
-            });
-        }
+        console.log('main: ' + legendState);
+        //console.log(legendState+" "+(legendState!=[])+' '+(legendState!= undefined));
+        if (legendState.length > 0 && legendState != undefined) setSeries(legendState, buttonSelectID, true);
         return chart;
     });
     //});
 }
+
+
+function upperDrawWait(chart) {
+    //console.log('updatingcallback ');
+    if (mainfocus) {
+        chart.dispatch.on('brush.user', function (brush) {
+            //updateData(newState); //brush is returned and extent []
+            navigationIndexes[0] = Math.round(brush.extent[0]);
+            navigationIndexes[1] = Math.round(brush.extent[1]);
+            changeStatus();
+            if (navigationFilter) {
+                console.log(country);
+                leftVisData = upperVisData(leftVis.yAxis.axisLabel(), leftVis.xAxis.axisLabel(), phillipsCurve(country));
+                middleVisData = upperVisData(middleVis.yAxis.axisLabel(), middleVis.xAxis.axisLabel(), lafferCurve(country));
+
+                rightVisData = upperVisData(rightVis.yAxis.axisLabel(), rightVis.xAxis.axisLabel(), ISLMCurve(country));
+                //rightVis.data = rightVisData;
+
+                d3.select('#leftvis svg').datum(leftVisData);
+                d3.select('#middlevis svg').datum(middleVisData);
+                d3.select('#rightvis svg').datum(rightVisData);
+                chart.useVoronoi(false);
+                //drawUpperVisualisations();
+                leftVis.update();
+                middleVis.update();
+                rightVis.update();
+            }
+        });
+    }
+    if (isMainNormalised) {
+        isMainNormalised = !isMainNormalised;
+        NormaliseMode(false);
+    }
+}
+
 function updateData(newState) {
-    //console.log(newState);
+    //console.log('update: '+newState);
+    legendState = [];
     //console.log(mainVis.state);
     newState.disabled.forEach(function (disabled, i) {
         if (Normalisedmaindata != null)Normalisedmaindata[i].disabled = disabled;
-        else {
-            //console.log('normalised is null');
-        }
         unNormalisedmaindata[i].disabled = disabled;
+        if (!disabled) {
+            var str = maindata[i].key.split(" ");
+            if (str[str.length - 1] == currency)str = str.slice(0, -2);//maindata[i].key.split(" ").slice(0,-2).push(currency);
+            //str= str.substring(0, str.lastIndexOf(" "));
+
+            //legendState.push(str.substring(0, str.lastIndexOf(" ")));
+            legendState.push(str.join(" "));
+        }
     });
+    console.log('update: ' + legendState);
     //mainVis.legend.update(maindata);
     //mainVis.update(maindata);
 }
 function SelectCountry(id, currencyId) {
-
     changeButtonColourClass('#' + country, false, 'btn-info', 'btn-default');
-
     changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
     country = id;
     //removeGraph('main', mainVis);
@@ -312,7 +318,6 @@ function setUpperVisData(data) {
     }
     else {
         leftVisData = data;
-
     }
     //rightVis.data = rightVisData;
     //console.log(rightVisData);
@@ -324,7 +329,7 @@ function setUpperVisData(data) {
     middleVis.update();
     rightVis.update();
 }
-function NormaliseMode() {
+function NormaliseMode(changeStatus) {
     if (!isMainNormalised && Normalisedmaindata == null) {
         console.log('calculating normalisation values');
         Normalisedmaindata = [];
@@ -369,7 +374,11 @@ function NormaliseMode() {
     mainVis.update(maindata);
     //drawmain(maindata);
     isMainNormalised = !isMainNormalised;
-    changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
+    if (changeStatus === undefined || changeStatus === true) {
+        changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
+    } else {
+        console.log('false');
+    }
 }
 function BackgroundColour(id) {
     backgroundcolour = !backgroundcolour;
@@ -401,23 +410,36 @@ function search() {
     if (text != '' && text != null)setSeries(text);
 }
 /*Set the series that will be displayed. input is a list of keywords*/
-function setSeries(keywords, id) {
-    if (keywords == undefined || keywords[0] == '') return;
-    //console.log(id);
+function setSeries(keywords, id, useEquals) {
+    if (keywords == undefined || keywords == [] || keywords[0] == '') return;
+    console.log('setseries: ' + keywords + ' ' + keywords.length);
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
         state.disabled.push(function (kws) {
             //var match = false;
             if (kws[0].toString().toLowerCase() == 'all')return false;
             for (var index in kws) {
-                var key = series.key.toLowerCase();
+                var datakey = series.key.toLowerCase();
                 var keyword = kws[index].toString();
                 //console.log(key + '   ' + keyword + ' ' + index + ' ' + keyword.toLowerCase());
-                if (key.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
-                    return false;
-                }
+                //var shortKey = datakey.substring(0, datakey.lastIndexOf(" "));
+
+                var shortKey = datakey.split(" ");
+                if (shortKey[shortKey.length - 1] == currency.toLowerCase())shortKey = shortKey.slice(0, -2).join(" ");
+                else shortKey= datakey;//shortKey.join(" ");
+                //if (datakey.length >= 4) shortKey = datakey.substring(0, datakey.length - 4);
+                //console.log(shortKey + '|' + keyword.toLowerCase() + ' ' + (shortKey == keyword.toLowerCase()));
+                    if (useEquals != undefined && useEquals == true) {
+                        console.log(currency+' equaling ' + shortKey + '|' + keyword.toLowerCase());
+                        if (shortKey == keyword.toLowerCase()) return false;
+
+                        //return true;
+                    }
+                    else if (datakey.indexOf(keyword.toLowerCase()) >= 0) { //console.log(kws[keyword]+'  '+(series.key.indexOf(kws[keyword]) >= 0)+' '+series.key);
+                        return false;
+                    }
             }
-            ;
+
             return true;
         }(keywords));
     });
@@ -448,7 +470,7 @@ function changeStatus() {
     var text = "Time Range Bar: <b>" + boolToOnOff(mainfocus)
         + "</b>,&nbsp;&nbsp; Time Range Filter: <b>" + boolToOnOff(navigationFilter)
         + "</b>,&nbsp;&nbsp; Normalised: <b>" + boolToOnOff(isMainNormalised)
-        + "</b>,&nbsp;&nbsp; Background Col.: <b>" + boolToOnOff(backgroundcolour)
+        + "</b>,&nbsp;&nbsp; Night Mode: <b>" + boolToOnOff(backgroundcolour)
         + "</b>,&nbsp;&nbsp; High Quality: <b>" + boolToOnOff((d3.select('#' + 'fancyvis').property('className').indexOf('btn-info') >= 0));
     if (mainfocus) text += "</b>,&nbsp;&nbsp; Year Range: <b>" + navigationIndexes[0] + ':' + navigationIndexes[1];
 
@@ -471,8 +493,6 @@ function fullscreen(id, selfid) {
     else {
         d3.select('#' + selfid + ' span').classed('glyphicon-resize-small', false);
         d3.select('#' + selfid + ' span').classed('glyphicon-resize-full', true);
-
-
     }
     d3.select('#leftcontrol').style('display', display);
     d3.select('#rightcontrol').style('display', display);
@@ -495,8 +515,6 @@ function upperhide(id, selfid) {
     else {
         d3.select('#' + selfid + ' span').classed('glyphicon-arrow-down', false);
         d3.select('#' + selfid + ' span').classed('glyphicon-arrow-up', true);
-
-
     }
     d3.select('#upperparent').style('display', display);
     //d3.select('#middlevis').style('display', display);
@@ -536,9 +554,11 @@ function drawUpperVisualisations() {
     drawmiddlevis('Tax Rev, GDP %', 'Income Tax Rate, avg %');
     drawrightvis('Interest Rate, %', ('Real GDP, billions ' + currency));
 }
+
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
+    //console.log('staradf ' + visid);
     nv.addGraph(function () {
-        console.log('drawing ' + visid);
+        //console.log('drawing ' + visid);
         var chart = nv.models.lineChart();
         chart.tooltips(true);
         chart.xAxis.tickFormat(d3.format(tickformat)).tickValues([]);
@@ -554,9 +574,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             return parseFloat(d.x)
         });
         chart.useVoronoi(false);
-        //chart.useInteractiveGuideline(true);
-        //chart.interpolate('linear-closed');
-        //chart.pointShape('cross');
+
         if (leftLabel != null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
         if (bottomLabel != null)chart.xAxis.axisLabel(bottomLabel).axisLabelDistance(-17);
         chart.tooltipContent(function (key, x, y, e, graph) {
@@ -581,7 +599,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
 
         if (visid == 'leftvis')leftVis = chart;
         else if (visid == 'middlevis')middleVis = chart;
-        else if (visid == 'rightvis')rightVis = chart;
+        else if (visid == 'rightvis') rightVis = chart;
 
         /*Event Handlers*/
         chart.dispatch.on('tooltipShow.upper', function (e) {
@@ -613,8 +631,12 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             mainVis.clearHighlights();
         });
         /*chart.interactiveLayer.dispatch.on('elementMousemove.upper', function (e) {
-         console.log(e);
+
          });*/
+
+        return chart;
+    }, function () { //callback function to be called after the uppver visualisations are drawn
+        if (visid == 'rightvis') return upperDrawWait(mainVis);
     });
 }
 
@@ -625,9 +647,8 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     if (unNormalisedmaindata == null) return;
     unNormalisedmaindata.forEach(function (series, i) {
         if (series.key == leftAxis)inflationSeries = series.values;
-        if (series.key == bottomAxis) {
-            unemploymentSeries = series.values;
-        }
+        if (series.key == bottomAxis) unemploymentSeries = series.values;
+
     });
     var first = false;
     // console.log(theoreticalCurve[0].key);
