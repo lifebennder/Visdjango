@@ -602,30 +602,28 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
 }
 
 function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
-    var historicPhillipsCurve = [], unemploymentStartIndex,
-        inflationSeries,
-        unemploymentSeries;
+    var historicData = [], bottomStartIndex,
+        leftAxisSeries,
+        bottomAxisSeries;
     if (unNormalisedmaindata == null) return;
     unNormalisedmaindata.forEach(function (series, i) {
-        if (series.key == leftAxis)inflationSeries = series.values;
-        if (series.key == bottomAxis) unemploymentSeries = series.values;
+        if (series.key == leftAxis)leftAxisSeries = series.values;
+        if (series.key == bottomAxis) bottomAxisSeries = series.values;
 
     });
     var first = false;
-    for (var i = 0; i < unemploymentSeries.length; i++) {
-        if ((navigationIndexes[0] <= parseInt(unemploymentSeries[i].x) && parseInt(unemploymentSeries[i].x) <= navigationIndexes[1]) || !navigationFilter || !mainfocus) {
-            //console.log((navigationIndexes[0]<=parseInt(unemploymentSeries[i].x) &&parseInt(unemploymentSeries[i].x)<=navigationIndexes[1]));
-            //console.log(navigationIndexes[0]+!!(navigationIndexes[0]<=parseInt(unemploymentSeries[i].x))+'  '+unemploymentSeries[i].x+'  '+navigationIndexes[1]);
-            var unemploymentVal = unemploymentSeries[i].y, inflationVal = inflationSeries[i].y;
-            if (unemploymentVal != '' && inflationVal != '') {
+    for (var i = 0; i < bottomAxisSeries.length; i++) {
+        if ((navigationIndexes[0] <= parseInt(bottomAxisSeries[i].x) && parseInt(bottomAxisSeries[i].x) <= navigationIndexes[1]) || !navigationFilter || !mainfocus) {
+            var bottomVal = bottomAxisSeries[i].y, leftVal = leftAxisSeries[i].y;
+            if (bottomVal != '' && leftVal != '') {
                 if (first == false) {
-                    unemploymentStartIndex = unemploymentSeries[i].x;
+                    bottomStartIndex = bottomAxisSeries[i].x;
                     first = !first;
                 }
-                historicPhillipsCurve.push({
-                    x: unemploymentVal,
-                    y: inflationVal,
-                    year: unemploymentSeries[i].x,
+                historicData.push({
+                    x: bottomVal,
+                    y: leftVal,
+                    year: bottomAxisSeries[i].x,
                     shape: 'circle'
                 });
             }
@@ -634,10 +632,10 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     var data = [
 //area: true,
         {
-            values: historicPhillipsCurve,
+            values: historicData,
             key: "Historic Values",
             color: "#2ca02c",
-            startXIndex: unemploymentStartIndex
+            startXIndex: bottomStartIndex
         }/*,
          {
          values: [],
