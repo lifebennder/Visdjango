@@ -27,6 +27,7 @@ var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
     loadpage();
+
 };
 
 function loadpage(newCountry, currencyId) {
@@ -52,7 +53,8 @@ function loadpage(newCountry, currencyId) {
         drawmain(maindata);
         //if (!isMainNormalised)NormaliseMode();
     });
-    loadresource();
+    loadresource('ref');
+    loadresource('quiz');
     if (newCountry == undefined) {
         d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
         BackgroundColour('backgroundcolour');
@@ -63,12 +65,12 @@ function loadpage(newCountry, currencyId) {
     //if(isQuiz) isQuiz=true;
 }
 
-function loadresource(){
-    d3.text("/vis/data/" + country + "ref/", function (error, data) {
-        //console.log(data);
+function loadresource(resource) {
+    d3.text("/vis/data/" + country + resource + "/", function (error, data) {
+        if (data == undefined) return;
         //console.log(d3.select(data)[0][0].innerHTML);//'#document-fragment'));
         //d3.selectAll('#ref').html(d3.select(data)[0][0].innerHTML);;
-        d3.selectAll('#ref').html(data);
+        d3.selectAll('#' + resource).html(data);
     });
 }
 
@@ -81,12 +83,12 @@ function drawmain(data) {
             timeBarIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
             //console.log(timeBarIndexes + " ");
         }
-        else if(timeBarIndexes !=undefined){
+        else if (timeBarIndexes != undefined) {
             var minX = data[0].values[0].x;
             var maxX = data[0].values[data[0].values.length - 1].x;
             //console.log(timeBarIndexes+(timeBarIndexes[0]<minX||timeBarIndexes[0]>maxX));
-            if(timeBarIndexes[0]<minX||timeBarIndexes[0]>maxX)timeBarIndexes[0]=minX;
-            if(timeBarIndexes[1]<minX||timeBarIndexes[1]>maxX)timeBarIndexes[1]=maxX;
+            if (timeBarIndexes[0] < minX || timeBarIndexes[0] > maxX)timeBarIndexes[0] = minX;
+            if (timeBarIndexes[1] < minX || timeBarIndexes[1] > maxX)timeBarIndexes[1] = maxX;
         }
         if (mainfocus) {
             chart = nv.models.lineWithFocusChart().margin({left: 40});
@@ -344,12 +346,12 @@ function NormaliseMode(changeStatus) {
         unNormalisedmaindata.forEach(function (series, seriesi) {
             Normalisedmaindata.push({'key': series.key, 'values': [], 'disabled': series.disabled});
             var max = d3.max(series.values, function (d) {
-                        return parseFloat(d.y)
-                    })
+                    return parseFloat(d.y)
+                })
                 ;
             var min = d3.min(series.values, function (d) {
-                        return parseFloat(d.y)
-                    })
+                    return parseFloat(d.y)
+                })
                 ;
             //console.log('k: ' + series.key + ' min: ' + min + ' max: ' + max);
             series.values.forEach(function (s, i) {
@@ -427,8 +429,11 @@ function setSeries(keywords, id, useEquals) {
                 //if (datakey.length >= 4) shortKey = datakey.substring(0, datakey.length - 4);
                 if (useEquals != undefined && useEquals == true) {
                     //console.log(currency + ' equaling ' + shortKey + '|' + keyword.toLowerCase());
-                    if (shortKey == keyword.toLowerCase()) return false;}
-                else if (datakey.indexOf(keyword.toLowerCase()) >= 0) {return false;}
+                    if (shortKey == keyword.toLowerCase()) return false;
+                }
+                else if (datakey.indexOf(keyword.toLowerCase()) >= 0) {
+                    return false;
+                }
             }
             return true;
         }(keywords));

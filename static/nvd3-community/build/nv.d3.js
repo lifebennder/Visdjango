@@ -6062,7 +6062,7 @@ nv.models.lineWithFocusChart = function() {
                 .attr('transform', 'translate(0,' + ( availableHeight1 + margin.bottom + margin2.top) + ')');
 
             var contextLinesWrap = g.select('.nv-context .nv-linesWrap')
-                .datum(data.filter(function(d) { return !d.disabled }))
+                .datum(data.filter(function(d) { return !d.disabled }));
 
             d3.transition(contextLinesWrap).call(lines2);
 
@@ -6261,9 +6261,11 @@ nv.models.lineWithFocusChart = function() {
 
             // Taken from crossfilter (http://square.github.com/crossfilter/)
             function resizePath(d) {
+
                 var e = +(d == 'e'),
                     x = e ? 1 : -1,
                     y = availableHeight2 / 3;
+                                console.log(d+' '+' x: '+x);
                 return 'M' + (.5 * x) + ',' + y
                     + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
                     + 'V' + (2 * y - 6)
@@ -6282,10 +6284,16 @@ nv.models.lineWithFocusChart = function() {
                     .data([brush.empty() ? x2.domain() : brushExtent])
                     .each(function(d,i) {
                         var leftWidth = x2(d[0]) - x.range()[0],
-                            rightWidth = x.range()[1] - x2(d[1]);
+                            rightWidth = availableWidth//x.range()[1]
+                                - x2(d[1]);
                         d3.select(this).select('.left')
                             .attr('width',  leftWidth < 0 ? 0 : leftWidth);
-
+                        //if (rightWidth < 0)rightWidth = rightWidth * -1;
+                        /*var widthh = d3.select(this).node().getBoundingClientRect();
+                        widthh = leftWidth+
+                        console.log( availableWidth+' '+ x2(d[1]));
+                        console.log(rightWidth+'= '+(x.range()[1])+' - '+x2(d[1]));
+*/
                         d3.select(this).select('.right')
                             .attr('x', x2(d[1]))
                             .attr('width', rightWidth < 0 ? 0 : rightWidth);

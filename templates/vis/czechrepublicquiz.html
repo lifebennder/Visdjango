@@ -1,82 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-{% load url from future %}
 {% load staticfiles %}
-
-{# TODO: make blocks for header and content areas in body #}
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- This is the magic setting that adjusts the presentation to mobile  -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Economics Visualisaion{% endblock %}</title>
-    <!--
-          change to bootstrap.min.css for production
-         removed media="screen"
-     -->
-    <link href="{% static 'bootstrap/dist/css/bootstrap.css' %}" rel="stylesheet">
-
-    <link href="{% static 'google-code-prettify/bin/prettify.min.css' %}" rel="stylesheet">
-    <link href="{% static 'visdjango.css' %}" rel="stylesheet">
-    <link href="{% static 'nvd3-community/build/nv.d3.css' %}" rel="stylesheet">
-    <script src="{% static 'js/panels.js' %}"></script>
-    <script src="{% static 'd3/d3.js' %}"></script>
-    <script src="{% static 'nvd3-community/build/nv.d3.js' %}"></script>
-    <script src="{% static 'jquery/dist/jquery.js' %}"></script>
-    <script src="{% static 'google-code-prettify/bin/prettify.min.js' %}"></script>
-    <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-
-    {% block extrahead %}{% endblock %}
-</head>
-<body>
-<div class="navbar navbar-inverse navbar-fixed-top" style="height: 20px;">
-    <div class="home-container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Visualisation</a>
-        </div>
-        <!-- navbar-header -->
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <!-- <li class="active"><a href="/">Home</a></li> -->
-                <li><a href="{% url 'vis.views.about' %}">About</a></li>
-                <li><a href="{% url 'vis.views.help' %}">Help</a></li>
-                <li><a target="_blank" href="{% url 'vis.views.main_data' %}">Main Data</a></li>
-                <li><a target="_blank" href="{% static 'debtdata.csv' %}">Main Data CSV</a></li>
-            </ul>
-            <!-- navbar-nav (left)-->
-            <ul id="navbarright" class="nav navbar-nav navbar-right">
-                <li><a class="simhref" onclick="quiz()">Quiz</a></li>
-                <li><a target="_blank" href="https://github.com/lifebennder/Visdjango">Source on GitHub</a></li>
-            </ul>
-            <!-- navbar-right -->
-        </div>
-        <!-- navbar-collapse -->
-    </div>
-    <!-- container -->
-</div>
-<!-- navbar -->
-<div class=" home-container" style="  height: 93vh; min-width: 800px;
-    ">
-    <div class="quiz" id="quiz">
-        <!--img class="quit" style="" src="{% static 'images/cancel.png' %}" alt="close" onclick="quiz()">
+        <img class="quit" style="" src="{% static 'images/cancel.png' %}" alt="close" onclick="quiz()">
 
         <div class="simhref" style="text-align: center;" onclick="quiz()"><h1 style="margin-top: 0">&nbsp;&nbsp;&nbsp;&nbsp;
             Quiz</h1></div>
 
         <dl>
-            <dt>1. How did the disparity between Debt as a % of GDP and Nominal Debt affect the UK economy?
+            <dt>1. How did the disparity between Debt as a % of GDP and Nominal Debt affect the Czech economy?
                 <a class="simhref" onclick="hint(['GDP, bill','Debt, mill','Inflation'])">Hint</a>
             </dt>
             <dd>
@@ -91,7 +20,7 @@
                 </form>
 
             </dd>
-            <dt>2. When was the only decrease in GDP in UK history?
+            <dt>2. When was the only decrease in GDP in Czech history?
                 <a class="simhref" onclick="hint(['GDP, bill'])">Hint</a>
             </dt>
             <dd>
@@ -105,7 +34,7 @@
 
                 </form>
             </dd>
-            <dt>3. Does the UK follow the phillips curve rule?
+            <dt>3. Does the Czech follow the phillips curve rule?
                 <a class="simhref" onclick="hint('phillipscurve')">Hint</a></dt>
             <dd>
                 <form id="q3" role="form">
@@ -132,7 +61,7 @@
 
                 </form>
             </dd>
-            <dt>5. When did UK's population decrease?
+            <dt>5. When did Czech's population decrease?
                 <a class="simhref" onclick="hint(['Population'])">Hint</a></dt>
             <dd>
                 <form id="q5" role="form">
@@ -171,7 +100,7 @@
 
                 </form>
             </dd>
-            <dt>8. Does Nominal Debt have an effect on Uk's GDP?
+            <dt>8. Does Nominal Debt have an effect on Czech's GDP?
                 <a class="simhref" onclick="hint(['GDP, bill','Debt, mill'])">Hint</a></dt>
             <dd>
                 <form id="q8" role="form">
@@ -210,20 +139,4 @@
 
                 </form>
             </dd>
-        </dl-->
-    </div>
-    {% block sub_menu %}{% endblock %}
-    {# include "messages.html" #}
-    {% block content %}(no content){% endblock %}
-
-    <hr/>
-
-</div>
-{% block footer %}
-{% endblock %}
-{% block extrafooter %}{% endblock %}
-
-</body>
-
-</html>
-
+        </dl>
