@@ -27,6 +27,11 @@ var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
     loadpage();
+                console.log(correctAnswers);
+        d3.json("/vis/data/quizanswers/", function (error, data) {
+        console.log(correctAnswers);
+        correctAnswers = data;
+    });
 
 };
 
@@ -55,6 +60,7 @@ function loadpage(newCountry, currencyId) {
     });
     loadresource('ref');
     loadresource('quiz');
+    if(isQuiz)quiz();
     if (newCountry == undefined) {
         d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
         BackgroundColour('backgroundcolour');

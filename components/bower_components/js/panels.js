@@ -5,6 +5,7 @@
 var isQuiz = false;
 var correctAnswers = [0, 0, 0, 1, 1, 0, 1, 0, 1, 0];
 window.onload = function (e) {
+    console.log('asdasdas');
 
 };
 function hide(id) {
@@ -55,7 +56,8 @@ function validate(id) {
     else return;
     //console.log(radios);
     var text = "not set";
-    var isCorrect = radios == correctAnswers[parseInt(parent.slice(1)) - 1];
+    console.log(correctAnswers[country][parseInt(parent.slice(1)) - 1]+' '+country);
+    var isCorrect = radios == correctAnswers[country][parseInt(parent.slice(1)) - 1];
     //console.log(isCorrect + '  ' + parseInt(parent.slice(-1)) + ' ' + correctAnswers[parseInt(parent.slice(-1)) - 1]);
     var correct = '✓ Correct';
     var wrong = '✘ Wrong';

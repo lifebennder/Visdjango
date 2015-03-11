@@ -94,11 +94,11 @@
         <h4>Inputting your own data</h4>
         The data for the graph is taken from a csv file that is located with the server. Therefore the data can be
         changed by changing the
-        csv file itself. This can be easily don't by opening it in excell or the like. The data us read and given to the
+        csv file itself. This can be easily don't by opening it in excel or the like. The data us read and given to the
         graph using JSON.
-        The JSON data can be seen by accessing <a href="{% url 'vis.views.main_data' %}">Main Graph Data</a>. The CSV
+        {% comment %}The JSON data can be seen by accessing <a href="{% url 'vis.views.main_data' %}">Main Graph Data</a>. The CSV
         can be accessed using
-        <a href="{% static 'debtdata.csv' %}">CSV Link</a>.
+        <a href="{% static 'debtdata.csv' %}">CSV Link</a>. {% endcomment %}
     </div>
 
 {% endblock %}

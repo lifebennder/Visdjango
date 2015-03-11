@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-
+from django.contrib.staticfiles.views import serve
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -9,7 +9,8 @@ from django.http import JsonResponse
 from collections import defaultdict
 from numbers import Number
 import csv, string
-
+import json
+from django.contrib.staticfiles.templatetags.staticfiles import static
 import random
 import datetime
 import time, os
@@ -106,6 +107,12 @@ def main_ref(request, country):
 
 def main_quiz(request, country):
     return render_to_response('vis/'+country+'quiz.html')
+
+def main_quizanswers(request):
+    json_data = open('static/quizanswers.json')
+    data1 = json.load(json_data)
+    json_data.close()
+    return JsonResponse(data1, safe=False)
 
 def index(request):
     return render_to_response('vis/index.html')
