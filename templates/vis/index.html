@@ -2,10 +2,16 @@
 {% load staticfiles %}
 {% block title %}Economic Visualisation{% endblock %}
 {% block extrahead %}
-
+    <script src="{% static 'js/panels.js' %}"></script>
     <script src="{% static 'js/mainvis.js' %}"></script>
 {% endblock %}
-
+{% block extralinkleft %}
+    <li><a id="datalink" target="_blank" href="{% url 'vis.views.main_data' country='unitedkingdomdata' %}">Data</a></li>
+    <li><a id="datalinkcsv" target="_blank" href="{% static 'unitedkingdomdata.csv' %}">Data CSV</a></li>
+{% endblock %}
+{% block extralinkright %}
+    <li><a class="simhref" onclick="quiz()">Quiz</a></li>
+{% endblock %}
 {% block content %}
 
     <div class="page-header">
@@ -99,9 +105,11 @@
                     </div>
                 </div>
             </div>
-                        <!-- Third, Style Control Panel-->
+            <!-- Third, Style Control Panel-->
             <div class="panel panel-info">
-                <div class="panel-heading" title="This lists all the possible countries to choose from and their data." data-toggle="tooltip">Country Selection</div>
+                <div class="panel-heading" title="This lists all the possible countries to choose from and their data."
+                     data-toggle="tooltip">Country Selection
+                </div>
                 <div class="panel-body countrylist" style="text-align: center; padding-bottom: 30px">
                     <div>
                         <div class="btn-group-vertical btn-group-md" role="group">
@@ -345,7 +353,7 @@
 
 {% endblock %}
 {% block extrafooter %}
-    <div id="startfooter" class="startfooter " onclick="hide('startfooter')" >
+    <div id="startfooter" class="startfooter " onclick="hide('startfooter')">
         <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
 
         <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation

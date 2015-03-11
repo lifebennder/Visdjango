@@ -60,7 +60,8 @@ function loadpage(newCountry, currencyId) {
     });
     loadresource('ref');
     loadresource('quiz');
-    if(isQuiz)quiz();
+    loadupperlinks();
+    if(isQuiz!= undefined && isQuiz)quiz();
     if (newCountry == undefined) {
         d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
         BackgroundColour('backgroundcolour');
@@ -70,7 +71,10 @@ function loadpage(newCountry, currencyId) {
     //drawUpperVisualisations();
     //if(isQuiz) isQuiz=true;
 }
-
+function loadupperlinks(){
+    d3.select('#datalinkcsv').attr('href',"/static/" + country + "data.csv");
+    d3.select('#datalink').attr('href',"/vis/data/" + country + "data/");
+}
 function loadresource(resource) {
     d3.text("/vis/data/" + country + resource + "/", function (error, data) {
         if (data == undefined) return;
