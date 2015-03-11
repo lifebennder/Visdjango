@@ -52,7 +52,7 @@
                 <!-- <li class="active"><a href="/">Home</a></li> -->
                 <li><a href="{% url 'vis.views.about' %}">About</a></li>
                 <li><a href="{% url 'vis.views.help' %}">Help</a></li>
-                <li><a target="_blank" href="{% url 'vis.views.main_data' %}">Main Data</a></li>
+                <li><a target="_blank" href="{% url 'vis.views.main_data' country='czechrepublicdata' %}">Main Data</a></li>
                 <li><a target="_blank" href="{% static 'debtdata.csv' %}">Main Data CSV</a></li>
             </ul>
             <!-- navbar-nav (left)-->

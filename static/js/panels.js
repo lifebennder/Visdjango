@@ -3,7 +3,7 @@
  */
 
 var isQuiz = false;
-var correctAnswers = [0, 0, 0, 1, 1, 0, 1, 0, 1,0];
+var correctAnswers = [0, 0, 0, 1, 1, 0, 1, 0, 1, 0];
 window.onload = function (e) {
 
 };
@@ -33,13 +33,17 @@ function quiz() {
     isQuiz = !isQuiz;
 }
 
-function hint(series) {
+function hint(series, normalise) {
     if (!(series instanceof Array)) {
         var button = document.getElementById(series);
         button.click();
     }
     else
-    setSeries(series);
+        setSeries(series);
+    if (normalise != undefined) {
+        if (normalise === true && isMainNormalised === false)NormaliseMode(true);
+        if (normalise === false && isMainNormalised === true)NormaliseMode(true);
+    }
     quiz();
 }
 
