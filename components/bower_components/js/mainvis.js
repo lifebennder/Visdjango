@@ -734,8 +734,8 @@ function ISLMCurve(countryy) {
     if (countryy == 'czechrepublic') {
         for (var i = 2400; i < 4000; i = i + 30) {
             var iShift = i;
-            var ISy = Math.round(100 * (-0.005 * i + 20)) / 100;
-            var LMy = Math.round(100 * (0.005 * i - 12)) / 100;
+            var ISy = Math.round(100 * (-0.01 * i + 38)) / 100;
+            var LMy = Math.round(100 * (0.01 * i - 26)) / 100;
             IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
             LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
         }
