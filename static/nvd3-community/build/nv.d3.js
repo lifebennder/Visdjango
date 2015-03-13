@@ -4296,7 +4296,7 @@ nv.models.ohlcBarChart = function() {
 
             wrap.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
             chart.update = function(dataa) {
-                                    console.log('legend update');
+                                   // console.log('legend update');
                 if(dataa!=undefined && dataa!=null){
                     //console.log(data[0].values[320].y);
                     data = dataa;//console.log('updating');
@@ -6265,7 +6265,7 @@ nv.models.lineWithFocusChart = function() {
                 var e = +(d == 'e'),
                     x = e ? 1 : -1,
                     y = availableHeight2 / 3;
-                                console.log(d+' '+' x: '+x);
+                               // console.log(d+' '+' x: '+x);
                 return 'M' + (.5 * x) + ',' + y
                     + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
                     + 'V' + (2 * y - 6)

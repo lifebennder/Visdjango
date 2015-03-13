@@ -27,9 +27,9 @@ var middleVisData = null;
 var rightVisData = null;
 window.onload = function (e) {
     loadpage();
-                console.log(correctAnswers);
+                //console.log(correctAnswers);
         d3.json("/vis/data/quizanswers/", function (error, data) {
-        console.log(correctAnswers);
+        //console.log(correctAnswers);
         correctAnswers = data;
     });
 
@@ -389,8 +389,6 @@ function NormaliseMode(changeStatus) {
     isMainNormalised = !isMainNormalised;
     if (changeStatus === undefined || changeStatus === true) {
         changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
-    } else {
-        console.log('false');
     }
 }
 function BackgroundColour(id) {
