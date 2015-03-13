@@ -89,7 +89,7 @@ svg {
 }
 
 #leftvis g.nv-scatter g.nv-series-0 path.nv-point, #middlevis g.nv-scatter g.nv-series-0 path.nv-point, #rightvis g.nv-scatter g.nv-series-0 path.nv-point {
-    fill-opacity: 0.4;
+    fill-opacity: 0.5;
     stroke-opacity: 0;
 }
 
