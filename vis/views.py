@@ -109,7 +109,7 @@ def main_quiz(request, country):
     return render_to_response('vis/'+country+'quiz.html')
 
 def main_quizanswers(request):
-    json_data = open('static/quizanswers.json')
+    json_data = open(os.path.join(settings.STATIC_PATH, 'quizanswers.json'))
     data1 = json.load(json_data)
     json_data.close()
     return JsonResponse(data1, safe=False)
