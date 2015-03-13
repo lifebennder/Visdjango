@@ -59,23 +59,28 @@
         <img class="image" src="{% static 'images/data combinations.jpg' %}"><br>
         This panel, below the visualisations shows a list of interesting data and series combinations. For example,
         <code>&quot;Spending Vs. Public Debt&quot;</code> shows the Government spending and Public Debt series. This shows
-        the correlation between the two and economic conclusions can be made from them.
+        the correlation between the two and economic conclusions can be made from them.<br>
+        The Theoretic Axis area is for data combinations that match the upper theoretic graph's axis. This allows you to
+        select only the data that is relevant to that graph.
         <br><br>
         <h4>Main Visualisation Controls</h4>
         <img class="image" src="{% static 'images/maingraphcontrol.jpg' %}"><br>
         This panel controls the Main visualisation properties. There are 3 properties that can be changes:
         <ol>
-            <li><b>&quot;Interactive Mode&quot;</b> - This toggles if the tooltip style. Either its tooltip displaying 1 point, or
-            the tooltip shows all series in that particular year.</li>
-            <li><b>&quot;Navigation Chart&quot;</b> - This toggles the Navigation chart that allows for the x axis to be
-            shortened or extended.</li>
+            <li><b>&quot;Time Range Bar&quot;</b> -This toggles the time range zooming panel below the main graph. It
+            allows you to change the Years that are shown. You can set the start and end year to display.</li>
+            <li><b>&quot;Time Range Filter&quot;</b> - This toggles if the upper visualisations historic data is filtered
+            by the start and end date of the main visualisation data. This historic data is the green dots. This allows
+            you to see which dots correspond to which date range.</li>
             <li><b>&quot;Normalise&quot;</b> - This Normalises the data. This means that all the data curves will be
             the same height. All data will be between 0 and 1.</li>
         </ol>
         <br>
-        <h4>Main Visualisation Legend</h4>
+        <h4>Main Visualisation Legend & Status</h4>
         <img class="image" src="{% static 'images/legend.jpg' %}"><br>
-        This panel is above the main visualisations and displayes all the series information: The Series name and The Series Colour.
+        The panel is split into 2 parts, the top is status information about all the controls and data and the lower part
+        is the series legend.
+        This legend is above the main visualisations and displays all the series information: The Series name and The Series Colour.
         If the circle to the left of each series is full then that means the series is being displayed, Otherwise, the circle
         is hollow. This means that the series is disabled and not displayed.<br>
         The legend is also a control tool. It can enable or disable series. There are two actions that can be performed:
@@ -87,15 +92,25 @@
             the double click will enable all series.</li>
         </ul>
 
-
+        <br>
+        <h4>Style Control</h4>
+        <img class="image" src="{% static 'images/style.jpg' %}"><br>
+        This panel controls the visual aspect of the application. It has 2 buttons:
+        <ul>
+            <li><b>Night Mode</b> - This toggles if to darken the background for night time. The darker colour is less
+            tiring for the eyes and is less contrasting to the surrounding darkness.</li>
+            <li><b>High Quality</b> - This toggles if to have animation and shadows. The animations control if the tooltips
+            or the highlights have a transition. The shadow is just setting if the tooltip has a shadow. Having this on
+            decreases performance! Turning it off increases performance!</li>
+        </ul>
         <br><br>
 
         <h3>Extending</h3>
         <h4>Inputting your own data</h4>
-        The data for the graph is taken from a csv file that is located with the server. Therefore the data can be
+        The data for the graph is taken from a csv file that is located on the server. Therefore the data can be
         changed by changing the
-        csv file itself. This can be easily don't by opening it in excel or the like. The data us read and given to the
-        graph using JSON.
+        csv file itself. This can be easily done by opening it in excel or the like. The data is read and given to the
+        graphing tool using JSON.
         {% comment %}The JSON data can be seen by accessing <a href="{% url 'vis.views.main_data' %}">Main Graph Data</a>. The CSV
         can be accessed using
         <a href="{% static 'debtdata.csv' %}">CSV Link</a>. {% endcomment %}
