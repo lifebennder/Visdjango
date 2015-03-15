@@ -77,29 +77,14 @@ def readcsv(path):
     #chartdata['extra'+str(colnum+1)] = {"tooltip": {"y_start": 'Value: '+'', "y_end":  " thousands"}}
     return chartdata
 
+def help(request):
+    return render_to_response('vis/help.html')
 
 def main_data(request,country):
-    #country='debtdata'
-    #country=request.GET.get('country', 'debtdata')
     tooltip_date = "%d %b %Y %H:%M:%S %p"
     extra_serie = {"tooltip": {"y_start": "There are ", "y_end": " calls"},
                    "date_format": tooltip_date}
     chartdata = readcsv(os.path.join(settings.STATIC_PATH, country+'.csv'))
-    charttype = "lineWithFocusChart"
-
-    chartcontainer = 'linewithfocuschart_container'  # container name
-    data = {
-        'charttype': charttype,
-        'chartdata': chartdata,
-        'chartcontainer': chartcontainer,
-        'extra': {
-            'x_is_date': True,
-            'x_axis_format': '%Y',
-            'tag_script_js': True,
-            'jquery_on_ready': True,
-            'chart_attr': {}
-        }
-    }
     return JsonResponse(chartdata, safe=False)
 
 def main_ref(request, country):
@@ -119,8 +104,7 @@ def index(request):
     #return render_to_response('nvd3/barchart_2.html')
 
 
-def help(request):
-    return render_to_response('vis/help.html')
+
 
 
 def about(request):
