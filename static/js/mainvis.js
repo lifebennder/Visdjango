@@ -34,7 +34,7 @@ window.onload = function (e) {
     });
 
 };
-
+/*the loading function of the whole page*/
 function loadpage(newCountry, currencyId) {
     $('[data-toggle="tooltip"]').tooltip({trigger: 'hover', 'placement': 'bottom', delay: {"show": 800, "hide": 100}}); //activate tooltip plugin
     removeGraph('main', mainVis);
@@ -84,6 +84,7 @@ function loadresource(resource) {
     });
 }
 
+/*function that draws the main visualisation*/
 function drawmain(data) {
     //removeGraph('main', mainVis);
     nv.addGraph(function () {
@@ -205,7 +206,7 @@ function drawmain(data) {
     //});
 }
 
-
+/*function that happens after the drawing of the upper visualisations. This is to fix the ajax property of d3*/
 function upperDrawWait(chart) {
     //console.log('updatingcallback ');
     if (mainfocus) {
@@ -236,7 +237,7 @@ function upperDrawWait(chart) {
         NormaliseMode(false);
     }
 }
-
+/*makes sure the status for both normalised and unnormalised data is the same*/
 function updateData(newState) {
     legendState = [];
     newState.disabled.forEach(function (disabled, i) {
@@ -268,10 +269,9 @@ function removeGraph(graph, chartobject) {
     }
     d3.selectAll("#" + graph + " svg > *").remove();
 }
-function setInteractiveMode() {
+/*function setInteractiveMode() {
     console.log("setting interactive   ");
     //removeGraph('main');
-    //TODO MAYBE REMOVE THIS
     removeGraph('main', mainVis);
     if (mainfocus) {
         mainfocus = !mainfocus;
@@ -287,7 +287,9 @@ function setInteractiveMode() {
         maintooltips = true;
         drawmain(maindata);
     }
-}
+}*/
+
+/*changes the button colour*/
 function changeButtonColourClass(id, isOn, onClass, offClass) {
     var text = d3.select(id).text();
     //var lastIndex = -1;// = oldText.lastIndexOf(" ");
@@ -311,6 +313,7 @@ function changeButtonColourClass(id, isOn, onClass, offClass) {
     }
     changeStatus();
 }
+/*toggles the time bar button event*/
 function setFocusMode() {
     console.log("setFocus Mode");
     removeGraph('main', mainVis);
@@ -349,6 +352,7 @@ function setUpperVisData(data) {
     middleVis.update();
     rightVis.update();
 }
+/*event hanlder for normalisation*/
 function NormaliseMode(changeStatus) {
     if (!isMainNormalised && Normalisedmaindata == null) {
         console.log('calculating normalisation values');
@@ -391,6 +395,7 @@ function NormaliseMode(changeStatus) {
         changeButtonColourClass('#normalisemode', isMainNormalised, 'btn-info', 'btn-default');
     }
 }
+/*event han;der fpr the background colour change*/
 function BackgroundColour(id) {
     backgroundcolour = !backgroundcolour;
     var topcolour = d3.rgb("#c9c9c0");
@@ -405,6 +410,7 @@ function BackgroundColour(id) {
     d3.selectAll('.topvis').style('background-color', topcolour);
     changeButtonColourClass('#' + id, backgroundcolour, 'btn-info', 'btn-default');
 }
+/*toggles high quality visualisations*/
 function FancyVis(id) {
     var istrue = (d3.select('#' + id).property('className').indexOf('btn-info') >= 0);
     d3.select('#leftvis').classed({'with-3d-shadow': !istrue, 'with-transitions': !istrue});
@@ -453,6 +459,7 @@ function setSeries(keywords, id, useEquals) {
         changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
     }
 }
+/*changes the status of the visualisation. status=the series that are selected*/
 function changeStatus() {
     /*var text = "<b>Time Range Bar: </b>"+mainfocus
      +"<b>,&nbsp; Normalised: </b>"+isMainNormalised
@@ -472,6 +479,7 @@ function boolToOnOff(bool) {
     if (bool) return 'On';
     else return 'Off';
 }
+/*event hanlder for fullscreen button*/
 function fullscreen(id, selfid) {
     isFullscreen = !isFullscreen;
     var display = 'inline', width = '64%';
@@ -493,7 +501,7 @@ function fullscreen(id, selfid) {
     middleVis.update();
     rightVis.update();
 }
-
+/*event hanlder for hiding the upper visualiastions*/
 function upperhide(id, selfid) {
     isUpperHidden = !isUpperHidden;
     var display = 'block', height = '75%';
@@ -545,7 +553,7 @@ function drawUpperVisualisations() {
     drawmiddlevis('Tax Rev, GDP %', 'Income Tax Rate, avg %');
     drawrightvis('Interest Rate, %', ('Real GDP, billions ' + currency));
 }
-
+/*generic function to draw the upper visualisations*/
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
     nv.addGraph(function () {
         //console.log('drawing ' + visid);
@@ -621,7 +629,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         if (visid == 'rightvis') return upperDrawWait(mainVis);
     });
 }
-
+/*generic function to generate uppervisualisation data*/
 function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     var historicData = [], bottomStartIndex,
         leftAxisSeries,
@@ -669,7 +677,7 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
     });
     return data;
 }
-
+/*phillips curve data*/
 function phillipsCurve(countryy) {
     var curve = [];
     if (countryy == 'czechrepublic') {
@@ -692,7 +700,7 @@ function phillipsCurve(countryy) {
         color: "#0000CD"
     }];
 }
-
+/*laffer curve data*/
 function lafferCurve(countryy) {
     var curve = [];
     if (countryy == 'czechrepublic') {
@@ -719,7 +727,7 @@ function lafferCurve(countryy) {
         color: "#0000CD"
     }];
 }
-
+/*IS-LM model data*/
 function ISLMCurve(countryy) {
     var IScurve = [], LMcurve = [];
     if (countryy == 'czechrepublic') {
