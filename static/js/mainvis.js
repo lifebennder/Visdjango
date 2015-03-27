@@ -425,18 +425,14 @@ function setSeries(keywords, id, useEquals) {
     var state = {disabled: []};
     maindata.forEach(function (series, i) {
         state.disabled.push(function (kws) {
-            //var match = false;
             if (kws[0].toString().toLowerCase() == 'all')return false;
             for (var index in kws) {
                 var datakey = series.key.toLowerCase();
                 var keyword = kws[index].toString();
-                //var shortKey = datakey.substring(0, datakey.lastIndexOf(" "));
                 var shortKey = datakey.split(" ");
                 if (shortKey[shortKey.length - 1] == currency.toLowerCase())shortKey = shortKey.slice(0, -2).join(" ");
                 else shortKey = datakey;//shortKey.join(" ");
-                //if (datakey.length >= 4) shortKey = datakey.substring(0, datakey.length - 4);
                 if (useEquals != undefined && useEquals == true) {
-                    //console.log(currency + ' equaling ' + shortKey + '|' + keyword.toLowerCase());
                     if (shortKey == keyword.toLowerCase()) return false;
                 }
                 else if (datakey.indexOf(keyword.toLowerCase()) >= 0) {
@@ -447,18 +443,13 @@ function setSeries(keywords, id, useEquals) {
         }(keywords));
     });
     mainVis.dispatch.changeState(state);
-    //if(d3.select('#'+id).property('className').indexOf('btn-info')){
-
     if (buttonSelectID != null) {
         var istrue = (d3.select('#' + buttonSelectID).property('className').indexOf('btn-info') >= 0);
-        //console.log(buttonSelectID + ' setting false ' + istrue);
         changeButtonColourClass('#' + buttonSelectID, false, 'btn-info', 'btn-default');
         buttonSelectID = null;
     }
     if (id != undefined) {
-        //console.log(id + ' setting true');
         buttonSelectID = id;
-        //d3.select('#'+id).property('className').indexOf('btn-info')>=0
         changeButtonColourClass('#' + id, true, 'btn-info', 'btn-default');
     }
 }
