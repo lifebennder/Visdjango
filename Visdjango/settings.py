@@ -33,10 +33,17 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-61319124-1'
+GOOGLE_ANALYTICS_DISPLAY_ADVERTISING = True
+GOOGLE_ANALYTICS_SITE_SPEED = True
 # Application definition
 
 INSTALLED_APPS = (
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
+    'admin_tools_stats',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +52,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_nvd3',
     'djangobower',
+    'analytical',
     #'bootstrap3',
     'vis',
 )
@@ -101,6 +109,18 @@ STATICFILES_DIRS = (
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+"django.contrib.auth.context_processors.auth",
+"django.core.context_processors.debug",
+"django.core.context_processors.i18n",
+"django.core.context_processors.media",
+"django.core.context_processors.static",
+"django.core.context_processors.tz",
+"django.core.context_processors.request",
+"django.contrib.messages.context_processors.messages",
+)
+
 #Bower
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
 STATICFILES_FINDERS = (
