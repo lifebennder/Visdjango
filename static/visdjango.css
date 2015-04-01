@@ -9,7 +9,7 @@ body {
 }
 
 .home-container {
-    padding-left: 1.5%;
+    height: 82% padding-left : 1.5 %;
     padding-right: 1.5%;
 }
 
@@ -44,7 +44,7 @@ h2 {
 
 .top-border {
     border-top: 2px solid #eee;
-    margin-top: 2%;
+    margin-top: 1.5%;
 }
 
 h3 {
@@ -70,7 +70,7 @@ svg {
 .toptitle {
     font-weight: bold;
     text-align: center;
-    margin: 5px 0 0px 0;
+    margin: 2px 0 0px 0;
 }
 
 .toptooltiptitle {
@@ -225,11 +225,61 @@ dt {
     font-weight: bold;
     color: green;
 }
+
 .background {
     background-color: white;
 }
+
 .countrylist {
     overflow: scroll;
     overflow-x: hidden;
     height: 130px;
+}
+
+.bottomadd {
+    margin: 0% auto 0 auto;
+    align-content: center;
+    border-color: #000000;
+    border: solid;
+    border-width: 1px;
+    width: 972px;
+    height: 92px;
+}
+.minwidth {
+    min-width: 1100px;
+}
+.refcontainer {
+    float:left;
+    height: 100%;
+    display: inline;
+    width: 64%;
+    /*margin-left: 4%;
+    padding-right: 4%;*/
+    border-right: 5px solid #dddddd;
+    border-left: 5px solid #dddddd;
+    /*margin: 10px 1% 10px 1%;*/
+    padding: 10px 10px 10px 10px;
+}
+
+.botadvleft {
+    height: 100%;
+    padding: 1% 2% 0 2%;
+        float:left;
+        display: inline;
+    width: 17.5%;
+    /*border-color: #000000;
+    border: solid;
+    border-width: 1px;*/
+
+}
+
+.botadvright {
+        height: 100%;
+    padding: 1% 2% 0 2%;
+        float:right;
+        display: inline;
+    width: 17.5%;
+    /*border-color: #000000;
+    border: solid;
+    border-width: 1px;*/
 }

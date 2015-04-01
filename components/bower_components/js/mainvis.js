@@ -25,6 +25,7 @@ var rightVis = null;
 var leftVisData = null;
 var middleVisData = null;
 var rightVisData = null;
+var visheight = null;
 window.onload = function (e) {
     loadpage();
                 //console.log(correctAnswers);
@@ -485,7 +486,7 @@ function fullscreen(id, selfid) {
     var display = 'inline', width = '64%';
     if (isFullscreen) {
         display = 'none';
-        width = '100%';
+        width = '99%';
         d3.select('#' + selfid + ' span').classed('glyphicon-resize-full', false);
         d3.select('#' + selfid + ' span').classed('glyphicon-resize-small', true);
     }
@@ -495,7 +496,7 @@ function fullscreen(id, selfid) {
     }
     d3.select('#leftcontrol').style('display', display);
     d3.select('#rightcontrol').style('display', display);
-    d3.select('#' + id).style('width', width);
+    d3.select('#' + id).style({'width': width,'margin-left':'auto','margin-right':'0'});
     mainVis.update();
     leftVis.update();
     middleVis.update();
@@ -504,10 +505,15 @@ function fullscreen(id, selfid) {
 /*event hanlder for hiding the upper visualiastions*/
 function upperhide(id, selfid) {
     isUpperHidden = !isUpperHidden;
-    var display = 'block', height = '75%';
+
+
+    if(visheight==null)    {visheight = d3.select('#' + id).style('height');
+            console.log(visheight);
+    }
+        var display = 'block', height = visheight;
     if (isUpperHidden) {
         display = 'none';
-        height = '100%';
+        height = '98%';
         d3.select('#' + selfid + ' span').classed('glyphicon-arrow-up', false);
         d3.select('#' + selfid + ' span').classed('glyphicon-arrow-down', true);
     }
@@ -573,7 +579,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
         });
         chart.useVoronoi(false);
 
-        if (leftLabel != null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-30);
+        if (leftLabel != null)chart.yAxis.axisLabel(leftLabel).axisLabelDistance(-14);
         if (bottomLabel != null)chart.xAxis.axisLabel(bottomLabel).axisLabelDistance(-17);
         chart.tooltipContent(function (key, x, y, e, graph) {
             var RGB = e.series.color;
@@ -590,7 +596,7 @@ function drawUpperVis(visid, leftLabel, bottomLabel, data) {
             if (e.seriesIndex == 0)content += '<br> Year: ' + year + '</p>';
             return content;
         });
-        chart.margin({"left": 40, "right": 30, "top": 10, "bottom": 30});
+        chart.margin({"left": 49, "right": 23, "top": 10, "bottom": 30});
         d3.select('#' + visid + ' svg').datum(data).call(chart);
         nv.utils.windowResize(chart.update);
         if (visid == 'leftvis')leftVis = chart;

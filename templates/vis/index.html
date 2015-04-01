@@ -6,7 +6,8 @@
     <script src="{% static 'js/mainvis.js' %}"></script>
 {% endblock %}
 {% block extralinkleft %}
-    <li><a id="datalink" target="_blank" href="{% url 'vis.views.main_data' country='unitedkingdomdata' %}">Data</a></li>
+    <li><a id="datalink" target="_blank" href="{% url 'vis.views.main_data' country='unitedkingdomdata' %}">Data</a>
+    </li>
     <li><a id="datalinkcsv" target="_blank" href="{% static 'unitedkingdomdata.csv' %}">Data CSV</a></li>
 {% endblock %}
 {% block extralinkright %}
@@ -14,15 +15,15 @@
 {% endblock %}
 {% block content %}
 
-    <div class="page-header">
+    <!--div class="page-header">
         <h2>Economic Visualisation</h2>
-    </div>
+    </div-->
 
     <!-- The Application-->
-    <div style="height:93%; min-height: 600px; min-width: 1100px; ">
+    <div class="minwidth" style="min-height: 600px; height: 90vh;  width:100%; margin:0 0.5% 0 0.5%;">
         <!--Left Control -->
-        <div id="leftcontrol" style="border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
-        padding: 0px 10px 10px 10px;  margin: 0px 00px 20px 00px;">
+        <div id="leftcontrol" style="position: relative; border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
+        padding: 0px 10px 10px 0px; ">
             <h4 style="   text-align: center;">
                 Series Search
             </h4>
@@ -134,7 +135,7 @@
         <!--The Middle, Visuallsations-->
         <div id="visualisation" class="" style=" float:left;  height: 100%; width: 64%;">
             <!--The TOP-->
-            <div id="upperparent" class="" style=" height: 25%;">
+            <div id="upperparent" class="" style=" height: 20%;">
                 <!--The TOP LEFT-->
                 <div class="topvis">
                     <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}"
@@ -183,7 +184,7 @@
 
             <!--The MAIN VISUALISATION right side BOTTOM-->
             <div id="mainparent" class=""
-                 style="  position:relative; width: 100%; border-top: 5px solid #dddddd;   height: 75%;">
+                 style="  position:relative; width: 100%; border-top: 5px solid #dddddd;   height: 79%;">
                 <div id="mainstatus" class="status"></div>
                 <button type="button" class="btn btn-default resizebutton" style="right:38px;" id="upperhide"
                         alt="hide upper" onclick="upperhide('mainparent',id)">
@@ -194,7 +195,7 @@
                     <span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
                 </button>
                 <div id="main" class=""
-                     style="  height:97%; width: 100%;  ">
+                     style="  height:100%; width: 100%;  ">
 
                     <svg></svg>
                 </div>
@@ -204,7 +205,7 @@
 
         <!--The Right Control Panel, Data Combinations-->
         <div id="rightcontrol" style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
-        padding: 0px 0px 10px 10px;  margin: 0px 00px 20px 00px;">
+        padding: 0px 0px 10px 10px; ">
             <h4 style="   text-align: center;" title="This panel shows interesting data combinations that tell you the
             evolution of the UK economy over the last 3 centuries." data-toggle="tooltip">
                 Data Combinations
@@ -309,48 +310,77 @@
             </div-->
         </div>
     </div>
+{% endblock %}
+{% block footer %}
+    <div class=" minwidth" style=" align-content:center; background-color: red;  width:100%; margin:0 0.5% 0 0.5%;">
+        <div id="leftadv" class="botadvleft">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- econvis leftbot -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-4494608684873222"
+                 data-ad-slot="1392129191"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        <div id="ref" class="references top-border refcontainer" style="">
+            <h1>Data Attributes</h1>
+            <h4>Series Details</h4>
+            <ul>
+                <li>Real GDP - The inflation adjustment is set to reference 2008</li>
+                <li>Tax Revenue- This includes all taxable income</li>
+                <li>Inflation - The inflation relates the the Consumer Price Index, therefore consumer goods inflation
+                </li>
+            </ul>
+            <br>
+            <h4>Data Sources</h4>
 
-    <div id="ref" class="references top-border">
-        <h1>Data Attributes</h1>
-        <h4>Series Details</h4>
-        <ul>
-            <li>Real GDP - The inflation adjustment is set to reference 2008</li>
-            <li>Tax Revenue- This includes all taxable income</li>
-            <li>Inflation - The inflation relates the the Consumer Price Index, therefore consumer goods inflation</li>
-        </ul>
-        <br>
-        <h4>Data Sources</h4>
+            <p> The data is a compile data table comes from many sources. Most of the data comes from the ONS
+                (Office for National Statistics).
+                However, any data provided that is not available from the ONS was taken from these Sources:<br>
+                Tax Rates: <a href="http://www.ifs.org.uk/">Institute For Fiscal Studies</a><br>
+                Pre-1900s Data: <a href="http://www.ukpublicspending.co.uk/">Uk Public Spending</a><br>
+                GDP 1840-2014: <a href="http://measuringworth.com/">Measuring Growth</a></p>
 
-        <p> The data is a compile data table comes from many sources. Most of the data comes from the ONS
-            (Office for National Statistics).
-            However, any data provided that is not available from the ONS was taken from these Sources:<br>
-            Tax Rates: <a href="http://www.ifs.org.uk/">Institute For Fiscal Studies</a><br>
-            Pre-1900s Data: <a href="http://www.ukpublicspending.co.uk/">Uk Public Spending</a><br>
-            GDP 1840-2014: <a href="http://measuringworth.com/">Measuring Growth</a></p>
+            <!--h1>Interesting data combinations</h1>
+            <ul class="twocolumns">
+                <li><a onclick="setSeries(['Spending', 'Debt'])">Spending Vs. Public Debt</a></li>
+                <li><a onclick="setSeries(['per capita'])">Real GDP (per Capita) Vs. GDP (per Capita)</a></li>
+                <li><a onclick="setSeries(['GDP %'])">GDP %</a></li>
+                <li><a onclick="setSeries(['GDP, billions','Real GDP, billions'])">Real GDP Vs. GDP</a></li>
+                <li><a onclick="setSeries(['GDP, billions','per capita','Population'])">Population Vs. GDP</a></li>
+                <li><a onclick="setSeries(['unemployment','Tax Rev, GDP %'])">Unemployment Vs. Tax Revenue, GDP %</a></li>
+            </ul-->
+            <h1>Further Reading</h1>
+            <ul class="twocolumns">
+                <li><a href="http://en.wikipedia.org/wiki/Phillips_curve">Phillips Curve</a>:
+                    <a href="https://www.youtube.com/watch?v=-Fk_2iRfC18"> Video Explanation</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/IS%E2%80%93LM_model">IS-LM Model</a>:
+                    <a href="https://www.youtube.com/watch?v=Q3hoC8lDCBo"> Video Explanation</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/Yield_curve">Yield Curve</a>:
+                    <a href="https://www.youtube.com/watch?v=3b69Ax5m7qg"> Video Explanation</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/Laffer_curve">Laffer Curve</a>:
+                    <a href="https://www.youtube.com/watch?v=bnyeWcA2nXo"> Video Explanation</a></li>
+            </ul>
+        </div>
 
-        <!--h1>Interesting data combinations</h1>
-        <ul class="twocolumns">
-            <li><a onclick="setSeries(['Spending', 'Debt'])">Spending Vs. Public Debt</a></li>
-            <li><a onclick="setSeries(['per capita'])">Real GDP (per Capita) Vs. GDP (per Capita)</a></li>
-            <li><a onclick="setSeries(['GDP %'])">GDP %</a></li>
-            <li><a onclick="setSeries(['GDP, billions','Real GDP, billions'])">Real GDP Vs. GDP</a></li>
-            <li><a onclick="setSeries(['GDP, billions','per capita','Population'])">Population Vs. GDP</a></li>
-            <li><a onclick="setSeries(['unemployment','Tax Rev, GDP %'])">Unemployment Vs. Tax Revenue, GDP %</a></li>
-        </ul-->
-        <h1>Further Reading</h1>
-        <ul class="twocolumns">
-            <li><a href="http://en.wikipedia.org/wiki/Phillips_curve">Phillips Curve</a>:
-                <a href="https://www.youtube.com/watch?v=-Fk_2iRfC18"> Video Explanation</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/IS%E2%80%93LM_model">IS-LM Model</a>:
-                <a href="https://www.youtube.com/watch?v=Q3hoC8lDCBo"> Video Explanation</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Yield_curve">Yield Curve</a>:
-                <a href="https://www.youtube.com/watch?v=3b69Ax5m7qg"> Video Explanation</a></li>
-            <li><a href="http://en.wikipedia.org/wiki/Laffer_curve">Laffer Curve</a>:
-                <a href="https://www.youtube.com/watch?v=bnyeWcA2nXo"> Video Explanation</a></li>
-        </ul>
+        <div id="rightadv" class="botadvright">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- econvis leftbot -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-4494608684873222"
+                 data-ad-slot="1392129191"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+
     </div>
-
-
 {% endblock %}
 {% block extrafooter %}
     <div id="startfooter" class="startfooter " onclick="hide('startfooter')">
