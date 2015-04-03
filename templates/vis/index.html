@@ -385,37 +385,26 @@
     </div>
 {% endblock %}
 {% block extrafooter %}
-    <div id="startfooter" class="startfooter " onclick="hide('startfooter')">
+    <div id="startfooter" class="startfooterr " onclick="hide('startfooter')">
         <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
 
-        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation
-            Application!<br>
+        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation Application!<br>
             &nbsp;&nbsp;&nbsp;&nbsp;An Application for the economic analysis of Historic data and its comparison to
-            economic theory and their
-            models.<br>
-            Best performance is achieved using Chrome (around 3x as fast). It is recommended to use Chrome!</b><br>
-            If you don't know how anything works look at the <a style="font-weight: bold;"
-                                                                href="{% url 'vis.views.help' %}">help page</a> or hover
-            over the item to get more
-            information in the tooltip
-        </div>
-        <b>Left Control</b> - This area allows to change the properties of the visualisations. From activating a
-        Time Range Bar to zoom
-        in the graph, to background colour selection.<br>
-        <b>Visualisation Area</b> - This area is split into the Main, Historic Visualisation of UK economic properties
-        over the past 300 years.
-        Then you get the upper visualisations that show the relation between economic theory and their models (blue
-        curves), with the historic
-        data from the Historic graph (green dots).<br>
-        <b>Series Selection</b> - You can select or deselect which series (economic property) you want by either
-        clicking
-        on the label of it; toggling that series,
-        or double clicking which selects only that value or selects all values.<br>
-        <b>Right Control</b> - This shows a list of data combinations that will limit the series that are shown by the
-        main (historic) visualisation.
-        Hover over the buttons to see details about each category.<br>
+            economic theory and their models.</b><br>
+            {% comment %}
+            It is recommended to use Chrome!</b><br>
 
-        <div style="text-align: center;"><b>For extra info you can scroll down.</b></div>
+            If you don't know how anything works look at the
+            <a style="font-weight: bold;"href="{% url 'vis.views.help' %}">help page</a> or read the tooltip.
+        <br>
+        {% endcomment %}
+        <b>Left Control</b> - This area allows to change the properties of the visualisations.<br>
+        <b>Visualisation Area</b> - This area is split into the bottom Main and top Theoretic Visualisation.<br>
+        <b>Right Control</b> - A list of interesting data combinations.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+        </div>
+        <div style="text-align: center;"><b>It is recommended to use Chrome! For references scroll down.</b>
+            <a style="font-weight: bold;"href="{% url 'vis.views.help' %}">Help</a>.</div>
 
     </div>
 {% endblock %}
