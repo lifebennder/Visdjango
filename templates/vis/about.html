@@ -4,58 +4,76 @@
 
 
 {% block content %}
+    <div class="margin">
+        <div class="page-header">
+            <h2>About</h2>
+        </div>
 
-    <div class="page-header" >
-        <h2>About</h2>
+        <div class="" style="  min-height: 400px; ">
+            <h3>What is the Economics Visualisation Application?</h3>
+            The Economics Visualisation Application is a visualisation application that displays macroeconomic data of
+            any
+            country. It also provides economic theory curves and shows how the theory compares to real life historic
+            data.<br>
+            This compilation of economic data and the comparison to economic theory means that this is a great tool for
+            teaching
+            purposes, it provides the missing link between real life and economic theory that is often lacking in
+            university
+            lectures. It even provides a quiz to allow the students to check what they have or haven't learned. It can
+            also be
+            used by lecturers in lectures to show economic data and interesting data combinations. <br><br>
+            Furthermore, the application provides a ecosystem of controls to allow for enhancing what can be extracted
+            from the data into
+            useful information. Things such as normalisation, data combinations and time range manipulation.
+            <h3>Technologies Used</h3>
+            There are many technologies used in this project. The backend and server side is built using Django. The
+            frontend is built
+            using pure css and bootstrap. The graphs are built using the NVD3 library which is built on D3.
+            <br>
+            <h4><a href="https://www.djangoproject.com/">Django</a></h4>
+            Django is a Content Management System for Websites. It provides web server capabilities with a managed way
+            of storing and delivering
+            websites to the client pc. It works on a Model-View-Template architecture. Where a view renders a template
+            dynamically from the model data
+            This allows for a changing (dynamic) web pages that do not have to be written fully and statically.
+            <br><br>
+            <h4><a href="https://nvd3-community.github.io/nvd3/">NVD3</a> and <a href="http://d3js.org/">D3</a></h4>
+            These are two JavaScript Libraries. NVD3 is a visualisation library that provides a series of visualisation
+            models e.g
+            LineChart visualisations. NVD3 uses the D3 (Data-Driven-Documents) library to access the DOM (Document
+            Object Model)
+            of the webpage to insert data into it or edit it. In this case NVD3 uses D3 to access the <code>&lt;svg&gt;&lt;/svg&gt;</code>
+            html element to draw the visualisations.
+            <br><br>
+            <h4><a href="http://www.w3schools.com/">HTML and CSS</a></h4>
+            As this is a web based visualisation then html and css is required. The Page is described using Html and CSS
+            is used for styling
+            and positioning. Most of the website is built using pure CSS and HTML. Django renders a HTML version of the
+            template with all the
+            data substituted as necessary. Then D3 is used to insert the visualisations. This result is sent to the
+            clients browser and rendered
+            as a full web page.
+            <br><br>
+            The design of the website was done using mostly pure CSS as opossed to using Bootstrap framework, because
+            bootstrap didnt display
+            as it was supposed to and lacked the necessesary finese. Therefore, a more low level approach was taken of
+            pure CSS to layout the page
+            The web page is fully responsive and rescalable fitting the users screen size. (not using bootstrap).
+            <br><br>
+            <h4><a href="http://getbootstrap.com/">Bootstrap</a></h4>
+            As mentioned before Bootstrap is a web development framework that allows for easily applying predefined css
+            style to html elements.
+            Therefore, a theme and layout options are provided that are easily applied using the class system in css.
+            <code>&lt;div class="page-header"&gt;&lt;/div&gt;</code>. This gives the specified divide, the "page-header"
+            css properties.
+            <br><br>
+        </div>
+
+
     </div>
-
-    <div class="" style="  min-height: 400px; ">
-        <h3>What is the Economics Visualisation Application?</h3>
-        The Economics Visualisation Application is a visualisation application that displays macroeconomic data of any
-        country. It also provides economic theory curves and shows how the theory compares to real life historic data.<br>
-        This compilation of economic data and the comparison to economic theory means that this is a great tool for teaching
-        purposes, it provides the missing link between real life and economic theory that is often lacking in university
-        lectures. It even provides a quiz to allow the students to check what they have or haven't learned. It can also be
-        used by lecturers in lectures to show economic data and interesting data combinations. <br><br>
-        Furthermore, the application provides a ecosystem of controls to allow for enhancing what can be extracted from the data into
-        useful information. Things such as normalisation, data combinations and time range manipulation.
-        <h3>Technologies Used</h3>
-        There are many technologies used in this project. The backend and server side is built using Django. The frontend is built
-        using pure css and bootstrap. The graphs are built using the NVD3 library which is built on D3.
-        <br>
-        <h4><a href="https://www.djangoproject.com/">Django</a></h4>
-        Django is a Content Management System for Websites. It provides web server capabilities with a managed way of storing and delivering
-        websites to the client pc. It works on a Model-View-Template architecture. Where a view renders a template dynamically from the model data
-        This allows for a changing (dynamic) web pages that do not have to be written fully and statically.
-        <br><br>
-        <h4><a href="https://nvd3-community.github.io/nvd3/">NVD3</a> and <a href="http://d3js.org/">D3</a></h4>
-        These are two JavaScript Libraries. NVD3 is a visualisation library that provides a series of visualisation models e.g
-        LineChart visualisations. NVD3 uses the D3 (Data-Driven-Documents) library to access the DOM (Document Object Model)
-        of the webpage to insert data into it or edit it. In this case NVD3 uses D3 to access the <code>&lt;svg&gt;&lt;/svg&gt;</code>
-        html element to draw the visualisations.
-        <br><br>
-        <h4><a href="http://www.w3schools.com/">HTML and CSS</a></h4>
-        As this is a web based visualisation then html and css is required. The Page is described using Html and CSS is used for styling
-        and positioning. Most of the website is built using pure CSS and HTML. Django renders a HTML version of the template with all the
-        data substituted as necessary. Then D3 is used to insert the visualisations. This result is sent to the clients browser and rendered
-        as a full web page.
-        <br><br>
-        The design of the website was done using mostly pure CSS as opossed to using Bootstrap framework, because bootstrap didnt display
-        as it was supposed to and lacked the necessesary finese. Therefore, a more low level approach was taken of pure CSS to layout the page
-        The web page is fully responsive and rescalable fitting the users screen size. (not using bootstrap).
-        <br><br>
-        <h4><a href="http://getbootstrap.com/">Bootstrap</a></h4>
-        As mentioned before Bootstrap is a web development framework that allows for easily applying predefined css style to html elements.
-        Therefore, a theme and layout options are provided that are easily applied using the class system in css.
-        <code>&lt;div class="page-header"&gt;&lt;/div&gt;</code>. This gives the specified divide, the "page-header" css properties.
-        <br><br>
-     </div>
-
-
-
 {% endblock %}
 {% block footer %}
-    <div class="references top-border" >
+    <div class="references top-border margin">
         <h1>Credits</h1>
         <ul>
             <li><p>Author: Luka Prelic</p></li>

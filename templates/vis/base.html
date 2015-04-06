@@ -77,13 +77,27 @@ Not just a graph! econvis.">
     </div>
     {% block sub_menu %}{% endblock %}
     {# include "messages.html" #}
+    {% block addtop %}
+        <div class="adtop" id="adtop">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- econvis top -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-4494608684873222"
+                 data-ad-slot="8644050798"
+                 data-ad-format="auto"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    {% endblock %}
     {% block content %}(no content){% endblock %}
 
     <hr/>
 
 </div>
 {% block addbot %}
-    <div class="bottomadd " style="display: block">
+    <div class="adbot " style="display: block">
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <!-- econvis bottom large -->
         <ins class="adsbygoogle"
