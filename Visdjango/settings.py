@@ -27,11 +27,11 @@ STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
 SECRET_KEY = '7qd*yle&=(lwc_^!!gbz#t2$vo0a0!y5g^=5!#q1ld=35i3sgt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.econvis.com','localhost', '127.0.0.1','.pythonanywhere.com']
 
 GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-61319124-1'
 GOOGLE_ANALYTICS_DISPLAY_ADVERTISING = True
