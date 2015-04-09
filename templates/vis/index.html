@@ -13,7 +13,7 @@
 {% block extralinkright %}
     <li><a class="simhref" onclick="quiz()">Quiz</a></li>
 {% endblock %}
-    {% block addtop %} {% endblock %}
+{% block addtop %} {% endblock %}
 {% block content %}
 
     <!--div class="page-header">
@@ -21,7 +21,7 @@
     </div-->
 
     <!-- The Application-->
-    <div class="minwidth" style="min-height: 660px; height: 90vh;  width:100%; margin:0 0.5% 0 0.5%;">
+    <div class="minwidth" style="min-height: 650px; height: 665px;   width:100%; margin:0 0.5% 0 0.5%;">
         <!--Left Control -->
         <div id="leftcontrol" style="position: relative; border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
         padding: 0px 10px 10px 0px; ">
@@ -72,18 +72,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Second, Upper Visualisation Control Panel-->
-            {% comment %}<div class="panel panel-info" >
-                <div class="panel-heading ">Data</div>
-                <div class="panel-body" style="text-align: center"><div>
-                    <div class="btn-group-vertical btn-group-lg " role="group">
-                    <button type="checkbox" class="btn btn-info" aria-label="true" onclick="setInteractiveMode()"></button>
-                    <button type="checkbox" class="btn btn-info"  onclick="setFocusMode()"></button>
-                    <button type="checkbox" class="btn btn-info" onclick="NormaliseMode()"></button>
-                    </div>
-                    </div>
-                </div>
-            </div>{% endcomment %}
             <!-- Third, Style Control Panel-->
             <div class="panel panel-info">
                 <div class="panel-heading">Style</div>
@@ -121,18 +109,23 @@
                                     data-toggle="tooltip">
                                 <div class="txt-responsive">United Kingdom</div>
                             </button>
+                            <button id="unitedstates" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="SelectCountry(id,'$')"
+                                    title="Selects Czech Republic Data." data-toggle="tooltip">
+                                <div class="txt-responsive">United States</div>
+                            </button>
                             <button id="czechrepublic" type="button" class="btn btn-default " aria-label="true"
                                     onclick="SelectCountry(id,'Kč')"
                                     title="Selects Czech Republic Data." data-toggle="tooltip">
                                 <div class="txt-responsive">Czech Republic</div>
                             </button>
+
                         </div>
                         <br>
                         More coming soon.
                     </div>
                 </div>
             </div>
-
 
         </div>
         <!--The Middle, Visuallsations-->
@@ -199,7 +192,6 @@
                 </button>
                 <div id="main" class=""
                      style="  height:100%; width: 100%;  ">
-
                     <svg></svg>
                 </div>
 
@@ -315,7 +307,7 @@
     </div>
 {% endblock %}
 {% block footer %}
-    <div class=" minwidth" style=" align-content:center; background-color: red;  width:100%; margin:0 0.5% 0 0.5%;">
+    <div class=" minwidth" style=" align-content:center; background-color: red;  width:99%; margin:0 0.5% 0 0.5%;">
         <div id="leftadv" class="botadvleft">
             <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
             <!-- econvis leftbot -->
@@ -389,7 +381,8 @@
     <div id="startfooter" class="startfooterr " onclick="hide('startfooter')">
         <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
 
-        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation Application!<br>
+        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation
+            Application!<br>
             &nbsp;&nbsp;&nbsp;&nbsp;An Application for the economic analysis of Historic data and its comparison to
             economic theory and their models.</b><br>
             {% comment %}
@@ -399,13 +392,14 @@
             <a style="font-weight: bold;"href="{% url 'vis.views.help' %}">help page</a> or read the tooltip.
         <br>
         {% endcomment %}
-        <b>Left Control</b> - This area allows to change the properties of the visualisations.<br>
-        <b>Visualisation Area</b> - This area is split into the bottom Main and top Theoretic Visualisation.<br>
-        <b>Right Control</b> - A list of interesting data combinations.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <b>Left Control</b> - This area allows to change the properties of the visualisations.<br>
+            <b>Visualisation Area</b> - This area is split into the bottom Main and top Theoretic Visualisation.<br>
+            <b>Right Control</b> - A list of interesting data combinations.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
         </div>
         <div style="text-align: center;"><b>It is recommended to use Chrome! For references scroll down.</b>
-            <a style="font-weight: bold;"href="{% url 'vis.views.help' %}">Help</a>.</div>
+            <a style="font-weight: bold;" href="{% url 'vis.views.help' %}">Help</a>.
+        </div>
 
     </div>
 {% endblock %}

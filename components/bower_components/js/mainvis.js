@@ -28,8 +28,8 @@ var rightVisData = null;
 var visheight = null;
 window.onload = function (e) {
     loadpage();
-                //console.log(correctAnswers);
-        d3.json("/vis/data/quizanswers/", function (error, data) {
+    //console.log(correctAnswers);
+    d3.json("/vis/data/quizanswers/", function (error, data) {
         //console.log(correctAnswers);
         correctAnswers = data;
     });
@@ -56,13 +56,14 @@ function loadpage(newCountry, currencyId) {
         var keystr = data[0].key;
         currency = keystr.substr(keystr.indexOf('ns ') + 3);
         console.log('Currency: ' + currency);
+        console.log(data);
         drawmain(maindata);
         //if (!isMainNormalised)NormaliseMode();
     });
     loadresource('ref');
     loadresource('quiz');
     loadupperlinks();
-    if(isQuiz!= undefined && isQuiz)quiz();
+    if (isQuiz != undefined && isQuiz)quiz();
     if (newCountry == undefined) {
         d3.select('#startfooter').transition().delay(1500).duration(3000).ease("elastic").style("opacity", 1);
         BackgroundColour('backgroundcolour');
@@ -72,9 +73,9 @@ function loadpage(newCountry, currencyId) {
     //drawUpperVisualisations();
     //if(isQuiz) isQuiz=true;
 }
-function loadupperlinks(){
-    d3.select('#datalinkcsv').attr('href',"/static/" + country + "data.csv");
-    d3.select('#datalink').attr('href',"/vis/data/" + country + "data/");
+function loadupperlinks() {
+    d3.select('#datalinkcsv').attr('href', "/static/" + country + "data.csv");
+    d3.select('#datalink').attr('href', "/vis/data/" + country + "data/");
 }
 function loadresource(resource) {
     d3.text("/vis/data/" + country + resource + "/", function (error, data) {
@@ -271,24 +272,24 @@ function removeGraph(graph, chartobject) {
     d3.selectAll("#" + graph + " svg > *").remove();
 }
 /*function setInteractiveMode() {
-    console.log("setting interactive   ");
-    //removeGraph('main');
-    removeGraph('main', mainVis);
-    if (mainfocus) {
-        mainfocus = !mainfocus;
-        drawmain(maindata);
-    }
-    else if (mainVis.useInteractiveGuideline() == true) {
-        console.log('interactive is true:   ' + mainVis.useInteractiveGuideline());
-        maininteractive = false;
-        drawmain(maindata);
-    } else {
-        console.log('interactive is false');
-        maininteractive = true;
-        maintooltips = true;
-        drawmain(maindata);
-    }
-}*/
+ console.log("setting interactive   ");
+ //removeGraph('main');
+ removeGraph('main', mainVis);
+ if (mainfocus) {
+ mainfocus = !mainfocus;
+ drawmain(maindata);
+ }
+ else if (mainVis.useInteractiveGuideline() == true) {
+ console.log('interactive is true:   ' + mainVis.useInteractiveGuideline());
+ maininteractive = false;
+ drawmain(maindata);
+ } else {
+ console.log('interactive is false');
+ maininteractive = true;
+ maintooltips = true;
+ drawmain(maindata);
+ }
+ }*/
 
 /*changes the button colour*/
 function changeButtonColourClass(id, isOn, onClass, offClass) {
@@ -496,7 +497,7 @@ function fullscreen(id, selfid) {
     }
     d3.select('#leftcontrol').style('display', display);
     d3.select('#rightcontrol').style('display', display);
-    d3.select('#' + id).style({'width': width,'margin-left':'auto','margin-right':'0'});
+    d3.select('#' + id).style({'width': width, 'margin-left': 'auto', 'margin-right': '0'});
     mainVis.update();
     leftVis.update();
     middleVis.update();
@@ -507,10 +508,11 @@ function upperhide(id, selfid) {
     isUpperHidden = !isUpperHidden;
 
 
-    if(visheight==null)    {visheight = d3.select('#' + id).style('height');
-            console.log(visheight);
+    if (visheight == null) {
+        visheight = d3.select('#' + id).style('height');
+        console.log(visheight);
     }
-        var display = 'block', height = visheight;
+    var display = 'block', height = visheight;
     if (isUpperHidden) {
         display = 'none';
         height = '98%';
@@ -557,7 +559,13 @@ function drawrightvis(leftAxis, bottomAxis) {
 function drawUpperVisualisations() {
     drawleftvis('Inflation, (CPI) %', 'Unemployment, %');
     drawmiddlevis('Tax Rev, GDP %', 'Income Tax Rate, avg %');
-    drawrightvis('Interest Rate, %', ('Real GDP, billions ' + currency));
+    var realgdp = 'Real GDP, ';
+    unNormalisedmaindata.forEach(function (series, i) {
+        if (series.key.indexOf(realgdp) >= 0)realgdp = series.key;
+
+    });
+    drawrightvis('Interest Rate, %', realgdp);
+    //drawrightvis('Interest Rate, %', ('Real GDP, billions ' + currency));
 }
 /*generic function to draw the upper visualisations*/
 function drawUpperVis(visid, leftLabel, bottomLabel, data) {
@@ -686,7 +694,14 @@ function upperVisData(leftAxis, bottomAxis, theoreticalCurve) {
 /*phillips curve data*/
 function phillipsCurve(countryy) {
     var curve = [];
-    if (countryy == 'czechrepublic') {
+    if (countryy == 'unitedstates') {
+        for (var i = 1; i < 13; i++) {
+            var y = Math.round(100 * ((1 / (i)) * 30 - 3)) / 100;
+            //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+            curve.push({x: i, y: y == 0 ? 0.01 : y});
+        }
+    }
+    else if (countryy == 'czechrepublic') {
         for (var i = 1; i < 20; i++) {
             var y = Math.round(100 * ((1 / (i)) * 100  )) / 350;
             //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
@@ -709,7 +724,16 @@ function phillipsCurve(countryy) {
 /*laffer curve data*/
 function lafferCurve(countryy) {
     var curve = [];
-    if (countryy == 'czechrepublic') {
+    if (countryy == 'unitedstates'){
+        for (var i = 0; i < 101; i++) {
+            var iShift = i - 50;
+            var y = (-Math.pow((iShift) / 10, 2) + 22);
+            y = Math.round(100 * y) / 100; //round the value
+            //console.log('x: '+i+' y: '+y+' '+((1 / (i))*30-5));
+            curve.push({x: i, y: y < 0 ? 0 : y});
+        }
+    }
+    else if (countryy == 'czechrepublic') {
         for (var i = 0; i < 101; i++) {
             var iShift = i - 50;
             var y = (-Math.pow((iShift) / 10, 2) + 26);
@@ -736,7 +760,16 @@ function lafferCurve(countryy) {
 /*IS-LM model data*/
 function ISLMCurve(countryy) {
     var IScurve = [], LMcurve = [];
-    if (countryy == 'czechrepublic') {
+        if (countryy == 'unitedstates') {
+        for (var i = 0; i < 18; i = i + 1) {
+            var iShift = i;
+            var ISy = Math.round(100 * (-0.9 * i + 15)) / 100;
+            var LMy = Math.round(100 * (0.9 * i)) / 100;
+            IScurve.push({x: i, y: ISy == 0 ? 0.01 : ISy});
+            LMcurve.push({x: i, y: LMy == 0 ? 0.01 : LMy});
+        }
+    }
+    else if (countryy == 'czechrepublic') {
         for (var i = 2400; i < 4000; i = i + 30) {
             var iShift = i;
             var ISy = Math.round(100 * (-0.01 * i + 38)) / 100;
