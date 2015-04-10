@@ -89,6 +89,7 @@ function drawmain(data) {
     //removeGraph('main', mainVis);
     nv.addGraph(function () {
         var chart;
+        console.log(timeBarIndexes+ " "+ data[0].values[data[0].values.length - 1].x);
         if (timeBarIndexes == undefined) {
             timeBarIndexes = [data[0].values[0].x, data[0].values[data[0].values.length - 1].x];
         }
@@ -99,7 +100,7 @@ function drawmain(data) {
             if (timeBarIndexes[1] < minX || timeBarIndexes[1] > maxX)timeBarIndexes[1] = maxX;
         }
         if (mainfocus) {
-            chart = nv.models.lineWithFocusChart().margin({left: 40});
+            chart = nv.models.lineWithFocusChart().margin({left: 55});
             chart.y2Axis.tickFormat(d3.format(tickformat));
             chart.brushExtent(timeBarIndexes);
         } else {
