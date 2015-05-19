@@ -239,13 +239,13 @@ dt {
 }
 
 .bottomadd {
-    margin: 0% auto 0 auto;
+    margin: 0 auto 0 auto;
     align-content: center;
     /*border-color: #000000;
     border: solid;
     border-width: 1px;*/
-    width: 972px;
-    height: 92px;
+    width: 728px;
+    height: 90px;
 }
 
 .minwidth {
