@@ -27,7 +27,7 @@ STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
 SECRET_KEY = '7qd*yle&=(lwc_^!!gbz#t2$vo0a0!y5g^=5!#q1ld=35i3sgt'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = False
 
