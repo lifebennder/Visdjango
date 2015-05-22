@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.contrib.staticfiles.views import serve
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
@@ -12,11 +12,12 @@ import csv, string
 import json
 from django.contrib.staticfiles.templatetags.staticfiles import static
 import random
-import datetime
+from datetime import datetime
 import time, os
 from django.conf import settings
 #def index(request):
 #    return render_to_response('vis/index.html')
+from vis.models import Visits
 
 
 def isnumeric(v):
@@ -99,8 +100,25 @@ def main_quizanswers(request):
     json_data.close()
     return JsonResponse(data1, safe=False)
 
+
+def visit(request):
+    #visits = int(request.COOKIES.get('visits', '1'))
+    context_dict = {'vvv': Visits.objects.first()}
+    if request.META['USERDOMAIN']!='LUKA':
+        v = Visits.objects.first()
+        v.visits += 1
+        #v = Visits(visits=1)
+        v.last_visited = datetime.now()
+        v.save()
+        context_dict['vvv'] = v
+    response = render(request, 'vis/index.html', context_dict)
+    return response
+
+
+
 def index(request):
-    return render_to_response('vis/index.html')
+    return visit(request)
+    #return render(request,'vis/index.html', {})
     #return render_to_response('nvd3/barchart_2.html')
 
 
