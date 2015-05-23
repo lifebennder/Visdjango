@@ -108,7 +108,11 @@ def visit(request):
     v = Visits.objects.first()
     v.visits += 1
     #v = Visits(visits=1)
+
     v.last_visited = datetime.now()
+    #print request.META
+    v.meta = request.META
+
     v.save()
     context_dict['vvv'] = v
     response = render(request, 'vis/index.html', context_dict)

@@ -15,6 +15,7 @@ class UserProfile(models.Model):
 class Visits(models.Model):
     visits = models.IntegerField(default=0)
     last_visited = models.DateTimeField(default=datetime.now())
+    meta = models.TextField(default="empty")
     def __unicode__(self):
         return'%s, %s' % (self.visits, self.last_visited.strftime('%Y-%m-%d %H:%M'))
     class Meta:
