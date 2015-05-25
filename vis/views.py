@@ -102,19 +102,16 @@ def main_quizanswers(request):
 
 
 def visit(request):
-    #visits = int(request.COOKIES.get('visits', '1'))
     context_dict = {'vvv': Visits.objects.first()}
     #if request.META['USERDOMAIN']!='LUKA':
-    v = Visits.objects.first()
-    v.visits += 1
-    #v = Visits(visits=1)
-
-    v.last_visited = datetime.now()
-    #print request.META
-    v.meta = request.META
-
-    v.save()
-    context_dict['vvv'] = v
+    v = Visits.objects.last()
+    #v.visits += 1
+    #v.last_visited = datetime.now()
+    #v.meta = request.META
+    visits = v.visits + 1
+    vv = Visits.objects.get_or_create(visits=visits,last_visited=datetime.now(),meta=request.META)[0]
+    vv.save()
+    #context_dict['vvv'] = vv
     response = render(request, 'vis/index.html', context_dict)
     return response
 
