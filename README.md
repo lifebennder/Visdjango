@@ -1,6 +1,7 @@
 Visdjango
 =========
 <h3>Built by Luka Prelic</h3>
+<strong>Hosted At: [econvis.com](http://www.econvis.com/)</strong>
 <p>An economic visualisation and teaching Web Application that illustrates the historic changes of UK's economic status.
 The Historic data is tied to abstract economic theory. This allows for economic students to make a clear picture between
 economic theory and real life application of that theory. A perspective that is frequently missing from economic teachings.</p>
