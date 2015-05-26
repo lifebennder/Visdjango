@@ -17,7 +17,7 @@ import time, os
 from django.conf import settings
 #def index(request):
 #    return render_to_response('vis/index.html')
-from vis.models import Visits
+from vis.models import Visit
 
 
 def isnumeric(v):
@@ -32,19 +32,16 @@ def isnumeric(v):
         return False
     return True
 
-
 def strtointfloat(str):
     if isinstance(str, int):
         return int(str)
     return float(str)
-
 
 def readcsv(path):
     chartdata = []
     if not os.path.isfile(path): return chartdata
     with open(path) as f:
         reader = list(csv.reader(f))
-
         for rownum, row in enumerate(reader):
             adjcolnum = 1
             for colnum, cell in enumerate(row):
@@ -52,7 +49,6 @@ def readcsv(path):
                     if not isnumeric(reader[1][colnum]) or colnum==0: continue
                     chartdata.append({'key': cell, 'values': [], 'disabled': False})
                 else:
-
                     if colnum == 0 or not isnumeric(reader[1][colnum]):
                         if not isnumeric(reader[1][colnum]): adjcolnum += 1
                         continue
@@ -71,11 +67,6 @@ def readcsv(path):
            #chartdata['x'] = map(int,val[1:]) # change to do if statement outside, so not do if everytime
        else:
            chartdata.append({'key': val[0], 'values': val[1:]})"""
-
-
-    #chartdata['y'+str((colnum+1))] = map(strtointfloat, val[1:])
-    #chartdata['name'+str((colnum+1))] = val[0]
-    #chartdata['extra'+str(colnum+1)] = {"tooltip": {"y_start": 'Value: '+'', "y_end":  " thousands"}}
     return chartdata
 
 def help(request):
@@ -102,14 +93,19 @@ def main_quizanswers(request):
 
 
 def visit(request):
-    context_dict = {'vvv': Visits.objects.first()}
+    context_dict = {'vvv': Visit.objects.first()}
     #if request.META['USERDOMAIN']!='LUKA':
-    v = Visits.objects.last()
-    #v.visits += 1
-    #v.last_visited = datetime.now()
-    #v.meta = request.META
-    visits = v.visits + 1
-    vv = Visits.objects.get_or_create(visits=visits,last_visited=datetime.now(),meta=request.META)[0]
+    v = Visit.objects.last()
+    if v is None:
+        visits = 1
+    else:
+        visits = v.visits + 1
+    info = 'Not'
+    if 'HTTP_FROM' in request.META:
+        info = request.META['HTTP_FROM']
+    elif 'HTTP_X_REAL_IP' in request.META:
+        info = request.META['HTTP_X_REAL_IP']
+    vv = Visit.objects.get_or_create(visits=visits,last_visited=datetime.now(),meta=request.META,ip=info)[0]
     vv.save()
     #context_dict['vvv'] = vv
     response = render(request, 'vis/index.html', context_dict)
@@ -122,18 +118,12 @@ def index(request):
     #return render(request,'vis/index.html', {})
     #return render_to_response('nvd3/barchart_2.html')
 
-
-
-
-
 def about(request):
     return render_to_response('vis/about.html')
-
 
 def decode_url(param):  # helper function just to mak things that little easier
     name = param.replace('_', ' ')
     return name
-
 
 def encode_url(str):
     return str.replace(' ', '_')

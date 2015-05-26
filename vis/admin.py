@@ -1,6 +1,6 @@
 from django.contrib import admin
 
 # Register your models here.
-from vis.models import Visits
+from vis.models import Visit
 
-admin.site.register(Visits)
+admin.site.register(Visit)

@@ -12,11 +12,12 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return self.user.username
 
-class Visits(models.Model):
+class Visit(models.Model):
     visits = models.IntegerField(default=0)
     last_visited = models.DateTimeField(default=datetime.now())
     meta = models.TextField(default="empty")
+    ip = models.CharField(max_length=60,null=True,blank=True,default='Not')
     def __unicode__(self):
-        return'%s, %s' % (self.visits, self.last_visited.strftime('%Y-%m-%d %H:%M'))
+        return'%s, %s, %s' % (self.visits, self.last_visited.strftime('%Y-%m-%d %H:%M'),self.ip)
     class Meta:
-        db_table = 'Visits'
+        db_table = 'Visit'
