@@ -10,4 +10,5 @@ urlpatterns = patterns('',
     url(r'^data/(?P<country>\w+)quiz/$', views.main_quiz),
     url(r'^data/quizanswers/$', views.main_quizanswers),
     url(r'^data/(?P<country>\w+)/$', views.main_data),
+    url(r'^data/vlad/$', views.vlad),
 )
