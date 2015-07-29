@@ -35,6 +35,16 @@ window.onload = function (e) {
     });
 
 };
+
+function loadvlad() {
+    d3.text("/vis/data/vlad", function (error, data) {
+        if (data == undefined) return;
+        d3.selectAll('#main').html(data);
+    });
+}
+
+
+
 /*the loading function of the whole page*/
 function loadpage(newCountry, currencyId) {
     $('[data-toggle="tooltip"]').tooltip({trigger: 'hover', 'placement': 'bottom', delay: {"show": 800, "hide": 100}}); //activate tooltip plugin
@@ -46,7 +56,7 @@ function loadpage(newCountry, currencyId) {
     //timeBarIndexes = undefined;
     //var countryinput = country;
     if (newCountry != undefined && newCountry != null) country = newCountry;
-    d3.json("/vis/data/" + country + "data/", function (error, data) {
+    d3.json("/vis/data/" +"vlad/", function (error, data) {
         unNormalisedmaindata = data;
         maindata = unNormalisedmaindata;
         Normalisedmaindata = null;
@@ -106,7 +116,7 @@ function drawmain(data) {
         } else {
             chart = nv.models.lineChart().margin({left: 55});
         }
-        chart.xAxis.axisLabel('Years');
+        chart.xAxis.axisLabel('Wavelength');
         chart.xAxis.tickFormat(d3.format('f'));
         //chart.xDomain([1600,2019]);
         chart.yAxis.tickFormat(d3.format(tickformat));
