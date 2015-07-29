@@ -1,0 +1,353 @@
+{% extends 'vis/base.html' %}
+{% load staticfiles %}
+{% block title %}Economic Visualisation{% endblock %}
+{% block extrahead %}
+    <script src="{% static 'js/panels.js' %}"></script>
+    <script src="{% static 'js/mainvis.js' %}"></script>
+{% endblock %}
+{% block extralinkleft %}
+    <li><a id="datalink" target="_blank" href="{% url 'vis.views.main_data' country='unitedkingdomdata' %}">Data</a>
+    </li>
+    <li><a id="datalinkcsv" target="_blank" href="{% static 'unitedkingdomdata.csv' %}">Data CSV</a></li>
+{% endblock %}
+{% block extralinkright %}
+    <li><a class="simhref" onclick="quiz()">Quiz</a></li>
+{% endblock %}
+{% block addtop %} {% endblock %}
+{% block content %}
+    <!-- The Application-->
+    <div class="minwidth" style="min-height: 650px; height: 665px;   width:100%; margin:0 0.5% 0 0.5%;">
+        <!--Left Control -->
+        <div id="leftcontrol" style="position: relative; border-right: 5px solid #dddddd; float:left; height: 100%; width: 18%;
+        padding: 0px 10px 0px 0px; ">
+            <h4 style="   text-align: center;">
+                Series Search
+            </h4>
+            <!-- Series Search Box-->
+            <div class="input-group">
+                <input id="searchbox" type="text" class="form-control"
+                       title="Searches the series for the keyword entered. E.g. &quot;Tax&quot; will return all series with tax word in them.
+                       Many keywords can be used, &quot;, &quot; seperation E.g.  &quot;%, capita, gdp&quot;"
+                       data-toggle="tooltip"
+                       placeholder="Select Series: &quot;Tax, GDP&quot;">
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" type="button" onclick="search()">Go!</button>
+                    </span>
+            </div>
+            <br>
+            <!-- Main Visualisation Control Panel-->
+            <div class="panel panel-info">
+                <div class="panel-heading">Main Visualisation</div>
+                <div class="panel-body" style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button id="setfocusmode" type="button" class="btn btn-default" onclick="setFocusMode()"
+                                    title="Adds time selection control underneath the main graph that allows you to zoom
+                                     in on the time axis. This will also affect upper visualisation historic data
+                                     values if the &quot;Time Range Filter&quot; is enabled." data-toggle="tooltip">
+                                <div class="txt-responsive">Time Range Bar</div>
+                            </button>
+                            <button id="navigationfiltertoggle" type="button" class="btn btn-info"
+                                    onclick="navigationFilterToggle()"
+                                    title="Toggles if the upper Visualisations limit the Historic Values (green) according to time zooming in the main graph."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">Time Range Filter</div>
+                            </button>
+                            <button id="normalisemode" type="button" class="btn btn-default" style="margin-top: 15px;"
+                                    onclick="NormaliseMode()"
+                                    title="Toggles if to normalise the Historic Data. Makes all the data points be between 0 and 1."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">Normalise</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Third, Style Control Panel-->
+            <div class="panel panel-info">
+                <div class="panel-heading">Style</div>
+                <div class="panel-body " style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button id="backgroundcolour" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="BackgroundColour(id)"
+                                    title="Toggles if to have the visualisation background white or darker colour for
+                                    night time."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Night Mode&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                            </button>
+                            <button id="fancyvis" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="FancyVis(id)"
+                                    title="Toggles if the visualisations tooltips have shadows and transitions.Turning this off
+                                    increases Performance." data-toggle="tooltip">
+                                <div class="txt-responsive">High Quality</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Third, Style Control Panel-->
+            <div class="panel panel-info">
+                <div class="panel-heading" title="This lists all the possible countries to choose from and their data."
+                     data-toggle="tooltip">Country Selection
+                </div>
+                <div class="panel-body countrylist" style="text-align: center; padding-bottom: 30px">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button id="unitedkingdom" type="button" class="btn btn-info " aria-label="true"
+                                    onclick="SelectCountry(id,'£')"
+                                    title="Selects United Kingdom Data."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">United Kingdom</div>
+                            </button>
+                            <button id="unitedstates" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="SelectCountry(id,'$')"
+                                    title="Selects Czech Republic Data." data-toggle="tooltip">
+                                <div class="txt-responsive">United States</div>
+                            </button>
+                            <button id="czechrepublic" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="SelectCountry(id,'Kč')"
+                                    title="Selects Czech Republic Data." data-toggle="tooltip">
+                                <div class="txt-responsive">Czech Republic</div>
+                            </button>
+
+                        </div>
+                        <br>
+                        More coming soon.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--The Middle, Visuallsations-->
+        <div id="visualisation" class="" style=" float:left;  height: 100%; width: 64%;">
+            <!--The TOP-->
+            <div id="upperparent" class="" style=" height: 20%;">
+                <!--The TOP LEFT-->
+                <div class="topvis">
+                    <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}"
+                                            title="The Phillips Curve shows the relationship between Unemployment and Inflation. The
+                             higher the inflation, the lower the unemployment because the money supply is bigger. A
+                             bigger money supply means more money in the economy. This creates higher spending
+                             causing a greater need for production of new goods as people buy more, consequently
+                             increasing enmployment. The increased money supply also creates inflation due to
+                             there being more money decreasing its value as there is more of it." data-toggle="tooltip">Phillips
+                        Curve</a></h5>
+
+                    <div id="leftvis" style="height: 90%; width:100%">
+                        <svg></svg>
+                    </div>
+                </div>
+                <!--The TOP MIDDLE-->
+                <div class="topvis">
+                    <h5 class="toptitle"><a style="text-decoration: none;" href="{% url 'vis.views.help' %}"
+                                            title="The Laffer Curve shows the possible tax income depending on the
+                                            tax percentage. A too-high tax rate would infact lower tax income due to
+                                            lower production caused by lower incentives. A too-low tax rate would
+                                            also not be ideal because too little tax would be collected as its a
+                                            too small % of the economic production." data-toggle="tooltip">Laffer
+                        Curve</a></h5>
+
+                    <div id="middlevis" style="height: 90%; width:100%">
+                        <svg></svg>
+                    </div>
+                </div>
+                <!--The TOP RIGHT-->
+                <div class="topvis" style="float: right; border-right: 0px;">
+                    <h5 class="toptitle"><a style=" text-decoration: none;" href="{% url 'vis.views.help' %}"
+                                            title="The IS-LM model shows the affect of Interest Rates on Real GDP Growth. The IS (Interest-Savings)
+                             curve is downwards sloping. This shows that higher interest rates decrease the supply of money
+                             into the economy, decreasing the output (GDP). The LM (liquidity preference–money supply)
+                             curve is upward sloping because higher income results in higher demand for money, thus
+                             resulting in higher interest rates. The intersection of the IS curve with the LM curve
+                             shows the equilibrium interest rate and price level. " data-toggle="tooltip">IS-LM
+                        Model</a></h5>
+
+                    <div id="rightvis" style="height: 90%; width:100%">
+                        <svg></svg>
+                    </div>
+                </div>
+            </div>
+            <!--The MAIN VISUALISATION right side BOTTOM-->
+            <div id="mainparent" class=""
+                 style="  position:relative; width: 100%; border-top: 5px solid #dddddd;   height: 79%;">
+                <div id="mainstatus" class="status"></div>
+                <button type="button" class="btn btn-default resizebutton" style="right:38px;" id="upperhide"
+                        alt="hide upper" onclick="upperhide('mainparent',id)">
+                    <span class=" glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                </button>
+                <button type="button" class="btn btn-default resizebutton" id="fullscreenbt" alt="resize"
+                        onclick="fullscreen('visualisation',id)">
+                    <span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+                </button>
+                <div id="main" class=""
+                     style="  height:100%; width: 100%;  ">
+                    <svg></svg>
+                </div>
+
+            </div>
+        </div>
+        <!--The Right Control Panel, Data Combinations-->
+        <div id="rightcontrol" style="  border-left: 5px solid #dddddd; float:right; height: 100%; width: 18%;
+        padding: 0px 0px 0px 10px; ">
+            <h4 style="   text-align: center;" title="This panel shows interesting data combinations that tell you the
+            evolution of the UK economy over the last 3 centuries." data-toggle="tooltip">
+                Data Combinations
+            </h4>
+
+            <div class="panel panel-info">
+                <div class="panel-heading">Main Visualisation</div>
+                <div class="panel-body" style="text-align: center">
+                    <div>
+                        <div class="btn-group-vertical btn-group-md" role="group" style="margin-bottom: 15px;">
+                            <button id="data0" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['All'],id)"
+                                    title="Select all the Series." data-toggle="tooltip">
+                                <div class="txt-responsive">Select All</div>
+                            </button>
+                            <button id="data1" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Spending', 'Debt'],id)"
+                                    title="Shows the correlation between Spending and Public Debt. This illustrates how increased spending
+                                    of the government causes ever increasing public debt." data-toggle="tooltip">
+                                <div class="txt-responsive">Spending &<br> Public Debt</div>
+                            </button>
+                            <button id="data4" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['GDP, billions','Real GDP, billions'],id)"
+                                    title="Shows the correlation between Nominal GDP in billions and Real GDP (inflation adjusted) in billions. This illustrates
+                                    the actual production of the UK as compared to the nominal value.
+                                    It shows the decreasing value of money £, due to inflation (higher prices).
+                                    As you can see after 2008 the Real GDP (wealth) of the UK didn't increase, however
+                                    the GDP did (nominal value). This shows money printing."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">Real GDP & GDP</div>
+                            </button>
+                            <button id="data2" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['per capita'],id)"
+                                    title="Shows the correlation between Real GDP per capita (inflation adjusted) and Nominal GDP per capita. This illustrates
+                                    the production of each citizen and the difference between actual and nominal values, caused by inflation."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">Real GDP (per Capita) <br>& GDP (per Capita)</div>
+                            </button>
+                            <button id="data3" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['GDP %'],id)"
+                                    title="Shows the correlation between all GDP percentage type values"
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">GDP %</div>
+                            </button>
+
+                            <button id="data5" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['GDP, billions','per capita','Population'],id)"
+                                    title="Shows the correlation between GDP, per capita values and Population. This illustrates the increasing wealth of
+                                    UK Citizens." data-toggle="tooltip">
+                                <div class="txt-responsive">Population & GDP</div>
+                            </button>
+                            <button id="data6" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['unemployment','Tax Rev, GDP %'],id)"
+                                    title="Shows the correlation between Unemployment and Tax Revenue
+                                    This illustrates the affect of unemployment on tax revenue. Bigger Unemployment would
+                                    mean lower Tax Revenue." data-toggle="tooltip">
+                                <div class="txt-responsive">Unemployment & <br>Tax Revenue, GDP %</div>
+                            </button>
+                            <button id="data7" type="button" class="btn btn-default " aria-label="true"
+                                    onclick="setSeries(['Interest','Debt, GDP %'],id)"
+                                    title="Shows the correlation between the Interest Rate and Public Debt.
+                                    The amount of debt is directly tied to the interest rate on it."
+                                    data-toggle="tooltip">
+                                <div class="txt-responsive">Public Debt & <br>Interest Rate, %</div>
+                            </button>
+                        </div>
+                        <div class="bootstrapfont">
+                            <b>Theoretic Axis</b></div>
+                        <!--THE UPPER VISUALISATIONS SERIES SELECTORS -->
+                        <div class="btn-group-vertical btn-group-md" role="group">
+                            <button id="phillipscurve" type="button" class="btn btn-default " aria-label="true"
+                                    title="Selects the series from the axis of the Phillips Curve Graph.
+                                     &quot;Inflation, Unemployment&quot;" data-toggle="tooltip"
+                                    onclick="setSeries(['Inflation', 'Unemployment'],id)">
+                                <div class="txt-responsive">Phillips Curve<br>
+                                    <span class="notbold">Unemployment, Inflation</span></div>
+                            </button>
+                            <button id="laffercurve" type="button" class="btn btn-default " aria-label="true"
+                                    title="Selects the series from the axis of the Laffer Curve Graph.
+                                     &quot;Tax Rev, Income Tax&quot;" data-toggle="tooltip"
+                                    onclick="setSeries(['Tax Rev, GDP %', 'Income Tax'],id)">
+                                <div class="txt-responsive">Laffer Curve<br>
+                                    <span class="notbold">Tax Rev, Income Tax</span></div>
+                            </button>
+                            <button id="islmmodel" type="button" class="btn btn-default " aria-label="true"
+                                    title="Selects the series from the axis of the IS-LM Model Graph.
+                                     &quot;Interest Rate, Real GDP, billions&quot;" data-toggle="tooltip"
+                                    onclick="setSeries(['Interest', 'Real GDP, billions'],id)">
+                                <div class="txt-responsive">IS-LM Model<br>
+                                    <span class="notbold">Interest, Real GDP</span></div>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block footer %}
+    <div class=" minwidth" style=" align-content:center; background-color: red;  width:99%; margin:0 0.5% 0 0.5%;">
+        <div id="leftadv" class="botadvleft">
+            <script type="text/javascript"
+                    src="http://srvpub.com/adServe/banners?tid=34990_50952_6&size=160x600"></script>
+        </div>
+        <div id="ref" class="references top-border refcontainer" style="">
+            <h1>Data Attributes</h1>
+            <h4>Series Details</h4>
+            <ul>
+                <li>Real GDP - The inflation adjustment is set to reference 2008</li>
+                <li>Tax Revenue- This includes all taxable income</li>
+                <li>Inflation - The inflation relates the the Consumer Price Index, therefore consumer goods inflation
+                </li>
+            </ul>
+            <br>
+            <h4>Data Sources</h4>
+
+            <p> The data is a compile data table comes from many sources. Most of the data comes from the ONS
+                (Office for National Statistics).
+                However, any data provided that is not available from the ONS was taken from these Sources:<br>
+                Tax Rates: <a href="http://www.ifs.org.uk/">Institute For Fiscal Studies</a><br>
+                Pre-1900s Data: <a href="http://www.ukpublicspending.co.uk/">Uk Public Spending</a><br>
+                GDP 1840-2014: <a href="http://measuringworth.com/">Measuring Growth</a></p>
+
+            <h1>Further Reading</h1>
+            <ul class="twocolumns">
+                <li><a href="http://en.wikipedia.org/wiki/Phillips_curve">Phillips Curve</a>:
+                    <a href="https://www.youtube.com/watch?v=-Fk_2iRfC18"> Video Explanation</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/IS%E2%80%93LM_model">IS-LM Model</a>:
+                    <a href="https://www.youtube.com/watch?v=Q3hoC8lDCBo"> Video Explanation</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/Yield_curve">Yield Curve</a>:
+                    <a href="https://www.youtube.com/watch?v=3b69Ax5m7qg"> Video Explanation</a></li>
+                <li><a href="http://en.wikipedia.org/wiki/Laffer_curve">Laffer Curve</a>:
+                    <a href="https://www.youtube.com/watch?v=bnyeWcA2nXo"> Video Explanation</a></li>
+            </ul>
+        </div>
+
+        <div id="rightadv" class="botadvright">
+            <script type="text/javascript"
+                    src="http://srvpub.com/adServe/banners?tid=34990_50952_7&size=160x600"></script>
+        </div>
+    </div>
+{% endblock %}
+{% block extrafooter %}
+    <div id="startfooter" class="startfooterr " onclick="hide('startfooter')">
+        <img class="quit" src="{% static 'images/cancel.png' %}" alt="close" onclick="hide('startfooter')">
+
+        <div style="text-align: center;"><b>&nbsp;&nbsp;&nbsp;&nbsp; Welcome to the Economic Visualisation
+            Application!<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;An Application for the economic analysis of Historic data and its comparison to
+            economic theory and their models.</b><br>
+            <b>Left Control</b> - This area allows to change the properties of the visualisations.<br>
+            <b>Visualisation Area</b> - This area is split into the bottom Main and top Theoretic Visualisation.<br>
+            <b>Right Control</b> - A list of interesting data combinations.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+        </div>
+        <div style="text-align: center;"><b>It is recommended to use Chrome! For references scroll down.</b>
+            <a style="font-weight: bold;" href="{% url 'vis.views.help' %}">Help</a>.
+        </div>
+    </div>
+{% endblock %}

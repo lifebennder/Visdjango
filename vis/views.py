@@ -128,4 +128,32 @@ def decode_url(param):  # helper function just to mak things that little easier
 def encode_url(str):
     return str.replace(' ', '_')
 
+def vladreadcsv(path):
+    print 'vladcsdfadgss'
+    chartdata = []
+    if not os.path.isfile(path): return chartdata
+    with open(path) as f:
+        reader = list(csv.reader(f))
+        for rownum, row in enumerate(reader):
+            print row
+            adjcolnum = 1
+            for colnum, cell in enumerate(row):
+                if rownum == 0:
+                    if not isnumeric(reader[1][colnum]) or colnum==0: continue
+                    chartdata.append({'key': cell, 'values': [], 'disabled': False})
+                else:
+                    if colnum == 0 or not isnumeric(reader[1][colnum]):
+                        if not isnumeric(reader[1][colnum]): adjcolnum += 1
+                        continue
+                    keyval = chartdata[colnum-adjcolnum]
+                    keyval['values'].append({'x':row[0],'y':cell})
+    return chartdata
 
+def vlad(request):
+    chartdata = vladreadcsv(os.path.join(settings.STATIC_PATH, 'specchart.csv'))
+    return JsonResponse(chartdata, safe=False)
+
+
+def vladindex(request):
+    response = render(request, 'vis/vladindex.html')
+    return response
