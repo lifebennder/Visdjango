@@ -7,7 +7,7 @@ urlpatterns = patterns('',
     url(r'^about/$', views.about, name='about'),
     url(r'^vlad/$', views.vladindex, name='vlad'),
       # data URLS
-    url(r'^data/vlad/$', views.vladindex),
+    url(r'^data/vlad/$', views.vlad),
     url(r'^data/(?P<country>\w+)ref/$', views.main_ref),
     url(r'^data/(?P<country>\w+)quiz/$', views.main_quiz),
     url(r'^data/quizanswers/$', views.main_quizanswers),
