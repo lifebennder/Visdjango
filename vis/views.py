@@ -129,13 +129,11 @@ def encode_url(str):
     return str.replace(' ', '_')
 
 def vladreadcsv(path):
-    print 'vladcsdfadgss'
     chartdata = []
     if not os.path.isfile(path): return chartdata
     with open(path) as f:
         reader = list(csv.reader(f))
         for rownum, row in enumerate(reader):
-            print row
             adjcolnum = 1
             for colnum, cell in enumerate(row):
                 if rownum == 0:
