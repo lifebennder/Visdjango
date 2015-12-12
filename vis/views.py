@@ -139,7 +139,7 @@ def vladreadcsv(path):
             for colnum, cell in enumerate(row):
                 if rownum == 0:
                     if not isnumeric(reader[1][colnum]) or colnum==0: continue
-                    if colnum==1 or colnum==2:chartdata.append({'key': cell, 'values': [{'x':399,'y':"0.03"}], 'disabled': False})
+                    if colnum==1 or colnum==2:chartdata.append({'key': cell, 'values': [{'x':399,'y':0.03}], 'disabled': False})
                     else:
                         chartdata.append({'key': cell, 'values': [], 'disabled': True})
                 else:
@@ -148,16 +148,34 @@ def vladreadcsv(path):
                         continue
                     keyval = chartdata[colnum-adjcolnum]
                     #keyval['values']   .append({'x':row[0],'y':0})
+                    if isfloat(cell): cell = float(cell)
+                    elif isint(cell): cell = int(cell)
+
                     keyval['values'].append({'x':row[0],'y':cell})
     #print chartdata
-    chartdata[1]['values'].append({'x':1000,'y':"0.29"})
+    chartdata[1]['values'].append({'x':1000,'y':0.29})
     return chartdata
 
 def vlad(request):
     chartdata = vladreadcsv(os.path.join(settings.STATIC_PATH, 'specchart.csv'))
     return JsonResponse(chartdata, safe=False)
 
-
+def isfloat(value):
+  try:
+    float(value)
+    return True
+  except:
+    return False
+def isint(value):
+  try:
+    int(value)
+    return True
+  except:
+    return False
 def vladindex(request):
     response = render(request, 'vis/vladindex.html')
+    return response
+
+def test(request):
+    response = render(request, 'vis/test.html')
     return response

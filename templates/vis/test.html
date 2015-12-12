@@ -1,3 +1,36 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'nvd3/build/nv.d3.css' %}" rel="stylesheet" type="text/css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.2/d3.min.js" charset="utf-8"></script>
+    <script src="{% static 'nvd3/build/nv.d3.js' %}"></script>
+    <script src="http://nvd3.org/assets/js/data/stream_layers.js"></script>
+    <script src="{% static 'jquery/dist/jquery.js' %}"></script>
+    <style>
+        text {
+            font: 12px sans-serif;
+        }
+        svg {
+            display: block;
+        }
+        html, body, #main, svg {
+            margin: 0px;
+            padding: 0px;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class='with-3d-shadow with-transitions'>
+
+                <div id="main" class=""
+                     style="  height:100%; width: 100%;  ">
+                    <svg></svg>
+                </div>
+
+<script>
 //main visualisation global variables.
 var mainVis = null;
 var maindata = null;
@@ -177,3 +210,6 @@ $(document).on("click", "#main svg", function(e) {
 
     });
 };
+</script>
+</body>
+</html>

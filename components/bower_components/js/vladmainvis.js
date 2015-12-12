@@ -70,6 +70,7 @@ window.onload = function (e) {
     });
     console.log(dataa);
     var chart;
+    mainVis = chart;
     d3.json("/vis/data/" +"vlad/", function (error, data) {
         data[0].type = "line";
         data[0].yAxis = 1;
@@ -97,7 +98,6 @@ window.onload = function (e) {
         data[11].yAxis = 2;
         data[12].type = "bar";
         data[12].yAxis = 2;
-        console.log(data);
         nv.addGraph(function () {
             var chart = nv.models.multiChart()
                 .margin({top: 30, right: 60, bottom: 50, left: 70})
@@ -123,7 +123,6 @@ window.onload = function (e) {
 
             //data[13].type = "bar";
             //data[13].yAxis = 2;
-            //console.log(data);
             //chart.forceX([0,120]);
             chart.yDomain1([0,0.8]);
             chart.yDomain2([0,0.8]);
@@ -131,23 +130,50 @@ window.onload = function (e) {
                 .datum(data)
                 .transition().duration(10).call(chart);
             nv.utils.windowResize(chart.update);
-            chart.dispatch.on('stateChange.main', function (newState) {
+            maindata = data;
+            /*chart.dispatch.on('stateChange.multiChart', function (newState) {
                 console.log('asd');
-                chart.update();
+                //chart.update();
                 //updateData(newState);
             });
-            chart.dispatch.on('changeState.main', function (newState) {
+            chart.dispatch.on('changeState.multiChart', function (newState) {
                 console.log('sssasd');
                 chart.update();
                 //updateData(newState);
-            });
-           /* chart.legend.dispatch.on('legendClick.main', function (newState) {
+            });*/
+            /*chart.legend.dispatch.on('legendClick.multiChart', function (newState) {
                 console.log('sssasssssd');
-                chart.update();
+                //chart.update();
                 //updateData(newState);
             });*/
+            /*chart.dispatch.on("legendClick.multiChart", function(e) {
+                console.log(e);
+            });*/
+            mainVis = chart;
+            /*maindata.forEach(function (series, i) {console.log('setting');if(i==0 ||i==1)series.disabled=false;});*/
             return chart;
         });
+$(document).on("click", "#main svg", function(e) {
+     /*console.log (e);*/
+     /*console.log (e.target.__data__);*/
+     var item = e.target.__data__;
+     console.log(item.disabled);
+     if(item.type == "line"){
+        /* console.log('true');*/
+         /*setTimeout(function(){ */
+             item.disabled = false;mainVis.update();
+         /*},10);*/
+     }
+     else if(item.type == "bar"){
+         var index = 0;
+         maindata.forEach(function (series, i) {
+             if(i==0 ||i==1)return;
+             else {if(series.disabled==false)index++;console.log(index);}
+         });
+     }
+        if(index>2)item.disabled = true;mainVis.update();
+        console.log('after '+item.disabled);
+    });
 
     });
 };

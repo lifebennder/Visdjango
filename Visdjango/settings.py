@@ -134,7 +134,7 @@ STATICFILES_FINDERS = (
 BOWER_PATH = 'bower.cmd'
 
 BOWER_INSTALLED_APPS = (
-#'d3#3.5.6',
+#'d3#3.5.3',
 #'nvd3#1.1.15-beta',
 'bootstrap#3.3.1',
 'jquery#2.1.3',

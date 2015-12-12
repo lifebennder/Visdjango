@@ -9438,6 +9438,7 @@ nv.models.multiChart = function() {
       height = null,
       showLegend = true,
       tooltips = true,
+      legend = nv.models.legend().height(30),
       tooltip = function(key, x, y, e, graph) {
         return '<h3>' + key + '</h3>' +
                '<p>' +  y + ' at ' + x + '</p>'
@@ -9469,7 +9470,7 @@ nv.models.multiChart = function() {
       yAxis1 = nv.models.axis().scale(yScale1).orient('left'),
       yAxis2 = nv.models.axis().scale(yScale2).orient('right'),
 
-      legend = nv.models.legend().height(30),
+
       dispatch = d3.dispatch('tooltipShow', 'tooltipHide');
 
   var showTooltip = function(e, offsetElement) {
@@ -9678,7 +9679,8 @@ nv.models.multiChart = function() {
           .style('opacity', series2.length ? 1 : 0)
           .attr('transform', 'translate(' + x.range()[1] + ',0)');
 
-      legend.dispatch.on('stateChange', function(newState) { 
+      legend.dispatch.on('stateChange', function(newState) {
+          console.log('asdasd');
         chart.update();
       });
      
@@ -9803,7 +9805,7 @@ nv.models.multiChart = function() {
   chart.yAxis1 = yAxis1;
   chart.yAxis2 = yAxis2;
   chart.options = nv.utils.optionsFunc.bind(chart);
-
+  chart.legend = legend;
   chart.x = function(_) {
     if (!arguments.length) return getX;
     getX = _;
