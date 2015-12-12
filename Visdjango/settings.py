@@ -31,7 +31,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['.econvis.com','localhost', '127.0.0.1','.pythonanywhere.com']
+ALLOWED_HOSTS = ['.econvis.com','localhost', '127.0.0.1','.pythonanywhere.com','lifebennder.pythonanywhere.com']
 
 GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-61319124-1'
 GOOGLE_ANALYTICS_DISPLAY_ADVERTISING = True
