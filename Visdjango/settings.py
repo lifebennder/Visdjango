@@ -31,7 +31,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['.econvis.com','localhost', '127.0.0.1','.pythonanywhere.com']
+ALLOWED_HOSTS = ['.econvis.com','localhost', '127.0.0.1','.pythonanywhere.com','lifebennder.pythonanywhere.com']
 
 GOOGLE_ANALYTICS_PROPERTY_ID = 'UA-61319124-1'
 GOOGLE_ANALYTICS_DISPLAY_ADVERTISING = True
@@ -134,10 +134,10 @@ STATICFILES_FINDERS = (
 BOWER_PATH = 'bower.cmd'
 
 BOWER_INSTALLED_APPS = (
-'d3#3.3.13',
+#'d3#3.5.3',
 #'nvd3#1.1.15-beta',
 'bootstrap#3.3.1',
 'jquery#2.1.3',
 'google-code-prettify#1.0.3',
-'nvd3-community#1.7.0',
+'nvd3#1.8.1',
 )
